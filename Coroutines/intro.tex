@@ -145,3 +145,17 @@ of support for language features.
 %concepts. Despite syntactic differences between the notation of the 
 %Palo Alto report and this Technical Specification, the report can be seen as a 
 %large-scale test of the expressiveness of this Technical Specification.
+
+\setcounter{section}{8}
+\rSec1[intro.execution]{Program execution}
+Modify paragraph 7 to read:
+\begin{quote}
+\setcounter{Paras}{6}
+\pnum 
+An instance of each object with automatic storage 
+duration~(\ref{basic.stc.auto}) is associated with each entry into its 
+block. Such an object exists and retains its last-stored value during 
+the execution of the block and while the block is suspended (by a call 
+of a function\added{, suspension of a resumable function} 
+or receipt of a signal). 
+\end{quote}
