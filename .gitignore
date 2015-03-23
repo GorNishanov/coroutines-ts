@@ -23,6 +23,7 @@ local.properties
 *.lof
 *.lot
 *.gz
+*.pdf
 
 # External tool builders
 .externalToolBuilders/
