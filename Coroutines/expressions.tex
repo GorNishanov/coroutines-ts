@@ -3,6 +3,35 @@
 \setcounter{chapter}{4}
 \rSec0[expr]{Expressions}
 
+\setcounter{section}{2}
+\rSec1[expr.unary]{Unary expressions}
+
+In paragraph 1 add underlined text.
+
+\begin{bnf}
+	\nontermdef{unary-expression}\br
+	postfix-expression\br
+	\terminal{++} cast-expression\br
+	\terminal{-{-}} cast-expression\br
+	\added{\terminal{await} cast-expression}\br
+	unary-operator cast-expression\br
+	\terminal{sizeof} unary-expression\br
+	\terminal{sizeof (} type-id \terminal{)}\br
+	\terminal{sizeof ...} \terminal{(} identifier \terminal{)}\br
+	\terminal{alignof (} type-id \terminal{)}\br
+	noexcept-expression\br
+	new-expression\br
+	delete-expression\br
+\end{bnf}
+
+Add subsection 5.3.9.
+
+\setcounter{subsection}{8}
+\rSec2[expr.await]{Await}
+
+\pnum
+The await operator is used to suspend evaluation of the enclosing resumable function until the asynchronous operation represented by the operand has completed.
+
 Modify paragraph 8 to include a reference to \grammarterm{requires-expression}{}s.
 
 \begin{quote}
