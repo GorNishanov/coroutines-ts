@@ -4,6 +4,26 @@
 %%
 \rSec0[dcl.decl]{Declarators}
 
+\setcounter{section}{3}
+\rSec1[dcl.fct.def]{Function definitions}
+
+Add subsection \ref{dcl.fct.def.resumable}
+
+\setcounter{subsection}{3}
+\rSec2[dcl.fct.def.resumable]{Resumable Functions}
+
+\pnum
+Functions is compiled as \term{resumable} if it contains
+one or more \term{suspension point}{}s. 
+Suspension points are created by await operator (\ref{expr.await}) in potentially-evaluated context
+or a yield statement (\ref{stmt.yield}). 
+
+\pnum
+Execution of a resumable function is suspended when it reaches suspension point.
+At a later point, suspended resumable function can be resumed
+to continue execution from the suspension point by invoking
+a 
+
 Factor the grammar of \grammarterm{declarator}{}s to
 allow the specification of constraints on function declarations.
 
