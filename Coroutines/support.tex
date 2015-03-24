@@ -6,8 +6,26 @@
 
 Add a row to Table~\ref{tab:lang.sup.lib.summary} for \tcode{<experimental/resumable>}
 
+
 \begin{libsumtab}{Language support library summary}{tab:lang.sup.lib.summary}
-\ref{support.resumable} & Resumable functions support & \tcode{<experimental/resumable>}
+	\cxxref{support.types}       & Types                     &   \tcode{<cstddef>}   \\ \rowsep
+	&                           &   \tcode{<limits>}    \\
+	\cxxref{support.limits}      & Implementation properties &   \tcode{<climits>}   \\
+	&                           &   \tcode{<cfloat>}    \\ \rowsep
+	\cxxref{cstdint}             & Integer types             & \tcode{<cstdint>}     \\ \rowsep
+	\cxxref{support.start.term}  & Start and termination     &   \tcode{<cstdlib>}   \\ \rowsep
+	\cxxref{support.dynamic}     & Dynamic memory management &   \tcode{<new>}       \\ \rowsep
+	\cxxref{support.rtti}        & Type identification       &   \tcode{<typeinfo>}  \\ \rowsep
+	\cxxref{support.exception}   & Exception handling        &   \tcode{<exception>} \\ \rowsep
+	\cxxref{support.initlist}    & Initializer lists & \tcode{<initializer_list>}    \\ \rowsep
+	\added{\ref{support.resumable}}  & \added{Resumable functions support} & \added{\tcode{<experimental/resumable>}}    \\ \rowsep
+	&                           &   \tcode{<csignal>}   \\
+	&                           &   \tcode{<csetjmp>}   \\
+	&                           &   \tcode{<cstdalign>} \\
+	\cxxref{support.runtime}     & Other runtime support     &   \tcode{<cstdarg>}   \\
+	&                           &   \tcode{<cstdbool>}  \\
+	&                           &   \tcode{<cstdlib>}   \\
+	&                           &   \tcode{<ctime>}     \\
 \end{libsumtab}
 
 
@@ -17,4 +35,22 @@ Add section \ref{support.resumable}
 \rSec1[support.resumable]{Resumable functions support library}
 
 \pnum
-The header 
+The header
+\tcode{<experimental/resumable]>}
+defines several types supporting resumable functions in a \Cpp program.
+
+\synopsis{Header \tcode{<experimental/resumable>} synopsis}
+
+\indextext{\idxhdr{experimental/resumable}}%
+\indexlibrary{\idxhdr{experimental/resumable}}%
+\begin{codeblock}
+	namespace std {
+	namespace experimental {
+		template <typename R, typename... Ts>
+		class coroutine_traits;
+		
+		template <typename Promise = void>
+		class coroutine_handle;		
+	}
+	}
+\end{codeblock}
