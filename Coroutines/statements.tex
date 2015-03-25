@@ -1,9 +1,79 @@
 
 \rSec0[stmt.stmt]{Statements}%
 
-Add section \ref{stmt.yield}.
+\setcounter{section}{4}
+\rSec1[stmt.iter]{Iteration statements}%
+Add underlined text to paragraph 1.
+
+\begin{quote}
+\pnum
+Iteration statements specify looping.
+
+\indextext{statement!\idxcode{while}}%
+\indextext{statement!\idxcode{do}}%
+\indextext{statement!\idxcode{for}}%
+%
+\begin{bnf}
+	\nontermdef{iteration-statement}\br
+	\terminal{while (} condition \terminal{)} statement\br
+	\terminal{do} statement \terminal{while (} expression \terminal{) ;}\br
+	\terminal{for (} for-init-statement condition\opt \terminal{;} expression\opt \terminal{)} statement\br
+	\terminal{for (} for-range-declaration \terminal{:} for-range-initializer \terminal{)} statement\br
+	\added{\terminal{for await (} for-range-declaration \terminal{:} for-range-initializer \terminal{)} statement}
+\end{bnf}
+\end{quote}
+
+Add subclause 6.5.5.
+
+\setcounter{subsection}{4}
+\rSec2[stmt.for.await]{The await-for statement}%
+
+\pnum
+A \tcode{for await} statement of the form
+
+\begin{ncbnf}
+	\terminal{for await(} for-range-declaration : expression \terminal{)} statement
+\end{ncbnf}
+
+is equivalent to
+
+\begin{codeblock}
+	{
+		auto && __range = range-init;
+		for ( auto __begin = await begin-expr,
+		__end = end-expr;
+		__begin != __end;
+		await ++__begin ) {
+			@\textit{for-range-declaration}@ = *__begin;
+			@\textit{statement}@
+		}
+	}
+\end{codeblock}
+
+where \tcode{__range}, \tcode{__begin}, 
+\textit{range-init}, \textit{begin-expr} and \textit{end-expr} are defined as in the range-based for statement \cxxref{stmt.ranged}.
+
+\setcounter{section}{5}
+\rSec1[stmt.jump]{Jump statements}%
+\setcounter{subsection}{2}
+\rSec2[stmt.return]{The \tcode{return} statement}%
+
+%Add underlined text to paragraph 1:
+%\pnum
+%A function returns to its caller by the \tcode{return} statement
+%\added{or by reaching suspend-resume-point}.
+
+Add subclause 4
+
+\setcounter{Paras}{3}
+\pnum 
+Within a resumable function bla bla
 
 \setcounter{section}{8}
 \rSec1[stmt.yield]{Yield statement}%
 
+Add this section after \cxxref{stmt.ambig}.
+
 Hello there
+
+

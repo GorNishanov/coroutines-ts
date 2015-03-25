@@ -46,17 +46,24 @@ defines several types supporting resumable functions in a \Cpp program.
 \indextext{\idxhdr{experimental/resumable}}%
 \indexlibrary{\idxhdr{experimental/resumable}}%
 \begin{codeblock}
-	namespace std {
-	namespace experimental {
-		template <typename R, typename... ArgTypes>
-		  class coroutine_traits;
-		
-		template <typename Promise = void>
-		class coroutine_handle;		
+namespace std {
+namespace experimental {
+  template <typename R, typename... ArgTypes>
+    class coroutine_traits;
+	
+  template <typename Promise = void>
+    class coroutine_handle;		
 
-		template <> class coroutine_handle<void>;		
-	}
-	}
+  template <> class coroutine_handle<void>;
+	
+  bool operator == (coroutine_handle<> x, coroutine_handle<> y) noexcept;
+  bool operator < (coroutine_handle<> x, coroutine_handle<> y) noexcept;			
+  bool operator != (coroutine_handle<> x, coroutine_handle<> y) noexcept;
+  bool operator <= (coroutine_handle<> x, coroutine_handle<> y) noexcept;			
+  bool operator >= (coroutine_handle<> x, coroutine_handle<> y) noexcept;
+  bool operator > (coroutine_handle<> x, coroutine_handle<> y) noexcept;			
+}
+}
 \end{codeblock}
 
 \rSec2[resumable.traits]{Class template \tcode{coroutine_traits}}
@@ -73,7 +80,7 @@ namespace experimental {
 			
     static auto get_return_object_on_allocation_failure() noexcept; // optional
 			
-	using promise_type = typename R::promise_type;
+    using promise_type = typename R::promise_type;
   };
 } // namespace experimental
 } // namespace std

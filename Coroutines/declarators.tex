@@ -15,8 +15,8 @@ Add subsection \ref{dcl.fct.def.resumable}
 \pnum
 Functions is compiled as \term{resumable} if it contains
 one or more \term{suspend-resume point}{}s. 
-Suspend-resume points are created by await operator (\ref{expr.await}) in potentially-evaluated context
-or a yield statement (\ref{stmt.yield}). 
+Suspend-resume points are created by await operator (\ref{expr.await}) in potentially-evaluated context, yield statement (\ref{stmt.yield}) 
+or await-for statement (\ref{stmt.await.for}). 
 
 \pnum
 Execution of a resumable function is suspended when it reaches suspend-resume point.

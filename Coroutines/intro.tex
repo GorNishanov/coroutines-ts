@@ -48,7 +48,7 @@ the original, unmodified text in the \Cpp Standard.
 
 \rSec1[intro.defs]{Terms and definitions}
 
-Add the definition of ``suspend-resume-point''.
+Add the definitions of ``suspend-resume-point'' and ``resumable function''.
 
 \setcounter{subsection}{26}
 \begin{quote}
@@ -58,7 +58,14 @@ A point in a \grammarterm{function-body}
 where evaluation of a function can be suspended
 with possibility of resuming it later
 via a call to a member function of a
-an \tcode{coroutine_handle} object associated with the suspended function.
+\tcode{coroutine_handle} object associated with the suspended function.
+\end{quote}
+
+\begin{quote}
+	\indexdefn{resumable function}%
+	\definition{resumable function}{defns.resumable.function}
+	A function defined with \grammarterm{function-body} that
+	contains one or more suspend-resume-points.
 \end{quote}
 
 %%
