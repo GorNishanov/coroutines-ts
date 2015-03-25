@@ -14,15 +14,22 @@ Add subsection \ref{dcl.fct.def.resumable}
 
 \pnum
 Functions is compiled as \term{resumable} if it contains
-one or more \term{suspension point}{}s. 
-Suspension points are created by await operator (\ref{expr.await}) in potentially-evaluated context
+one or more \term{suspend-resume point}{}s. 
+Suspend-resume points are created by await operator (\ref{expr.await}) in potentially-evaluated context
 or a yield statement (\ref{stmt.yield}). 
 
 \pnum
-Execution of a resumable function is suspended when it reaches suspension point.
-At a later point, suspended resumable function can be resumed
-to continue execution from the suspension point by invoking
-a 
+Execution of a resumable function is suspended when it reaches suspend-resume point.
+Later, suspended resumable function can be resumed
+to continue execution from at the suspend-resume point by invoking
+resumption member functions of an object of \tcode{coroutine_handle} type
+associated with this instance of a resumable function. 
+
+\pnum
+The template \tcode{std::experimental::coroutine_traits} is not predefined;
+if the header \tcode{<experimental/resumable>} is not included prior to a
+definition of a resumable function the program is ill-formed.
+
 
 Factor the grammar of \grammarterm{declarator}{}s to
 allow the specification of constraints on function declarations.

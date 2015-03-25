@@ -31,7 +31,77 @@ Add subsection 5.3.9.
 \rSec2[expr.await]{Await}
 
 \pnum
-The await operator is used to suspend evaluation of the enclosing resumable function until the asynchronous operation represented by the operand has completed.
+The await operator is used to suspend evaluation of the enclosing resumable function.
+
+\pnum
+Presence of an await operator in a potentially-evaluated expression makes enclosing function a resumable function.
+
+%\rSec2[expr.await.evaluation]{Evaluation of await operator}
+
+\pnum
+An \tcode{await} expression of the form
+
+\begin{ncbnf}
+	\terminal{await} cast-expression
+\end{ncbnf}
+
+is equivalent to \footnote{it it were possible to write
+an expression in terms of a block, where return from the 
+block becomes the result of the expression}
+
+\begin{codeblock}
+{
+  auto && __expr = cast-expression;
+  if ( !await-ready-expr ) {
+    await-suspend-expr;
+    suspend-resume-point
+  }
+  return await-resume-expr;
+}
+\end{codeblock}
+
+or if await-suspend-expr type is not void, it is equivalent to
+
+\begin{codeblock}
+{
+  auto && __expr = cast-expression;
+  if ( !await-ready-expr && await-suspend-expr ) {
+    suspend-resume-point
+  }
+  return await-resume-expr;
+}
+\end{codeblock}
+
+where \tcode{__expr} is a variable defined for
+exposition only, and \tcode{_ExprT} is the type of the
+\grammarterm{}{cast-expression}, and \textit{await-ready-expr}, \textit{await-suspend-expr} and \textit{await-expr} are
+determined as follows:
+
+\begin{itemize}
+	\item if \tcode{_ExprT} is a class type, the \grammarterm{unqualified-id}{s}
+	\tcode{await_ready}, \tcode{await_suspend} and \tcode{await_resume} are 
+	looked up in the scope of class \tcode{\mbox{_ExprT}}
+	as if by class member access lookup~(\cxxref{basic.lookup.classref}), and if it finds at least one declaration, 
+	\tcode{await_ready}, \tcode{await_suspend} and \tcode{await_resume} are
+	are \tcode{__expr.await_ready()}, \tcode{__expr.await_suspend(coroutine-handle)} and \tcode{__expr.await_resume()},
+	respectively;
+	
+	\item otherwise, \textit{begin-expr} and \textit{end-expr} are \tcode{begin(__range)}
+	and \tcode{end(__range)}, respectively, where \tcode{begin} and \tcode{end} are looked
+	up in the associated namespaces~(\ref{basic.lookup.argdep}).
+	\enternote Ordinary unqualified lookup~(\ref{basic.lookup.unqual}) is not
+	performed. \exitnote
+\end{itemize}
+
+\enterexample
+\begin{codeblock}
+	int array[5] = { 1, 2, 3, 4, 5 };
+	for (int& x : array)
+	x *= 2;
+\end{codeblock}
+\exitexample%
+
+\rSec2[expr.await]{Await}
 
 \rSec3[expr.await.awaitable]{Awaitable expression}
 

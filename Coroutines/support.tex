@@ -18,7 +18,9 @@ Add a row to Table~\ref{tab:lang.sup.lib.summary} for \tcode{<experimental/resum
 	\cxxref{support.rtti}        & Type identification       &   \tcode{<typeinfo>}  \\ \rowsep
 	\cxxref{support.exception}   & Exception handling        &   \tcode{<exception>} \\ \rowsep
 	\cxxref{support.initlist}    & Initializer lists & \tcode{<initializer_list>}    \\ \rowsep
-	\added{\ref{support.resumable}}  & \added{Resumable functions support} & \added{\tcode{<experimental/resumable>}}    \\ \rowsep
+	\added{\ref{support.resumable}} 
+  & \added{Resumable functions support} 
+  & \added{\tcode{<experimental/resumable>}}    \\ \rowsep
 	&                           &   \tcode{<csignal>}   \\
 	&                           &   \tcode{<csetjmp>}   \\
 	&                           &   \tcode{<cstdalign>} \\
@@ -46,11 +48,72 @@ defines several types supporting resumable functions in a \Cpp program.
 \begin{codeblock}
 	namespace std {
 	namespace experimental {
-		template <typename R, typename... Ts>
-		class coroutine_traits;
+		template <typename R, typename... ArgTypes>
+		  class coroutine_traits;
 		
 		template <typename Promise = void>
 		class coroutine_handle;		
+
+		template <> class coroutine_handle<void>;		
 	}
 	}
 \end{codeblock}
+
+\rSec2[resumable.traits]{Class template \tcode{coroutine_traits}}
+
+\indexlibrary{\idxcode{coroutine_traits}}%
+\begin{codeblock}
+namespace std {
+namespace experimental {
+  template <typename R, typename... Ts>
+  class coroutine_traits {
+  public:
+    template <typename... Us>
+      static auto get_allocator(Us&&...); // optional
+			
+    static auto get_return_object_on_allocation_failure() noexcept; // optional
+			
+	using promise_type = typename R::promise_type;
+  };
+} // namespace experimental
+} // namespace std
+\end{codeblock}
+
+\pnum
+The class
+\tcode{coroutine_traits}
+provides bla-bla as specified in~\ref{dcl.fct.def.resumable}.
+class for the types of objects thrown as exceptions by
+\Cpp standard library components, and certain
+expressions, to report errors detected during program execution.
+
+\pnum
+The \tcode{coroutine_traits} may be specialized for user-defined types 
+to indicate that such types are eligible
+
+
+\rSec2[resumable.handle]{Class \tcode{coroutine_handle}}
+
+\indexlibrary{\idxcode{coroutine_handle}}%
+\begin{codeblock}
+namespace std {
+namespace experimental {
+  template <typename R, typename... Ts>
+  class coroutine_traits {
+  public:
+    template <typename... Us>
+    auto get_allocator(Us&&...);
+				
+    using promise_type = typename R::promise_type;
+  };
+}
+}
+\end{codeblock}
+
+\pnum
+The class
+\tcode{coroutine_traits}
+defines the base
+class for the types of objects thrown as exceptions by
+\Cpp standard library components, and certain
+expressions, to report errors detected during program execution.
