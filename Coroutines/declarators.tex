@@ -13,17 +13,51 @@ Add subsection \ref{dcl.fct.def.resumable}
 \rSec2[dcl.fct.def.resumable]{Resumable Functions}
 
 \pnum
-Functions is compiled as \term{resumable} if it contains
+A function is considered \term{resumable} if it contains
 one or more \term{suspend-resume point}{}s. 
 Suspend-resume points are created by await operator (\ref{expr.await}) in potentially-evaluated context, yield statement (\ref{stmt.yield}) 
-or await-for statement (\ref{stmt.await.for}). 
+or await-for statement (\ref{stmt.for.await}).
 
 \pnum
 Execution of a resumable function is suspended when it reaches suspend-resume point.
 Later, suspended resumable function can be resumed
-to continue execution from at the suspend-resume point by invoking
+to continue execution by invoking
 resumption member functions of an object of \tcode{coroutine_handle} type
 associated with this instance of a resumable function. 
+
+%\pnum
+%Suspension of the resumable function 
+
+\pnum 
+Resumable function implementation specializes struct template \tcode{std::experimental::coroutine_traits} to 
+
+
+\pnum Given function \tcode{R f(T1 a, T2 b) S} where \tcode{S} is \grammarterm{function-body} with one or more suspend-resume points, 
+
+\begin{codeblock}
+R f(T1 a, T2 b) {
+  using _Traits = std::experimental::coroutine_traits<R,T1,T2>;
+  using _AllocType = decltype(_Traits::get_allocator(a,b));  
+  using _PromiseType = _Traits::promise_type;  
+  
+  struct _Context {
+  	_AllocType   __alloc;
+  	_PromiseType __promise;
+  	T1 a;
+  	T2 b;
+  	
+  	
+  	
+  };
+  
+  auto alloc = __traits::get_allocator(a,b);
+  void* mem = alloc.allocate(sizeof)
+  
+}
+\end{codeblock}
+
+\pnum
+
 
 \pnum
 The template \tcode{std::experimental::coroutine_traits} is not predefined;
