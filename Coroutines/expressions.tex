@@ -107,6 +107,7 @@ determined as follows:
 \exitexample%
 
 \pnum
+An \tcode{await} expression may appears as unevaluated operand (\cxxref{expr.typeid}, \cxxref{expr.sizeof}, \cxxref{expr.unary.noexcept}, \cxxref{dcl.type.simple}). Presence of such await expression does not make enclosing function resumable and can be used to examine the type of an await expression.
  
 \enterexample
 \begin{codeblock}	
