@@ -15,43 +15,83 @@ Add subsection \ref{dcl.fct.def.resumable}
 \pnum
 A function is considered \term{resumable} if it contains
 one or more \term{suspend-resume point}{}s. 
-Suspend-resume points are created by await operator (\ref{expr.await}) in potentially-evaluated context, yield statement (\ref{stmt.yield}) 
+Suspend-resume points are created by await operator (\ref{expr.await}) in potentially-evaluated expression, yield statement (\ref{stmt.yield}) 
 or await-for statement (\ref{stmt.for.await}).
 
 \pnum
 Execution of a resumable function is suspended when it reaches suspend-resume point.
-Later, suspended resumable function can be resumed
+Suspended resumable function can be resumed
 to continue execution by invoking
-resumption member functions of an object of \tcode{coroutine_handle} type
-associated with this instance of a resumable function. 
+resumption member functions of an object of \tcode{coroutine_handle<P>} type
+associated with this instance of a resumable function, where type P
+is determined by specializing struct template \tcode{std::experimental::coroutine_traits} as described below. 
 
-%\pnum
-%Suspension of the resumable function 
-
-\pnum 
-Resumable function implementation specializes struct template \tcode{std::experimental::coroutine_traits} to 
-
+\pnum
+Let \tcode{f} be a resumable function, \tcode{R} be a return type and $P_1$, $P_2$, ..., $P_n$
+where $n >= 0$ are types of parameters. If \tcode{f} is a non-static member function then $P_1$ denotes the type of implicit this parameter.
 
 \pnum Given function \tcode{R f(T1 a, T2 b) S} where \tcode{S} is \grammarterm{function-body} with one or more suspend-resume points, 
 
 \begin{codeblock}
-R f(T1 a, T2 b) {
-  using _Traits = std::experimental::coroutine_traits<R,T1,T2>;
-  using _AllocType = decltype(_Traits::get_allocator(a,b));  
-  using _PromiseType = _Traits::promise_type;  
-  
-  struct _Context {
-  	_AllocType   __alloc;
-  	_PromiseType __promise;
-  	T1 a;
-  	T2 b;
-  	
-  	
-  	
-  };
-  
-  auto alloc = __traits::get_allocator(a,b);
-  void* mem = alloc.allocate(sizeof)
-  
+	R f(T1 a, T2 b) {
+		using _Traits = std::experimental::coroutine_traits<R,T1,T2>;
+		using _Alloc = _Traits::get_allocator(a,b);
+		using _Promise = _Traits::promise_type;
+		struct _Context {
+			_Alloc __alloc;
+			_Promise __promise;
+			T1 a;
+			T2 b;
+			@\textit{unspecified-type _room_for_temps_and_locals}@;
+			
+			_Context(T1& a, T2& b) : a(move(a)), b(move(b)) {}
+			
+			void operator() {
+				try { 
+					@\textit{function-body}@ 
+				} catch(...) {
+					<handle exception as requested by the coroutine promise>
+				}
+				__end:  
+				if (__promise.final_suspend()) {
+					<suspend-resume-point>
+					std::terminate();
+				}			
+			}
+		};
+		_Alloc alloc
+		if (!__pr.initial_suspend()) {
+			__resume_f(context);
+		}
+	}
+	
+	void __resume_f(_Context* context) {
+	<
 }
 \end{codeblock}
+
+%\begin{codeblock}
+%R f(T1 a, T2 b) {
+%  // specialize coroutine_traits to discover customization points
+%  using _Traits = std::experimental::coroutine_traits<R,T1,T2>;
+%  <allocate memory for automatic variables>
+%  <transfer parameters as needed>
+%  <prepare return value>
+%  if (!__pr.initial_suspend()) {
+%    __resume_f(context);
+%  }
+%}
+%
+%void __resume_f(_Context* context) {
+%  try {
+%  } catch(...) {
+%  <handle exception as requiested by the coroutine promise>
+%}
+%__end:  
+%if (__promise.final_suspend()) {
+%	<suspend-resume-point>
+%	std::terminate();
+%}
+%<
+%}
+%\end{codeblock}
