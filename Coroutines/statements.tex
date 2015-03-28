@@ -57,18 +57,72 @@ where \tcode{__range}, \tcode{__begin},
 \rSec1[stmt.jump]{Jump statements}%
 \setcounter{subsection}{2}
 \rSec2[stmt.return]{The \tcode{return} statement}%
+\indextext{\idxcode{return}}%
+\indextext{function~return|see{\tcode{return}}}%
+
+Modify paragraphs 1 through 3 as follows.
+
+\begin{quote}
+\pnum
+A function returns to its caller by the \tcode{return} statement.
+\added{A resumable function also returns to its caller 
+when suspended at suspend-resume point.}
+
+\pnum
+\added{In a non-resumable function a}\removed{A} return statement
+with neither an \grammarterm{expression} nor a \grammarterm{braced-init-list}
+can be used only in functions
+that do not return a value, that is, a function with the return type
+\cv\ \tcode{void}, a constructor~(\cxxref{class.ctor}), or a
+destructor~(\cxxref{class.dtor}).
+\indextext{\idxcode{return}!constructor~and}%
+\indextext{\idxcode{return}!constructor~and}%
+A return statement with an expression of non-void type can be used only
+in functions returning a value; the value of the expression is returned
+to the caller of the function.
+\indextext{conversion!return~type}%
+The value of the expression is implicitly converted to the return type of the
+function in which it appears. A return statement can involve the
+construction and copy or move of a temporary object~(\cxxref{class.temporary}).
+\enternote
+A copy or move operation associated with a return statement may be elided or
+considered as an rvalue for the purpose of overload resolution in
+selecting a constructor~(\cxxref{class.copy}).
+\exitnote A return statement with a \grammarterm{braced-init-list} initializes the object or reference to be returned from the function by copy-list-initialization~(\cxxref{dcl.init.list}) from the specified initializer list. \enterexample
+
+\begin{codeblock}
+	std::pair<std::string,int> f(const char* p, int x) {
+		return {p,x};
+	}
+\end{codeblock}
+\exitexample
+
+Flowing off the end of a function is equivalent to a \tcode{return} with
+no value; this results in undefined behavior in a value-returning
+function.
+
+\pnum
+A return statement with an expression of type \tcode{void}
+can be used only in \added{non-resumable} functions with a return type of
+\cvqual{cv} \tcode{void}
+\added{or resumable functions with eventual return type of \cvqual{cv} \tcode{void}}; 
+the expression is evaluated just before the function
+returns to its caller.
+\end{quote}
 
 %Add underlined text to paragraph 1:
 %\pnum
 %A function returns to its caller by the \tcode{return} statement
 %\added{or by reaching suspend-resume-point}.
 
-Add subclause 4
+Add paragraph 4.
 
+\begin{quote}
 \setcounter{Paras}{3}
 \pnum 
-Within a resumable function return statement is replaced with
+In a resumable function return statement is replaced with
 a call to __pr.set_result, where _p
+\end{quote}
 
 \setcounter{section}{8}
 \rSec1[stmt.yield]{Yield statement}%

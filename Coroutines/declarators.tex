@@ -12,11 +12,21 @@ Add subsection \ref{dcl.fct.def.resumable}
 \setcounter{subsection}{3}
 \rSec2[dcl.fct.def.resumable]{Resumable Functions}
 
+\rSec3[resumable.definitions]{Definitions}
+
 \pnum
 A function is considered \term{resumable} if it contains
 one or more \term{suspend-resume point}{}s. 
 Suspend-resume points are created by await operator (\ref{expr.await}) in potentially-evaluated expression, yield statement (\ref{stmt.yield}) 
 or await-for statement (\ref{stmt.for.await}).
+
+\pnum
+Initial call to a resumable function
+Resume call to a suspended resumable function
+Destroy call to a suspended resumable function
+resumable function instance
+\pnum
+Suspension of a resumable function 
 
 \pnum
 Execution of a resumable function is suspended when it reaches suspend-resume point.
@@ -26,9 +36,21 @@ resumption member functions of an object of \tcode{coroutine_handle<P>} type
 associated with this instance of a resumable function, where type P
 is determined by specializing struct template \tcode{std::experimental::coroutine_traits} as described below. 
 
+\rSec3[dcl.fct.def.resumable.traits]{Coroutine traits}
+
 \pnum
-Let \tcode{f} be a resumable function, \tcode{R} be a return type and $P_1$, $P_2$, ..., $P_n$
-where $n >= 0$ are types of parameters. If \tcode{f} is a non-static member function then $P_1$ denotes the type of implicit this parameter.
+Coroutine traits are specialized by resumable functions to select an allocator and a coroutine promise to
+use in a particular resumable function.
+
+\pnum
+For a resumable function \tcode{f}, Let \tcode{R} be a return type and $P_1$, $P_2$, ..., $P_n$
+where $n >= 0$ be types of parameters. If \tcode{f} is a non-static member function then $P_1$ denotes the type of implicit this parameter. 
+Coroutine traits for function \tcode{f} is a specialization of
+struct template \tcode{std::experimental::coroutine_traits<R,P1,...,PN>}.
+
+\pnum
+Coroutine traits determine what 
+
 
 \pnum Given function \tcode{R f(T1 a, T2 b) S} where \tcode{S} is \grammarterm{function-body} with one or more suspend-resume points, 
 
