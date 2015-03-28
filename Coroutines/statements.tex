@@ -55,80 +55,210 @@ where \tcode{__range}, \tcode{__begin},
 
 \setcounter{section}{5}
 \rSec1[stmt.jump]{Jump statements}%
+
+In paragraph 1 add productions for \tcode{yield} statement.
+
+\begin{quote}
+\begin{bnf}
+	\nontermdef{jump-statement}\br
+	\terminal{break ;}\br
+	\terminal{continue ;}\br
+	\terminal{return} expression\opt \terminal{;}\br
+	\terminal{return} braced-init-list \terminal{;}\br
+	\added{\terminal{yield} expression \terminal{;}}\br
+	\added{\terminal{yield} braced-init-list \terminal{;}}\br
+	\terminal{goto} identifier \terminal{;}
+\end{bnf}
+\end{quote}
+
 \setcounter{subsection}{2}
 \rSec2[stmt.return]{The \tcode{return} statement}%
 \indextext{\idxcode{return}}%
 \indextext{function~return|see{\tcode{return}}}%
 
-Modify paragraphs 1 through 3 as follows.
+Add a note:
 
 \begin{quote}
-\pnum
-A function returns to its caller by the \tcode{return} statement.
-\added{A resumable function also returns to its caller 
-when suspended at suspend-resume point.}
+\enternote
+In this section function refers to non-resumable function only.
+The return statement in resumable functions is described in \ref{stmt.return.resumable}
+\exitnote
+\end{quote}
+
+%Modify paragraphs 1 through 3 as follows.
+%
+%\begin{quote}
+%\pnum
+%A function returns to its caller by the \tcode{return} statement.
+%\added{A resumable function also returns to its caller 
+%when suspended at suspend-resume point.}
+%
+%\pnum
+%\added{In a non-resumable function a}\removed{A} return statement
+%with neither an \grammarterm{expression} nor a \grammarterm{braced-init-list}
+%can be used only in functions
+%that do not return a value, that is, a function with the return type
+%\cv\ \tcode{void}, a constructor~(\cxxref{class.ctor}), or a
+%destructor~(\cxxref{class.dtor}).
+%\indextext{\idxcode{return}!constructor~and}%
+%\indextext{\idxcode{return}!constructor~and}%
+%\added{In a resumable function a  return statement
+%	with neither an \grammarterm{expression} nor a \grammarterm{braced-init-list}
+%	can be used only in functions
+%	with eventual return type \tcode{void}.}
+%A return statement with an expression of non-void type can be used only
+%in \added{non-resumable} functions returning a value
+%\added{or resumable functions returning an eventual value}; the value of the expression is returned
+%to the caller of the function.
+%\indextext{conversion!return~type}%
+%The value of the expression is implicitly converted to the return type of the
+%function in which it appears. A return statement can involve the
+%construction and copy or move of a temporary object~(\cxxref{class.temporary}).
+%\enternote
+%A copy or move operation associated with a return statement may be elided or
+%considered as an rvalue for the purpose of overload resolution in
+%selecting a constructor~(\cxxref{class.copy}).
+%\exitnote A return statement with a \grammarterm{braced-init-list} initializes the object or reference to be returned from the function by copy-list-initialization~(\cxxref{dcl.init.list}) from the specified initializer list. \enterexample
+%
+%\begin{codeblock}
+%	std::pair<std::string,int> f(const char* p, int x) {
+%		return {p,x};
+%	}
+%\end{codeblock}
+%\exitexample
+%
+%Flowing off the end of a function is equivalent to a \tcode{return} with
+%no value; this results in undefined behavior in a value-returning
+%\added{non-resumable} function \added{or in an eventual-value-returning resumable function}.
+%
+%\pnum
+%A return statement with an expression of type \tcode{void}
+%can be used only in \added{non-resumable} functions with a return type of
+%\cvqual{cv} \tcode{void} \added{or resumable functions with eventual return type of \tcode{void}}; 
+%the expression is evaluated just before the function
+%returns to its caller.
+%\end{quote}
+%
+%%Add underlined text to paragraph 1:
+%%\pnum
+%%A function returns to its caller by the \tcode{return} statement
+%%\added{or by reaching suspend-resume-point}.
+%
+%Add paragraph 4.
+%
+%\begin{quote}
+%\setcounter{Paras}{3}
+%\pnum 
+%In a resumable function return statement is replaced with
+%a call to __pr.set_result, where _p
+%\end{quote}
+
+Add sections \ref{stmt.return.resumable} and \ref{stmt.yield}.
+
+\rSec2[stmt.return.resumable]{The \tcode{return} statement in resumable functions}%
+%\enternote
+%In this section function refers to resumable function only.
+%The return statement in non-resumable functions is described in \ref{stmt.return}
+%\exitnote
+\enternote
+In this section, \tcode{_Pr} refers to the promise object
+of the enclosing resumable function.
+\exitnote
 
 \pnum
-\added{In a non-resumable function a}\removed{A} return statement
+A resumable function returns to its caller by the \tcode{return} statement
+or when suspended at suspend-resume point.
+
+\pnum
+A return statement
 with neither an \grammarterm{expression} nor a \grammarterm{braced-init-list}
-can be used only in functions
-that do not return a value, that is, a function with the return type
-\cv\ \tcode{void}, a constructor~(\cxxref{class.ctor}), or a
-destructor~(\cxxref{class.dtor}).
-\indextext{\idxcode{return}!constructor~and}%
-\indextext{\idxcode{return}!constructor~and}%
+can be used only in resumable functions
+that do not produce an eventual value or have eventual return type of \tcode{void}. In the latter case, completion of the resumable function
+is reported by calling \tcode{_Pr.set_result()}.
 A return statement with an expression of non-void type can be used only
-in functions returning a value; the value of the expression is returned
-to the caller of the function.
-\indextext{conversion!return~type}%
-The value of the expression is implicitly converted to the return type of the
-function in which it appears. A return statement can involve the
-construction and copy or move of a temporary object~(\cxxref{class.temporary}).
-\enternote
-A copy or move operation associated with a return statement may be elided or
-considered as an rvalue for the purpose of overload resolution in
-selecting a constructor~(\cxxref{class.copy}).
-\exitnote A return statement with a \grammarterm{braced-init-list} initializes the object or reference to be returned from the function by copy-list-initialization~(\cxxref{dcl.init.list}) from the specified initializer list. \enterexample
+in resumable functions producing an eventual value; the value of the expression is supplied to a promise of the resumable function by calling 
+\tcode{_Pr.set_result(\grammarterm{expression})} or
+\tcode{_Pr.set_result(\grammarterm{braced-init-list})}.
+
+\enterexample
 
 \begin{codeblock}
-	std::pair<std::string,int> f(const char* p, int x) {
+	std::future<std::pair<std::string,int>> f(const char* p, int x) {
+		await g();
 		return {p,x};
 	}
 \end{codeblock}
 \exitexample
 
 Flowing off the end of a function is equivalent to a \tcode{return} with
-no value; this results in undefined behavior in a value-returning
-function.
+no value; program is not well-formed if this happens in a eventual-value-returning resumable function.
 
 \pnum
 A return statement with an expression of type \tcode{void}
-can be used only in \added{non-resumable} functions with a return type of
-\cvqual{cv} \tcode{void}
-\added{or resumable functions with eventual return type of \cvqual{cv} \tcode{void}}; 
-the expression is evaluated just before the function
+can be used only in functions without an eventual return type 
+or with an eventual return type of void; the expression is evaluated just before the function
 returns to its caller.
-\end{quote}
 
-%Add underlined text to paragraph 1:
-%\pnum
-%A function returns to its caller by the \tcode{return} statement
-%\added{or by reaching suspend-resume-point}.
+\pnum
+Prior to returning to the caller, resumable function evaluates
+\tcode{_Pr.final_suspend()} predicate. If the predicate returns
+true, resumable function suspends at final suspend point,
+otherwise, resumable function completes destroying resumable instance
+object and freeing its memory if it were dynamically allocated.
 
-Add paragraph 4.
+\enternote
+If resumable function instance lifetime is controlled 
+by a RAII object, it is expected that \tcode{_Pr.final_suspend()} returns true
+and resumable function instance object will be freed when
+destructor of an owner object runs.
 
-\begin{quote}
-\setcounter{Paras}{3}
-\pnum 
-In a resumable function return statement is replaced with
-a call to __pr.set_result, where _p
-\end{quote}
+For detached tasks, where lifetime of the resumable function ends
+when the task completes, \tcode{_Pr.final_suspend()} would return false.
+\exitnote
 
-\setcounter{section}{8}
-\rSec1[stmt.yield]{Yield statement}%
+\rSec2[stmt.yield]{Yield statement}%
 
-Add this section after \cxxref{stmt.ambig}.
+\pnum
+A yield statement of the form
 
-Hello there
+\begin{codeblock}
+	yield V;
+\end{codeblock}
 
+where \textit{V} is either \grammarterm{expression} or \grammarterm{braced-init-list} is equivalent to:
 
+\begin{codeblock}
+	if (_Pr.yield_value(V)) {
+		suspend-resume-point
+	}
+\end{codeblock}
+
+If \tcode{_Pr.yield_value(V)} expression is convertible to \tcode{bool}, otherwise it is equivalent to:
+
+\begin{codeblock}
+	_Pr.yield_value(V);
+	suspend-resume-point
+\end{codeblock}
+
+Where \tcode{_Pr} is a promise object of the enclosing resumable function.
+
+\pnum
+Promise object may have more than one overload of \tcode{yield_value}.
+
+\enterexample
+\begin{codeblock}
+	recursive_generator<int> flatten(node* n)
+	{
+		if (n == nullptr)
+			return;
+			
+		yield flatten(n->left);
+		yield n->value;
+		yield flatten(n->right);
+	}
+\end{codeblock}
+
+Promise for flatten function should contain overloads that can accept a value of type int and a value of type \tcode{recursive_generator<int>}.
+In the case of a former, yielding a value is unconditional, however, yielding values produced by another generator may not produce
+any values and thus suspend is not required and correspoding yield_value must return false. 
+\exitexample
