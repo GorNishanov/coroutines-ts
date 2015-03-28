@@ -121,4 +121,10 @@ int main() {
 }
 \end{codeblock}
 \exitexample%
- 
+
+\pnum
+An \tcode{await} expression may only appear in the resumable functions 
+that have eventual return type, i.e. have \tcode{set_result} member
+function defined in a promise of the enclosing resumable function.
+
+If this requirement is not satisfied, the program is not well-formed and diagnostic is required.

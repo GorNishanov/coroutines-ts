@@ -53,6 +53,12 @@ is equivalent to
 where \tcode{__range}, \tcode{__begin}, 
 \textit{range-init}, \textit{begin-expr} and \textit{end-expr} are defined as in the range-based for statement \cxxref{stmt.ranged}.
 
+\pnum
+An \tcode{for await} statement may only appear in the resumable functions 
+that have eventual return type, i.e. have \tcode{set_result} member
+function defined in a promise of the enclosing resumable function.
+
+If this requirement is not satisfied, the program is not well-formed and diagnostic is required.
 \setcounter{section}{5}
 \rSec1[stmt.jump]{Jump statements}%
 
@@ -204,7 +210,7 @@ Prior to returning to the caller, resumable function evaluates
 \tcode{_Pr.final_suspend()} predicate. If the predicate returns
 true, resumable function suspends at final suspend point,
 otherwise, resumable function completes destroying resumable instance
-object and freeing its memory if it were dynamically allocated.
+object and freeing its memory if it was dynamically allocated.
 
 \enternote
 If resumable function instance lifetime is controlled 
@@ -228,19 +234,25 @@ A yield statement of the form
 where \textit{V} is either \grammarterm{expression} or \grammarterm{braced-init-list} is equivalent to:
 
 \begin{codeblock}
+	_Pr.yield_value(V);
+	suspend-resume-point
+\end{codeblock}
+
+If \tcode{_Pr.yield_value(V)} expression is \tcode{void}, otherwise it is equivalent to:
+
+\begin{codeblock}
 	if (_Pr.yield_value(V)) {
 		suspend-resume-point
 	}
 \end{codeblock}
 
-If \tcode{_Pr.yield_value(V)} expression is convertible to \tcode{bool}, otherwise it is equivalent to:
-
-\begin{codeblock}
-	_Pr.yield_value(V);
-	suspend-resume-point
-\end{codeblock}
-
 Where \tcode{_Pr} is a promise object of the enclosing resumable function.
+
+\pnum
+An \tcode{yield} statement may only appear if \tcode{yield_value} member
+function is defined in a promise of the enclosing resumable function.
+
+If this requirement is not satisfied, the program is not well-formed and diagnostic is required.
 
 \pnum
 Promise object may have more than one overload of \tcode{yield_value}.
