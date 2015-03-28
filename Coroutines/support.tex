@@ -134,23 +134,23 @@ discovered via specialization of \tcode{coroutine_traits}.
 The following tables describe the requirements on
 coroutine promise types.
 
-\pnum
-The template struct \tcode{allocator_traits}~(\ref{allocator.traits}) supplies
-a uniform interface to all allocator types.
-Table~\ref{tab:desc.var.def} describes the types manipulated
-through allocators. Table~\ref{tab:utilities.allocator.requirements}
-describes the requirements on allocator types
-and thus on types used to instantiate \tcode{allocator_traits}. A requirement
-is optional if the last column of
-Table~\ref{tab:utilities.allocator.requirements} specifies a default for a
-given expression. Within the standard library \tcode{allocator_traits}
-template, an optional requirement that is not supplied by an allocator is
-replaced by the specified default expression. A user specialization of
-\tcode{allocator_traits} may provide different defaults and may provide
-defaults for different requirements than the primary template. Within
-Tables~\ref{tab:desc.var.def} and~\ref{tab:utilities.allocator.requirements},
-the use of \tcode{move} and \tcode{forward} always refers to \tcode{std::move}
-and \tcode{std::forward}, respectively.
+%\pnum
+%The template struct \tcode{allocator_traits}~(\ref{allocator.traits}) supplies
+%a uniform interface to all allocator types.
+%Table~\ref{tab:desc.var.def} describes the types manipulated
+%through allocators. Table~\ref{tab:utilities.allocator.requirements}
+%describes the requirements on allocator types
+%and thus on types used to instantiate \tcode{allocator_traits}. A requirement
+%is optional if the last column of
+%Table~\ref{tab:utilities.allocator.requirements} specifies a default for a
+%given expression. Within the standard library \tcode{allocator_traits}
+%template, an optional requirement that is not supplied by an allocator is
+%replaced by the specified default expression. A user specialization of
+%\tcode{allocator_traits} may provide different defaults and may provide
+%defaults for different requirements than the primary template. Within
+%Tables~\ref{tab:desc.var.def} and~\ref{tab:utilities.allocator.requirements},
+%the use of \tcode{move} and \tcode{forward} always refers to \tcode{std::move}
+%and \tcode{std::forward}, respectively.
 
 \begin{libreqtab2}
 	{Descriptive variable definitions}
@@ -177,11 +177,13 @@ and \tcode{std::forward}, respectively.
 	Expression          &   Note \\ \capsep
 	\tcode{P\{\}}     &   Construct an object of type \tcode{P}\\ \rowsep
 	\tcode{p.get_return_object()}        &
-get_return_object is invoked by the coroutine to construct the
+\tcode{get_return_object} is invoked by the resumable function to construct the
 return object prior to reaching the first suspend-resume point.
 	\\ \rowsep
-	\tcode{p.set_result(v)}     &   
-Sets the value associated with the promise. set_result is invoked by
+	\tcode{p.set_result(v)}     &  
+Must be present if enclosing resumable function supports
+eventual value of type that \tcode{v} can be converted to. 
+Sets the value associated with the promise. \tcode{set_result} is invoked by
 a resumable function when 
 a return statement
 with an \grammarterm{expression} 
@@ -195,23 +197,29 @@ or a \grammarterm{braced-init-list}
 statement in the body result in a compile time error.
 	\\ \rowsep
 	\tcode{p.set_result()}     &   
-
-Sets the value associated with the promise. set_result is invoked by
+Must be present if enclosing resumable function supports
+eventual value of type \tcode{void}. Sets the value associated with the promise. \tcode{set_result} is invoked by
 a resumable function when 
 a return statement
 without an \grammarterm{expression} 
 nor a \grammarterm{braced-init-list}
 is encountered in a resumable function.
-
-Program is not well-formed if both p.set_result() and p.set_result(v)
-bla bla
-	
+Promise must contain at most one declaration of \tcode{set_result}.
 	\\ \rowsep
-	\tcode{p.set_exception(e)}     &   Construct an object of type \tcode{P}\\ \rowsep
-	\tcode{p.yield_value(v)}     &   Construct an object of type \tcode{P}\\ \rowsep
-	\tcode{p.initial_suspend()}     &   Construct an object of type \tcode{P}\\ \rowsep
-	\tcode{p.final_suspend(v)}     &   Construct an object of type \tcode{P}\\ \rowsep
-	 \\
+	\tcode{p.set_exception(e)} & 
+\tcode{set_exception} is invoked by a resumable function when an
+unhandled exception occurs within a \grammarterm{function-body} of the resumable
+function.
+If promise does not provide set_exception, an unhandled exception
+will propagate from a resumable functions normally.
+\\ \rowsep
+	\tcode{p.yield_value(v)}     &   
+Must be present for enclosing resumable function to support \tcode{yield} statement.
+	\\ \rowsep
+	\tcode{p.initial_suspend()}     &
+if \tcode{p.initial_suspend()} is evaluates to true, resumable function will suspend at initial suspend point prior to entering \grammarterm{function-body}.
+	   \\ \rowsep
+	\tcode{p.final_suspend()}     &   Construct an object of type \tcode{P}\\ 
 \end{concepttable}
 
 \footnotetext{It is intended that \tcode{a.allocate} be an efficient means
