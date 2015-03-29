@@ -17,36 +17,33 @@ Add subsection \ref{dcl.fct.def.resumable}
 \pnum
 A function is considered \term{resumable} if it contains
 one or more \term{suspend-resume point}{}s. 
-Suspend-resume points are created by await operator (\ref{expr.await}) in potentially-evaluated expression, yield statement (\ref{stmt.yield}) 
-or await-for statement (\ref{stmt.for.await}).
+Suspend-resume points are created by \tcode{await} operator (\ref{expr.await}) in potentially-evaluated expression,
+\tcode{yield} statement (\ref{stmt.yield}) 
+or \tcode{for await} statement (\ref{stmt.for.await}).
+
+%\pnum
+%\term{Initial call} to a resumable function occ
+%Resume call to a suspended resumable function
+%Destroy call to a suspended resumable function
+%resumable function instance
+%\pnum
+%Suspension of a resumable function 
 
 \pnum
-Initial call to a resumable function
-Resume call to a suspended resumable function
-Destroy call to a suspended resumable function
-resumable function instance
-\pnum
-Suspension of a resumable function 
-
-\pnum
-Execution of a resumable function is suspended when it reaches suspend-resume point.
-Suspended resumable function can be resumed
+Execution of a resumable function is suspended when it reaches a suspend-resume point.
+A suspended resumable function can be resumed
 to continue execution by invoking
-resumption member functions (\ref{resumable.handle.resumption}) of an object of \tcode{coroutine_handle<P>} type
+resumption member functions (\ref{resumable.handle.resumption}) of an object of \tcode{resumable_handle<P>} type
 associated with this instance of a resumable function, where type P
-is determined by specializing struct template \tcode{std::experimental::coroutine_traits} as described below. 
-
-\rSec3[dcl.fct.def.resumable.traits]{Coroutine traits}
+is determined by insantiating struct template \tcode{std::experimental::resumable_traits} as described below. 
 
 \pnum
-Coroutine traits are specialized by resumable functions to select an allocator and a coroutine promise to
-use in a particular resumable function.
 
 \pnum
 For a resumable function \tcode{f}, Let \tcode{R} be a return type and $P_1$, $P_2$, ..., $P_n$
 where $n >= 0$ be types of parameters. If \tcode{f} is a non-static member function then $P_1$ denotes the type of implicit this parameter. 
-Coroutine traits for function \tcode{f} is a specialization of
-struct template \tcode{std::experimental::coroutine_traits<R,P1,...,PN>}.
+Coroutine traits for function \tcode{f} is an insantiation of
+struct template \tcode{std::experimental::resumable_traits<R,P1,...,PN>}.
 
 \pnum
 Coroutine traits determine what 
@@ -56,7 +53,7 @@ Coroutine traits determine what
 
 \begin{codeblock}
 	R f(T1 a, T2 b) {
-		using _Traits = std::experimental::coroutine_traits<R,T1,T2>;
+		using _Traits = std::experimental::resumable_traits<R,T1,T2>;
 		using _Alloc = _Traits::get_allocator(a,b);
 		using _Promise = _Traits::promise_type;
 		struct _Context {
@@ -72,7 +69,7 @@ Coroutine traits determine what
 				try { 
 					@\textit{function-body}@ 
 				} catch(...) {
-					<handle exception as requested by the coroutine promise>
+					<handle exception as requested by the resumable promise>
 				}
 				__end:  
 				if (__promise.final_suspend()) {
@@ -94,8 +91,8 @@ Coroutine traits determine what
 
 %\begin{codeblock}
 %R f(T1 a, T2 b) {
-%  // specialize coroutine_traits to discover customization points
-%  using _Traits = std::experimental::coroutine_traits<R,T1,T2>;
+%  // specialize resumable_traits to discover customization points
+%  using _Traits = std::experimental::resumable_traits<R,T1,T2>;
 %  <allocate memory for automatic variables>
 %  <transfer parameters as needed>
 %  <prepare return value>
@@ -107,7 +104,7 @@ Coroutine traits determine what
 %void __resume_f(_Context* context) {
 %  try {
 %  } catch(...) {
-%  <handle exception as requiested by the coroutine promise>
+%  <handle exception as requiested by the resumable promise>
 %}
 %__end:  
 %if (__promise.final_suspend()) {
