@@ -140,36 +140,3 @@ the execution of the block and while the block is suspended (by a call
 of a function\added{, suspension of a resumable function} 
 or receipt of a signal). 
 \end{quote}
-
-Modify second part of paragraph 15 to read:
-
-\begin{quote}
-When calling a function (whether or not the function is inline), every
-\indextext{value computation}%
-value computation and
-\indextext{side effects}%
-side effect associated with any argument
-expression, or with the postfix expression designating the called
-function, is sequenced before execution of every expression or statement
-in the body of the called function. \enternote
-Value computations and
-side effects associated with different argument expressions are
-unsequenced. \exitnote Every evaluation in the calling function
-(including other function calls) that is not otherwise specifically
-sequenced before or after the execution of the body of the called
-function is indeterminately sequenced with respect to the execution of
-the called function.\footnote{In other words, function executions do not interleave with
-	each other.}
-Several contexts in \Cpp  cause evaluation of a function call, even
-though no corresponding function call syntax appears in the translation
-unit.
-\enterexample
-Evaluation of a \grammarterm{new-expression} invokes one or more allocation
-and constructor functions; see~\ref{expr.new}. For another example,
-invocation of a conversion function~(\ref{class.conv.fct}) can arise in
-contexts in which no function call syntax appears.
-\exitexample
-The sequencing constraints on the execution of the called function (as
-described above) are features of the function calls as evaluated,
-whatever the syntax of the expression that calls the function might be.
-\end{quote}
