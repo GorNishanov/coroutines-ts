@@ -152,58 +152,113 @@ namespace std {
 \pnum
 The struct template \tcode{resumable_handle}
 can be used to refer to suspended or executing resumable function.
-A default constructed \tcode{resumable_handle} object has no target 
-resumable instance object.
+Such function is called a \textit{target} of resumable_handle.
+A default constructed \tcode{resumable_handle} object has no target.
 
 
 \rSec3[resumable.handle.con]{\tcode{resumable_handle} construct/reset}
 \begin{itemdecl}
-      resumable_handle() noexcept;		
-      resumable_handle(std::nullptr_t) noexcept;
-      resumable_handle& operator=(nullptr_t) noexcept;
+  resumable_handle() noexcept;		
+  resumable_handle(std::nullptr_t) noexcept;
 \end{itemdecl}
+\begin{itemdescr}
+  \pnum\postconditions \tcode{!*this}.
+\end{itemdescr}
 
+\begin{itemdecl}
+  resumable_handle& operator=(nullptr_t) noexcept;
+\end{itemdecl}
 \begin{itemdescr}
 	\pnum\postconditions \tcode{!*this}.
+  
+  \pnum\returns \tcode{*this}.
 \end{itemdescr}
 
 \rSec3[resumable.handle.export]{\tcode{resumable_handle} export/import}
 \begin{itemdecl}
-	static resumable_handle from_address(void* addr) noexcept;		
-	void* to_address() const noexcept;
+  static resumable_handle from_address(void* addr) noexcept;		
+  void* to_address() const noexcept;
 \end{itemdecl}
+
+\begin{itemdescr}
+  \pnum
+  \postconditions \tcode{resumable_traits<>::from_address(this->to_address()) == *this}.
+\end{itemdescr}
 
 \rSec3[resumable.handle.capacity]{\tcode{resumable_handle} capacity}
 \begin{itemdecl}
-	explicit operator bool() const noexcept;
+  explicit operator bool() const noexcept;
 \end{itemdecl}
+
+\begin{itemdescr}
+  \pnum
+  \returns \tcode{true} if \tcode{*this} has a target, otherwise \tcode{false}.
+\end{itemdescr}
 
 \rSec3[resumable.handle.resumption]{\tcode{resumable_handle} resumption}
 \begin{itemdecl}
-	void operator()() const;
-	void resume() const;	
-	void destroy() const;
+  void operator()() const;
+  void resume() const;	
 \end{itemdecl}
+\begin{itemdescr}
+  \pnum
+  \precondition *this refers to a suspended resumable function
+  
+  \pnum
+  \effects resumes execution of a target function. If function was suspended
+  at final suspend point std::terminate is called.
+\end{itemdescr}
+
+\begin{itemdecl}
+  void destroy() const;
+\end{itemdecl}
+\begin{itemdescr}
+  \pnum
+  \precondition *this refers to a suspended resumable function
+  
+  \pnum
+  \effects objects with automatic storage duration that are in scope
+  at the suspend point are destroyed in the reverse order of the construction. If resumable function required dynamic allocation
+  for the objects with automatic storage duration, the memory
+  is freed.
+\end{itemdescr}
 
 \rSec3[resumable.handle.completion]{\tcode{resumable_handle} completion check}
 \begin{itemdecl}
-	bool done() const noexcept; 
+  bool done() const noexcept; 
 \end{itemdecl}
+\begin{itemdescr}
+  \pnum
+  \precondition *this refers to a suspended resumable function
+  
+  \pnum
+  \returns \tcode{true} if target function is suspended
+  at final suspend point, otherwise \tcode{false}.
+\end{itemdescr}
 
 \rSec3[resumable.handle.prom]{\tcode{resumable_handle} to/from promise}
 \begin{itemdecl}
-	static resumable_handle from_promise(Promise*) noexcept;		
-	Promise& promise() noexcept;		
-	Promise const& promise() const noexcept;
+  static resumable_handle from_promise(Promise* p) noexcept;	
+\end{itemdecl}
+\begin{itemdescr}
+  \pnum
+  \precondition \tcode{p} points to a promise object of a resumable function.
+  
+  \pnum
+  \returns \tcode{resumable_handle} referring to that resumable function.
+\end{itemdescr}
+\begin{itemdecl}
+  Promise& promise() noexcept;		
+  Promise const& promise() const noexcept;
 \end{itemdecl}
 
-\pnum
-The class
-\tcode{resumable_traits}
-defines the base
-class for the types of objects thrown as exceptions by
-\Cpp standard library components, and certain
-expressions, to report errors detected during program execution.
+\begin{itemdescr}
+  \pnum
+  \precondition *this refers to a resumable function
+  
+  \pnum
+  \returns a reference to a promise of the target function.
+\end{itemdescr}
 
 
 \rSec2[resumable.promise]{Coroutine promise requirements}
@@ -298,9 +353,11 @@ will propagate from a resumable functions normally.
 Must be present for enclosing resumable function to support \tcode{yield} statement.
 	\\ \rowsep
 	\tcode{p.initial_suspend()}     &
-if \tcode{p.initial_suspend()} is evaluates to true, resumable function will suspend at initial suspend point prior to entering \grammarterm{function-body}.
+if \tcode{p.initial_suspend()} is evaluates to \tcode{true}, resumable function will suspend at initial suspend point prior to entering \grammarterm{function-body}.
 	   \\ \rowsep
-	\tcode{p.final_suspend()}     &   Construct an object of type \tcode{P}\\ 
+	\tcode{p.final_suspend()}     &  
+if \tcode{p.final_suspend()} is evaluates to \tcode{true}, resumable function will suspend at final suspend point. 
+\\ 
 \end{concepttable}
 
 \footnotetext{It is intended that \tcode{a.allocate} be an efficient means
