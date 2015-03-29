@@ -77,14 +77,14 @@ that satisfies those requirements.
 \pnum
 Resumable functions need a set of related types and functions
 to complete the definition of their semantics.
-These types and functions are provided as a set of member typedefs
+These types and functions are provided as a set of member types or typedefs
 and functions in the instantiation of struct template
 \tcode{resumable_traits}. This subclause defines the semantics of these
 members.
 
 \pnum
 The \tcode{resumable_traits} may be specialized by the user 
-to customize an allocation policy and a promise type for resumable functions with particular set of signatures.
+to customize semantics of resumable functions.
 
 \rSec3[resumable.traits.requirements]{Resumable traits requirements}
 \pnum
@@ -111,7 +111,7 @@ $a_1$, $a_2$, ... $a_n$ denote parameters passed to a resumable function. If it 
   \tcode{X::get_return_object_on_allocatoin_failure()}     &
 \textit{(optional)} If present, it is assumed that an
 allocator's \tcode{allocate} function will violate the standard requirements and return \tcode{nullptr} in case of an
-allocation failure. A resumable function must check if an \tcode{allocate} returns nullptr, and if so it shall use the expression \tcode{X::get_return_object_on_allocation_failure()} to construct the return value and return back to the caller.
+allocation failure. A resumable function requires dynamic allocation, it must check if an \tcode{allocate} returns nullptr, and if so it shall use the expression \tcode{X::get_return_object_on_allocation_failure()} to construct the return value and return back to the caller.
   \\ 
 \end{concepttable}
 
@@ -181,7 +181,7 @@ namespace std {
 \pnum
 The struct template \tcode{resumable_handle}
 can be used to refer to suspended or executing resumable function.
-Such function is called a \textit{target} of resumable_handle.
+Such function is called a \textit{target} of \tcode{resumable_handle}.
 A default constructed \tcode{resumable_handle} object has no target.
 
 
@@ -290,14 +290,14 @@ A default constructed \tcode{resumable_handle} object has no target.
 \end{itemdescr}
 
 
-\rSec2[resumable.promise]{Coroutine promise requirements}
+\rSec2[resumable.promise]{Resumable promise requirements}
 
 \pnum
 A user supplies the definition of the resumable promise to implement 
 desired high-level semantics associated with a resumable functions
-discovered via specialization of \tcode{resumable_traits}.
+discovered via instantiation of \tcode{resumable_traits}.
 The following tables describe the requirements on
-coroutine promise types.
+resumable promise types.
 
 %\pnum
 %The template struct \tcode{allocator_traits}~(\ref{allocator.traits}) supplies
@@ -327,7 +327,7 @@ coroutine promise types.
 	\hline
 	\lhdr{Variable} &   \rhdr{Definition}   \\  \capsep
 	\endhead
-	\tcode{P}    &   a coroutine promise type       \\ \rowsep
+	\tcode{P}    &   a resumable promise type       \\ \rowsep
 	\tcode{p}       &   a value of type \tcode{P} \\ \rowsep
 	\tcode{e}       &   a value of \tcode{std::exception_ptr} type   \\ \rowsep
 	\tcode{h}       &   a value of \tcode{std::experimental::resumable_handle<P>} type    \\ \rowsep
@@ -346,9 +346,8 @@ coroutine promise types.
 return object prior to reaching the first suspend-resume point.
 	\\ \rowsep
 	\tcode{p.set_result(v)}     &  
-Must be present if enclosing resumable function supports
-eventual value of type that \tcode{v} can be converted to. 
-Sets the value associated with the promise. \tcode{set_result} is invoked by
+If present, an enclosing resumable function supports an
+eventual value of type that \tcode{v} can be converted to. \tcode{set_result} is invoked by
 a resumable function when 
 a return statement
 with an \grammarterm{expression} 
@@ -362,14 +361,14 @@ or a \grammarterm{braced-init-list}
 statement in the body result in a compile time error.
 	\\ \rowsep
 	\tcode{p.set_result()}     &   
-Must be present if enclosing resumable function supports
-eventual value of type \tcode{void}. Sets the value associated with the promise. \tcode{set_result} is invoked by
+If present, an enclosing resumable function supports an eventual value of type \tcode{void}. \tcode{set_result} is invoked by
 a resumable function when 
 a return statement
 without an \grammarterm{expression} 
 nor a \grammarterm{braced-init-list}
-is encountered in a resumable function.
-Promise must contain at most one declaration of \tcode{set_result}.
+is encountered in a resumable function or
+control flows to the end of the function.
+\footnotetext{A promise type must contain at most one declaration of \tcode{set_result}.}
 	\\ \rowsep
 	\tcode{p.set_exception(e)} & 
 \tcode{set_exception} is invoked by a resumable function when an
@@ -388,8 +387,3 @@ if \tcode{p.initial_suspend()} is evaluates to \tcode{true}, resumable function 
 if \tcode{p.final_suspend()} is evaluates to \tcode{true}, resumable function will suspend at final suspend point. 
 \\ 
 \end{concepttable}
-
-\footnotetext{It is intended that \tcode{a.allocate} be an efficient means
-	of allocating a single object of type \tcode{T}, even when \tcode{sizeof(T)}
-	is small. That is, there is no need for a container to maintain its own
-	free list.}

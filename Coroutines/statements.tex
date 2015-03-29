@@ -228,28 +228,28 @@ when the task completes, \tcode{_Pr.final_suspend()} would return false.
 A yield statement of the form
 
 \begin{codeblock}
-	yield V;
+  yield V;
 \end{codeblock}
 
 where \textit{V} is either \grammarterm{expression} or \grammarterm{braced-init-list} is equivalent to:
 
 \begin{codeblock}
-	_Pr.yield_value(V);
-	suspend-resume-point
+  _Pr.yield_value(V);
+  suspend-resume-point
 \end{codeblock}
 
 If \tcode{_Pr.yield_value(V)} expression is of type \tcode{void}, otherwise it is equivalent to:
 
 \begin{codeblock}
-	if (_Pr.yield_value(V)) {
-		suspend-resume-point
-	}
+  if (_Pr.yield_value(V)) {
+    suspend-resume-point
+  }
 \end{codeblock}
 
 Where \tcode{_Pr} is a promise object of the enclosing resumable function.
 
 \pnum
-An \tcode{yield} statement may only appear if \tcode{yield_value} member
+A \tcode{yield} statement may only appear if \tcode{yield_value} member
 function is defined in a promise of the enclosing resumable function.
 
 \pnum
@@ -257,18 +257,18 @@ Promise object may have more than one overload of \tcode{yield_value}.
 
 \enterexample
 \begin{codeblock}
-	recursive_generator<int> flatten(node* n)
-	{
-		if (n == nullptr)
-			return;
-			
-		yield flatten(n->left);
-		yield n->value;
-		yield flatten(n->right);
-	}
+  recursive_generator<int> flatten(node* n)
+  {
+    if (n == nullptr)
+    return;
+    
+    yield flatten(n->left);
+    yield n->value;
+    yield flatten(n->right);
+  }
 \end{codeblock}
 
 Promise for flatten function should contain overloads that can accept a value of type int and a value of type \tcode{recursive_generator<int>}.
 In the case of a former, yielding a value is unconditional, however, yielding values produced by another generator may not produce
-any values and thus suspend is not required and correspoding yield_value must return false. 
+any values and thus suspend is not required and corresponding \tcode{yield_value} must return false. 
 \exitexample
