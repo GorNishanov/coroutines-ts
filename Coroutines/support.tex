@@ -48,32 +48,32 @@ defines several types supporting resumable functions in a \Cpp program.
 \begin{codeblock}
 namespace std {
 namespace experimental {
+  // \ref{resumable.traits} resumable traits
   template <typename R, typename... ArgTypes>
-    class coroutine_traits;
+    class resumable_traits;
 	
+  // \ref{resumable.handle} resumable handle
   template <typename Promise = void>
-    class coroutine_handle;		
-
-  template <> class coroutine_handle<void>;
+    class resumable_handle;		
 	
-  bool operator == (coroutine_handle<> x, coroutine_handle<> y) noexcept;
-  bool operator < (coroutine_handle<> x, coroutine_handle<> y) noexcept;			
-  bool operator != (coroutine_handle<> x, coroutine_handle<> y) noexcept;
-  bool operator <= (coroutine_handle<> x, coroutine_handle<> y) noexcept;			
-  bool operator >= (coroutine_handle<> x, coroutine_handle<> y) noexcept;
-  bool operator > (coroutine_handle<> x, coroutine_handle<> y) noexcept;			
+  bool operator == (resumable_handle<> x, resumable_handle<> y) noexcept;
+  bool operator < (resumable_handle<> x, resumable_handle<> y) noexcept;			
+  bool operator != (resumable_handle<> x, resumable_handle<> y) noexcept;
+  bool operator <= (resumable_handle<> x, resumable_handle<> y) noexcept;			
+  bool operator >= (resumable_handle<> x, resumable_handle<> y) noexcept;
+  bool operator > (resumable_handle<> x, resumable_handle<> y) noexcept;			
 }
 }
 \end{codeblock}
 
-\rSec2[resumable.traits]{Class template \tcode{coroutine_traits}}
+\rSec2[resumable.traits]{Class template \tcode{resumable_traits}}
 
-\indexlibrary{\idxcode{coroutine_traits}}%
+\indexlibrary{\idxcode{resumable_traits}}%
 \begin{codeblock}
 namespace std {
 namespace experimental {
   template <typename R, typename... Ts>
-  class coroutine_traits {
+  class resumable_traits {
   public:
     template <typename... Us>
       static auto get_allocator(Us&&...); // optional
@@ -87,50 +87,131 @@ namespace experimental {
 \end{codeblock}
 
 \pnum
-The class
-\tcode{coroutine_traits}
+The struct template  
+\tcode{resumable_traits}
+defines ... .
+A default constructed \tcode{resumable_handle} object has no target 
+resumable instance object.
+
 provides bla-bla as specified in~\ref{dcl.fct.def.resumable}.
 class for the types of objects thrown as exceptions by
 \Cpp standard library components, and certain
 expressions, to report errors detected during program execution.
 
 \pnum
-The \tcode{coroutine_traits} may be specialized for user-defined types 
-to indicate that such types are eligible
+The \tcode{resumable_traits} may be specialized for user-defined types 
+to customize an allocation policy and a promise type for resumable functions.
 
 
-\rSec2[resumable.handle]{Class \tcode{coroutine_handle}}
+\rSec2[resumable.handle]{Struct template \tcode{resumable_handle}}
 
-\indexlibrary{\idxcode{coroutine_handle}}%
+\indexlibrary{\idxcode{resumable_handle}}%
 \begin{codeblock}
 namespace std {
-namespace experimental {
-  template <typename R, typename... Ts>
-  class coroutine_traits {
-  public:
-    template <typename... Us>
-    auto get_allocator(Us&&...);
-				
-    using promise_type = typename R::promise_type;
-  };
-}
+  namespace experimental {
+    template <>
+    struct resumable_handle<void>
+    {
+      // \ref{resumable.handle.con} construct/reset
+      resumable_handle() noexcept;		
+      resumable_handle(std::nullptr_t) noexcept;
+      resumable_handle& operator=(nullptr_t) noexcept;
+      
+      // \ref{resumable.handle.export} export/import
+      static resumable_handle from_address(void* addr) noexcept;		
+      void* to_address() const noexcept;
+      
+      // \ref{resumable.handle.capacity} capacity
+      explicit operator bool() const noexcept;
+      
+      // \ref{resumable.handle.resumption} resumption
+      void operator()() const;
+      void resume() const;	
+      void destroy() const;
+      
+      // \ref{resumable.handle.completion} completion check
+      bool done() const noexcept; 
+    };
+    
+    template <typename Promise>
+    struct resumable_handle : resumable_handle<>
+    {
+      // \ref{resumable.handle.con} construct/reset
+      using resumable_handle<>::resumable_handle;
+      resumable_handle& operator=(nullptr_t) noexcept;
+      
+      // \ref{resumable.handle.prom} construct/reset
+      static resumable_handle from_promise(Promise*) noexcept;		
+      Promise& promise() noexcept;		
+      Promise const& promise() const noexcept;
+    };
+  }
 }
 \end{codeblock}
 
 \pnum
+The struct template \tcode{resumable_handle}
+can be used to refer to suspended or executing resumable function.
+A default constructed \tcode{resumable_handle} object has no target 
+resumable instance object.
+
+
+\rSec3[resumable.handle.con]{\tcode{resumable_handle} construct/reset}
+\begin{itemdecl}
+      resumable_handle() noexcept;		
+      resumable_handle(std::nullptr_t) noexcept;
+      resumable_handle& operator=(nullptr_t) noexcept;
+\end{itemdecl}
+
+\begin{itemdescr}
+	\pnum\postconditions \tcode{!*this}.
+\end{itemdescr}
+
+\rSec3[resumable.handle.export]{\tcode{resumable_handle} export/import}
+\begin{itemdecl}
+	static resumable_handle from_address(void* addr) noexcept;		
+	void* to_address() const noexcept;
+\end{itemdecl}
+
+\rSec3[resumable.handle.capacity]{\tcode{resumable_handle} capacity}
+\begin{itemdecl}
+	explicit operator bool() const noexcept;
+\end{itemdecl}
+
+\rSec3[resumable.handle.resumption]{\tcode{resumable_handle} resumption}
+\begin{itemdecl}
+	void operator()() const;
+	void resume() const;	
+	void destroy() const;
+\end{itemdecl}
+
+\rSec3[resumable.handle.completion]{\tcode{resumable_handle} completion check}
+\begin{itemdecl}
+	bool done() const noexcept; 
+\end{itemdecl}
+
+\rSec3[resumable.handle.prom]{\tcode{resumable_handle} to/from promise}
+\begin{itemdecl}
+	static resumable_handle from_promise(Promise*) noexcept;		
+	Promise& promise() noexcept;		
+	Promise const& promise() const noexcept;
+\end{itemdecl}
+
+\pnum
 The class
-\tcode{coroutine_traits}
+\tcode{resumable_traits}
 defines the base
 class for the types of objects thrown as exceptions by
 \Cpp standard library components, and certain
 expressions, to report errors detected during program execution.
+
 
 \rSec2[resumable.promise]{Coroutine promise requirements}
 
 \pnum
 A user supplies the definition of the resumable promise to implement 
 desired high-level semantics associated with a resumable functions
-discovered via specialization of \tcode{coroutine_traits}.
+discovered via specialization of \tcode{resumable_traits}.
 The following tables describe the requirements on
 coroutine promise types.
 
@@ -165,7 +246,7 @@ coroutine promise types.
 	\tcode{P}    &   a coroutine promise type       \\ \rowsep
 	\tcode{p}       &   a value of type \tcode{P} \\ \rowsep
 	\tcode{e}       &   a value of \tcode{std::exception_ptr} type   \\ \rowsep
-	\tcode{h}       &   a value of \tcode{std::experimental::coroutine_handle<P>} type    \\ \rowsep
+	\tcode{h}       &   a value of \tcode{std::experimental::resumable_handle<P>} type    \\ \rowsep
 	\tcode{T}      &   an arbitrary type    \\ \rowsep
 	\tcode{v}      &   a value of type \tcode{T}    \\ \rowsep
 \end{libreqtab2}
