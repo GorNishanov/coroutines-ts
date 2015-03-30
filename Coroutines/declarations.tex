@@ -53,6 +53,24 @@ the return type is \tcode{std::experimental::task<T>} where type T is deduced fr
 where \tcode{T} is deduced from the \tcode{yield} statements.
 
 \end{itemize}
+\enterexample
+\begin{codeblock}
+// deduces to std::experimental::generator<char>
+auto f() { for(auto ch: "Hello") yield ch; }
+
+// deduces to std::experimental::async_stream<int>
+auto ticks() {
+  for(int tick = 0;; ++tick) {
+    yield tick;
+    await sleep_for(1ms);
+  }
+}
+
+// deduces to std::experimental::task<void>
+auto f() {  await g(); }
+
+\end{codeblock}
+\exitexample
 \end{quote}
 \ednote{Class templates \tcode{std::experimental::generator}, 
 \tcode{std::experimental::task} and 
