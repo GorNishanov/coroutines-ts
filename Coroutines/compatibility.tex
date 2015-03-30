@@ -11,21 +11,18 @@ and ISO \Cpp, by the chapters of this document.
 
 \ref{lex.key}
 \change New Keywords\\
-New keywords are added to \Cpp extensions for Concepts;
+New keywords are added to \Cpp extensions for resumable functions;
 see \ref{lex.key}.
 \rationale
 These keywords were added in order to implement the semantics of the
-new features. In particular, the \tcode{requires} keyword is added
-to introduce constraints through a \grammarterm{requires-clause} or
-a \grammarterm{requires-expression}. The \tcode{concept} keyword is
-added to enable the definition of concepts (\ref{dcl.spec.concept}),
-the normalization of constraints (\ref{temp.constr.decl}), and the 
-semantic differentiation of \grammarterm{concept-name}{s} from other
-\grammarterm{identifier}{s}.
+new features. In particular, the \tcode{yield} keyword is added
+to allow a function to yield zero or more values prior to completion. The \tcode{await} keyword is
+added to enable a suspension of a resumable function while
+awaiting on completion of asynchronous computation.
 \effect
 Change to semantics of well-defined feature.
 Any ISO \Cpp programs that used any of these keywords as identifiers
-are not valid \Cpp programs with Concepts.
+are not valid \Cpp programs with resumable functions.
 \difficulty
 Syntactic transformation.
 Converting one specific program is easy.

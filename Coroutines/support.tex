@@ -295,7 +295,7 @@ A default constructed \tcode{resumable_handle} object has no target.
 \pnum
 A user supplies the definition of the resumable promise to implement 
 desired high-level semantics associated with a resumable functions
-discovered via instantiation of \tcode{resumable_traits}.
+discovered via instantiation of struct template \tcode{resumable_traits}.
 The following tables describe the requirements on
 resumable promise types.
 
@@ -331,8 +331,7 @@ resumable promise types.
 	\tcode{p}       &   a value of type \tcode{P} \\ \rowsep
 	\tcode{e}       &   a value of \tcode{std::exception_ptr} type   \\ \rowsep
 	\tcode{h}       &   a value of \tcode{std::experimental::resumable_handle<P>} type    \\ \rowsep
-	\tcode{T}      &   an arbitrary type    \\ \rowsep
-	\tcode{v}      &   a value of type \tcode{T}    \\ \rowsep
+	\tcode{v}      &   an \grammarterm{expression} or \grammarterm{braced-init-list}   \\ \rowsep
 \end{libreqtab2}
 
 \indextext{requirements!\idxcode{ResumablePromise}}%
@@ -343,22 +342,23 @@ resumable promise types.
 	\tcode{P\{\}}     &   Construct an object of type \tcode{P}\\ \rowsep
 	\tcode{p.get_return_object()}        &
 \tcode{get_return_object} is invoked by the resumable function to construct the
-return object prior to reaching the first suspend-resume point.
+return object prior to reaching the first suspend-resume point,
+a \tcode{return} statement or flowing off the end of the function.
 	\\ \rowsep
 	\tcode{p.set_result(v)}     &  
 If present, an enclosing resumable function supports an
-eventual value of type that \tcode{v} can be converted to. \tcode{set_result} is invoked by
+eventual value of a type that \tcode{v} can be converted to. \tcode{set_result} is invoked by
 a resumable function when 
 a return statement
 with an \grammarterm{expression} 
 or a \grammarterm{braced-init-list}
 is encountered in a resumable function.
 
-If a promise type does not satisfy this requirement, presence of 
+If a promise type does not satisfy this requirement, the presence of 
 a return statement
 with an \grammarterm{expression} 
 or a \grammarterm{braced-init-list}
-statement in the body result in a compile time error.
+statement in the body results in a compile time error.
 	\\ \rowsep
 	\tcode{p.set_result()}     &   
 If present, an enclosing resumable function supports an eventual value of type \tcode{void}. \tcode{set_result} is invoked by
@@ -368,22 +368,22 @@ without an \grammarterm{expression}
 nor a \grammarterm{braced-init-list}
 is encountered in a resumable function or
 control flows to the end of the function.
-\footnotetext{A promise type must contain at most one declaration of \tcode{set_result}.}
+A promise type must contain at most one declaration of \tcode{set_result}.
 	\\ \rowsep
 	\tcode{p.set_exception(e)} & 
 \tcode{set_exception} is invoked by a resumable function when an
 unhandled exception occurs within a \grammarterm{function-body} of the resumable
 function.
-If promise does not provide set_exception, an unhandled exception
+If promise does not provide \tcode{set_exception}, an unhandled exception
 will propagate from a resumable functions normally.
 \\ \rowsep
 	\tcode{p.yield_value(v)}     &   
 Must be present for enclosing resumable function to support \tcode{yield} statement.
 	\\ \rowsep
 	\tcode{p.initial_suspend()}     &
-if \tcode{p.initial_suspend()} is evaluates to \tcode{true}, resumable function will suspend at initial suspend point prior to entering \grammarterm{function-body}.
+if \tcode{p.initial_suspend()} is evaluates to \tcode{true}, resumable function will suspend at \textit{initial suspend point} (\ref{dcl.fct.def.resumable}).
 	   \\ \rowsep
 	\tcode{p.final_suspend()}     &  
-if \tcode{p.final_suspend()} is evaluates to \tcode{true}, resumable function will suspend at final suspend point. 
+if \tcode{p.final_suspend()} is evaluates to \tcode{true}, resumable function will suspend at \textit{final suspend point} (\ref{dcl.fct.def.resumable}).
 \\ 
 \end{concepttable}

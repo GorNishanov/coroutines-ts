@@ -18,15 +18,6 @@ Modifications made directly to existing text from the International
 Standard use \added{underlining} to represent added text and
 \removed{strikethrough} to represent deleted text.
 
-%\pnum
-%WG21 paper N4191 defines ``fold expressions'', which are used to define 
-%constraint expressions resulting from the use of 
-%\grammarterm{constrained-parameter}{s} that declare template parameter
-%packs. This feature is not present in ISO/IEC 14882:2014, but it is
-%present in ISO/IEC 14882:2017. The specification of that feature is
-%included in this document.
-
-
 \rSec1[intro.refs]{Normative references}
 
 \pnum
@@ -46,27 +37,27 @@ reflects the numbering in the \Cpp Standard. References to Clauses
 and sections not appearing in this Technical Specification refer to
 the original, unmodified text in the \Cpp Standard.
 
-\rSec1[intro.defs]{Terms and definitions}
-
-Add the definitions of ``suspend-resume-point'' and ``resumable function''.
-
-\setcounter{subsection}{26}
-\begin{quote}
-\indexdefn{suspend-resume-point}%
-\definition{suspend-resume-point}{defns.suspend.resume}
-A point in a \grammarterm{function-body}
-where evaluation of a function can be suspended
-with possibility of resuming it later
-via a call to a member function of a
-\tcode{coroutine_handle} object associated with the suspended function.
-\end{quote}
-
-\begin{quote}
-	\indexdefn{resumable function}%
-	\definition{resumable function}{defns.resumable.function}
-	A function defined with \grammarterm{function-body} that
-	contains one or more suspend-resume-points.
-\end{quote}
+%\rSec1[intro.defs]{Terms and definitions}
+%
+%Add the definitions of ``suspend-resume-point'' and ``resumable function''.
+%
+%\setcounter{subsection}{26}
+%\begin{quote}
+%\indexdefn{suspend-resume-point}%
+%\definition{suspend-resume-point}{defns.suspend.resume}
+%A point in a \grammarterm{function-body}
+%where evaluation of a function can be suspended
+%with possibility of resuming it later
+%via a call to a member function of a
+%\tcode{coroutine_handle} object associated with the suspended function.
+%\end{quote}
+%
+%\begin{quote}
+%	\indexdefn{resumable function}%
+%	\definition{resumable function}{defns.resumable.function}
+%	A function defined with \grammarterm{function-body} that
+%	contains one or more suspend-resume-points.
+%\end{quote}
 
 %%
 %% Implementation compliance
@@ -108,12 +99,12 @@ column in Table~\ref{tab:info.features}.
 No header files should be required to test macros describing the presence
 of support for language features.
 
-\begin{floattable}{Feature-test macros for coroutines}{tab:info.features}
+\begin{floattable}{Feature-test macros for resumable functions}{tab:info.features}
 {ll}
 \topline
 \lhdr{Macro name suffix} & \rhdr{Value} \\
 \capsep
-\tcode{coroutines}  & \tcode{201599}      \\
+\tcode{resumable}  & \tcode{201599}      \\
 \end{floattable}
 
 %\rSec1[intro.ack]{Acknowledgments}

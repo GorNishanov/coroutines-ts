@@ -13,7 +13,7 @@ Add paragraph 16.
 \begin{quote}
 \setcounter{Paras}{15}
 \pnum
-A function can not be resumable if the \grammarterm{parameter-declaration-clause} terminates with an ellipsis.
+A function can not be resumable (\ref{dcl.fct.def.resumable}) if the \grammarterm{parameter-declaration-clause} terminates with an ellipsis.
 \end{quote}
 
 \setcounter{section}{3}
@@ -24,22 +24,60 @@ Add subsection \ref{dcl.fct.def.resumable}
 \setcounter{subsection}{3}
 \rSec2[dcl.fct.def.resumable]{Resumable Functions}
 
-\rSec3[resumable.definitions]{Definitions}
+%\rSec3[resumable.definitions]{Definitions}
 
 \pnum
-A function is considered \term{resumable} if it contains
+A function is considered \defn{resumable} if it contains
 one or more \term{suspend-resume point}{}s. 
-Suspend-resume points are created by \tcode{await} operator (\ref{expr.await}) in potentially-evaluated expression,
+
+\pnum
+\defn{Suspend-resume points} are created by \tcode{await} operator (\ref{expr.await}) in potentially-evaluated expression,
 \tcode{yield} statement (\ref{stmt.yield}) 
 or \tcode{for await} statement (\ref{stmt.for.await}).
 
-%\pnum
-%\term{Initial call} to a resumable function occ
-%Resume call to a suspended resumable function
-%Destroy call to a suspended resumable function
-%resumable function instance
-%\pnum
-%Suspension of a resumable function 
+\pnum
+Resumable functions need a set of related types and functions
+to complete the definition of their semantics.
+These types and functions are provided as a set of member types or typedefs
+and functions in the instantiation of struct template
+\tcode{resumable_traits} (\ref{resumable.traits}). 
+
+\pnum
+For a resumable function \tcode{f}, Let \tcode{R} be a return type and $P_1$, $P_2$, ..., $P_n$
+be types of parameters. If \tcode{f} is a non-static member function then $P_1$ denotes the type of the implicit this parameter. 
+Resumable traits for function \tcode{f} is an insantiation of
+struct template \tcode{std::experimental::resumable_traits<R,P1,...,PN>}.
+Let \tcode{F} be a \grammarterm{function-body}
+\footnote{
+Due to requirement of having suspend-resume points,
+\grammarterm{function-body} is either a
+\grammarterm{compound-statement} or 
+\grammarterm{function-try-block}.
+}
+of that function. Then, the resumable function 
+should behave as if its body were:
+\begin{codeblock}
+  {
+     using _Tr = std::experimental::resumable_traits<R,P1,...,PN>;
+     _Tr::promise_type _Pr;
+     if (_Pr.initial_suspend()) {
+       suspend-resume-point // initial suspend point
+     }
+     try { @\grammarterm{function-body}@ }
+     catch(...) {
+       @\textit{stop-or-propagate}@;
+     }
+     if (_Pr.final_suspend()) {
+       suspend-resume-point // final suspend point
+     }
+  }
+\end{codeblock}
+where type alias \tcode{_Tr} and local variable \tcode{_Pr} are for
+exposition only and
+\textit{stop-or-propate} is \tcode{throw} 
+if promise_type does not have \tcode{set_exception} member function, and \tcode{_Pr.set_exception(std::current_exception())} otherwise. An object denoted as \tcode{_Pr} is a \defn{promise object} of
+a resumable function and its type is a \defn{promise type}
+of the resumable function.
 
 \pnum
 Execution of a resumable function is suspended when it reaches a suspend-resume point.
@@ -47,70 +85,40 @@ A suspended resumable function can be resumed
 to continue execution by invoking
 resumption member functions (\ref{resumable.handle.resumption}) of an object of \tcode{resumable_handle<P>} type
 associated with this instance of a resumable function, where type P
-is determined by insantiating struct template \tcode{std::experimental::resumable_traits} as described below. 
+is a \term{promise type} of the function. 
 
 \pnum
+A resumable function may require to allocate
+memory to store objects with automatic storage duration
+local to the resumable function. If so, it must
+use the allocator object obtained as described in 
+Table~\ref{tab:resumable.traits.requirements} in clause \ref{resumable.traits}.
 
 \pnum
-For a resumable function \tcode{f}, Let \tcode{R} be a return type and $P_1$, $P_2$, ..., $P_n$
-where $n >= 0$ be types of parameters. If \tcode{f} is a non-static member function then $P_1$ denotes the type of implicit this parameter. 
-Coroutine traits for function \tcode{f} is an insantiation of
-struct template \tcode{std::experimental::resumable_traits<R,P1,...,PN>}.
+A \defn{resumable function state} consist of 
+storage for objects with automatic storage duration
+that are live at the current point of execution or suspension of 
+a resumable function.
+\term{Resumable function state} is destroyed when
+the control flows off the end of the function or
+\tcode{destroy} member function (\ref{resumable.handle.resumption}) of \tcode{resumable_handle} object associated with that function is invoked.
+
+\pnum 
+\defn{Suspension} of a resumable function returns control to the current
+caller of the resumable function. For the first suspend, the return value is obtained by invoking
+\tcode{get_return_object()} (\ref{resumable.promise})
+of the \term{promise object} of the resumable function.
 
 \pnum
-An invocation of a resumable function may incur an extra copy or move operation for the formal parameters if they need to be transferred from an ABI prescribed location into a memory allocated for the resumable instance. 
-
-\enternote
-A parameter copy is not required if a function never suspends or if it suspends but its parameters will
-not be accessed after the function is resumed.
-\exitnote
+An invocation of a resumable function may incur a copy or move operation for the parameters that may be accessed in the \grammarterm{function-body}
+of resumable function after a resume. These copies
+are defined in the same scope as \term{promise object}. 
+References to parameters are replaced to 
+references to their copies in the \grammarterm{function-body}
+of the resumable function.
 
 \pnum
 If a parameter copy/move is required, class object moves are performed according to the rules described in Copying and moving class objects (\cxxref{class.copy}).
-
-\pnum
-Coroutine traits determine what 
-
-
-\pnum Given function \tcode{R f(T1 a, T2 b) S} where \tcode{S} is \grammarterm{function-body} with one or more suspend-resume points, 
-
-\begin{codeblock}
-	R f(T1 a, T2 b) {
-		using _Traits = std::experimental::resumable_traits<R,T1,T2>;
-		using _Alloc = _Traits::get_allocator(a,b);
-		using _Promise = _Traits::promise_type;
-		struct _Context {
-			_Alloc __alloc;
-			_Promise __promise;
-			T1 a;
-			T2 b;
-			@\textit{unspecified-type _room_for_temps_and_locals}@;
-			
-			_Context(T1& a, T2& b) : a(move(a)), b(move(b)) {}
-			
-			void operator() {
-				try { 
-					@\textit{function-body}@ 
-				} catch(...) {
-					<handle exception as requested by the resumable promise>
-				}
-				__end:  
-				if (__promise.final_suspend()) {
-					<suspend-resume-point>
-					std::terminate();
-				}			
-			}
-		};
-		_Alloc alloc
-		if (!__pr.initial_suspend()) {
-			__resume_f(context);
-		}
-	}
-	
-	void __resume_f(_Context* context) {
-	<
-}
-\end{codeblock}
 
 %\begin{codeblock}
 %R f(T1 a, T2 b) {

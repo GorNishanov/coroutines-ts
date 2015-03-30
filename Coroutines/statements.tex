@@ -215,7 +215,7 @@ object and freeing its memory if it was dynamically allocated.
 \enternote
 If resumable function instance lifetime is controlled 
 by a RAII object, it is expected that \tcode{_Pr.final_suspend()} returns true
-and resumable function instance object will be freed when
+and resumable function state will be destroyed when
 destructor of an owner object runs.
 
 For detached tasks, where lifetime of the resumable function ends
@@ -246,7 +246,7 @@ If \tcode{_Pr.yield_value(V)} expression is of type \tcode{void}, otherwise it i
   }
 \end{codeblock}
 
-Where \tcode{_Pr} is a promise object of the enclosing resumable function.
+Where \tcode{_Pr} is a \term{promise object} (\ref{dcl.fct.def.resumable}) of the enclosing resumable function.
 
 \pnum
 A \tcode{yield} statement may only appear if \tcode{yield_value} member
