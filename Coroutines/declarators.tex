@@ -5,6 +5,18 @@
 \rSec0[dcl.decl]{Declarators}
 
 \setcounter{section}{3}
+\setcounter{subsection}{4}
+\rSec2[dcl.fct]{Functions}%
+
+Add paragraph 16.
+
+\begin{quote}
+\setcounter{Paras}{15}
+\pnum
+A function can not be resumable if the \grammarterm{parameter-declaration-clause} terminates with an ellipsis.
+\end{quote}
+
+\setcounter{section}{3}
 \rSec1[dcl.fct.def]{Function definitions}
 
 Add subsection \ref{dcl.fct.def.resumable}
@@ -44,6 +56,17 @@ For a resumable function \tcode{f}, Let \tcode{R} be a return type and $P_1$, $P
 where $n >= 0$ be types of parameters. If \tcode{f} is a non-static member function then $P_1$ denotes the type of implicit this parameter. 
 Coroutine traits for function \tcode{f} is an insantiation of
 struct template \tcode{std::experimental::resumable_traits<R,P1,...,PN>}.
+
+\pnum
+An invocation of a resumable function may incur an extra copy or move operation for the formal parameters if they need to be transferred from an ABI prescribed location into a memory allocated for the resumable instance. 
+
+\enternote
+A parameter copy is not required if a function never suspends or if it suspends but its parameters will
+not be accessed after the function is resumed.
+\exitnote
+
+\pnum
+If a parameter copy/move is required, class object moves are performed according to the rules described in Copying and moving class objects (\cxxref{class.copy}).
 
 \pnum
 Coroutine traits determine what 
