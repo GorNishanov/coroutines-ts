@@ -38,8 +38,8 @@ Add section \ref{support.resumable}
 
 \pnum
 The header
-\tcode{<experimental/resumable]>}
-defines several types supporting resumable functions in a \Cpp program.
+\tcode{<experimental/resumable>}
+defines several types providing compile and run-time support for resumable functions in a \Cpp program.
 
 \synopsis{Header \tcode{<experimental/resumable>} synopsis}
 
@@ -74,13 +74,13 @@ and defines a primary struct template
 \tcode{resumable_traits<R,Args...>}
 that satisfies those requirements.
 
-\pnum
-Resumable functions need a set of related types and functions
-to complete the definition of their semantics.
-These types and functions are provided as a set of member types or typedefs
-and functions in the instantiation of struct template
-\tcode{resumable_traits}. This subclause defines the semantics of these
-members.
+%\pnum
+%Resumable functions need a set of related types and functions
+%to complete the definition of their semantics.
+%These types and functions are provided as a set of member types or typedefs
+%and functions in the instantiation of struct template
+%\tcode{resumable_traits}. This subclause defines the semantics of these
+%members.
 
 \pnum
 The \tcode{resumable_traits} may be specialized by the user 
@@ -97,8 +97,8 @@ $a_1$, $a_2$, ... $a_n$ denote parameters passed to a resumable function. If it 
   \topline
   Expression          &   Behavior \\ \capsep
   \tcode{X::promise_type}     &
-  \tcode{X::promise_type} must be a type satisfying resumable promise requirements (\ref{resumable.promise}) that completes the definition
-  of resumable function semantics.
+  \tcode{X::promise_type} must be a type satisfying resumable promise requirements (\ref{resumable.promise}) 
+%  that completes the definition of resumable function semantics.
   \\ \rowsep
   \tcode{X::get_allocator($a_1$, $a_2$, ... $a_n$)}        &
   \textit{(optional)} Given a set of arguments passed to a resumable function,
@@ -111,7 +111,7 @@ $a_1$, $a_2$, ... $a_n$ denote parameters passed to a resumable function. If it 
   \tcode{X::get_return_object_on_allocatoin_failure()}     &
 \textit{(optional)} If present, it is assumed that an
 allocator's \tcode{allocate} function will violate the standard requirements and return \tcode{nullptr} in case of an
-allocation failure. A resumable function requires dynamic allocation, it must check if an \tcode{allocate} returns nullptr, and if so it shall use the expression \tcode{X::get_return_object_on_allocation_failure()} to construct the return value and return back to the caller.
+allocation failure. If a resumable function requires dynamic allocation, it must check if an \tcode{allocate} returns nullptr, and if so it shall use the expression \tcode{X::get_return_object_on_allocation_failure()} to construct the return value and return back to the caller.
   \\ 
 \end{concepttable}
 
@@ -180,7 +180,7 @@ namespace std {
 
 \pnum
 The struct template \tcode{resumable_handle}
-can be used to refer to suspended or executing resumable function.
+can be used to refer to a suspended or executing resumable function.
 Such function is called a \textit{target} of \tcode{resumable_handle}.
 A default constructed \tcode{resumable_handle} object has no target.
 
@@ -378,12 +378,12 @@ If promise does not provide \tcode{set_exception}, an unhandled exception
 will propagate from a resumable functions normally.
 \\ \rowsep
 	\tcode{p.yield_value(v)}     &   
-Must be present for enclosing resumable function to support \tcode{yield} statement.
+Must be present for the enclosing resumable function to support \tcode{yield} statement.
 	\\ \rowsep
 	\tcode{p.initial_suspend()}     &
-if \tcode{p.initial_suspend()} is evaluates to \tcode{true}, resumable function will suspend at \textit{initial suspend point} (\ref{dcl.fct.def.resumable}).
+if \tcode{p.initial_suspend()} evaluates to \tcode{true}, resumable function will suspend at \textit{initial suspend point} (\ref{dcl.fct.def.resumable}).
 	   \\ \rowsep
 	\tcode{p.final_suspend()}     &  
-if \tcode{p.final_suspend()} is evaluates to \tcode{true}, resumable function will suspend at \textit{final suspend point} (\ref{dcl.fct.def.resumable}).
+if \tcode{p.final_suspend()} evaluates to \tcode{true}, resumable function will suspend at \textit{final suspend point} (\ref{dcl.fct.def.resumable}).
 \\ 
 \end{concepttable}

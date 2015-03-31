@@ -54,9 +54,9 @@ where \tcode{__range}, \tcode{__begin},
 \textit{range-init}, \textit{begin-expr} and \textit{end-expr} are defined as in the range-based for statement \cxxref{stmt.ranged}.
 
 \pnum
-An \tcode{for await} statement may only appear in the resumable functions 
+A \tcode{for await} statement may only appear in the resumable functions 
 that have eventual return type, i.e. have \tcode{set_result} member
-function defined in a promise of the enclosing resumable function.
+function defined in a promise type of the enclosing resumable function.
 
 If this requirement is not satisfied, the program is not well-formed and diagnostic is required.
 \setcounter{section}{5}
@@ -86,7 +86,7 @@ Add a note:
 
 \begin{quote}
 \enternote
-In this section function refers to non-resumable function only.
+In this section a function refers to non-resumable functions only.
 The return statement in resumable functions is described in \ref{stmt.return.resumable}
 \exitnote
 \end{quote}
@@ -173,7 +173,7 @@ of the enclosing resumable function.
 
 \pnum
 A resumable function returns to its caller by the \tcode{return} statement
-or when suspended at suspend-resume point.
+or when suspended at \term{suspend-resume point}.
 
 \pnum
 A return statement
@@ -208,19 +208,18 @@ returns to its caller.
 \pnum
 Prior to returning to the caller, resumable function evaluates
 \tcode{_Pr.final_suspend()} predicate. If the predicate returns
-true, resumable function suspends at final suspend point,
-otherwise, resumable function completes destroying resumable instance
-object and freeing its memory if it was dynamically allocated.
+true, resumable function suspends at \term{final suspend point},
+otherwise, resumable function flows off the end of the function-body and destroys \term{resumable funciton state} and frees any extra memory dynamically allocated to store the state.
 
-\enternote
-If resumable function instance lifetime is controlled 
-by a RAII object, it is expected that \tcode{_Pr.final_suspend()} returns true
-and resumable function state will be destroyed when
-destructor of an owner object runs.
-
-For detached tasks, where lifetime of the resumable function ends
-when the task completes, \tcode{_Pr.final_suspend()} would return false.
-\exitnote
+%\enternote
+%If resumable function instance lifetime is controlled 
+%by a RAII object, it is expected that \tcode{_Pr.final_suspend()} returns true
+%and resumable function state will be destroyed when
+%destructor of an owner object runs.
+%
+%For detached tasks, where lifetime of the resumable function ends
+%when the task completes, \tcode{_Pr.final_suspend()} would return false.
+%\exitnote
 
 \rSec2[stmt.yield]{Yield statement}%
 
@@ -268,7 +267,6 @@ Promise object may have more than one overload of \tcode{yield_value}.
   }
 \end{codeblock}
 
-Promise for flatten function should contain overloads that can accept a value of type int and a value of type \tcode{recursive_generator<int>}.
-In the case of a former, yielding a value is unconditional, however, yielding values produced by another generator may not produce
-any values and thus suspend is not required and corresponding \tcode{yield_value} must return false. 
+Promise for flatten function should contain overloads that can accept a value of type \tcode{int} and a value of type \tcode{recursive_generator<int>}.
+In the case of a former, yielding a value is unconditional. In the case of the latter, nested generator may produce an empty sequence of values and thus suspension at the yield point shall not happen and corresponding \tcode{yield_value} must return false. 
 \exitexample

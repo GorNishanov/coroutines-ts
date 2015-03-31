@@ -35,7 +35,7 @@ The await operator is used to suspend evaluation of the enclosing resumable func
 for competition of computation represented by the operand expression.
 
 \pnum
-Presence of an await operator in a potentially-evaluated expression makes enclosing function a resumable function.
+Presence of an await operator in a potentially-evaluated expression makes the enclosing function a resumable function.
 
 \pnum
 The await operator shall not appear in a potentially-evaluated expression in a catch clause of a try block.
@@ -55,10 +55,10 @@ block becomes the result of the expression}
 
 \begin{codeblock}
 {
-  auto && __expr = cast-expression;
+  auto && __expr = @\grammarterm{cast-expression}@;
   if ( !await-ready-expr ) {
     await-suspend-expr;
-    suspend-resume-point
+    @\textit{suspend-resume-point}@
   }
   return await-resume-expr;
 }
@@ -68,9 +68,9 @@ if the type of \textit{await-suspend-expr} is \tcode{void}, otherwise it is equi
 
 \begin{codeblock}
 {
-  auto && __expr = cast-expression;
+  auto && __expr = @\grammarterm{cast-expression}@;
   if ( !await-ready-expr && await-suspend-expr ) {
-    suspend-resume-point
+    @\textit{suspend-resume-point}@
   }
   return await-resume-expr;
 }
@@ -78,8 +78,8 @@ if the type of \textit{await-suspend-expr} is \tcode{void}, otherwise it is equi
 
 where \tcode{__expr} is a variable defined for
 exposition only, and \tcode{_ExprT} is the type of the
-\grammarterm{}{cast-expression}, and \tcode{_CoroutineHandle}
-is an object of the \tcode{coroutine_handle} type specialized for an enclosing function,
+\grammarterm{}{cast-expression}, and \tcode{_ResumableHandle}
+is an object of the \tcode{resumable_handle} type specialized for an enclosing function,
 and \textit{await-ready-expr}, \textit{await-suspend-expr} and \textit{await-expr} are
 determined as follows:
 
@@ -89,11 +89,11 @@ determined as follows:
 	looked up in the scope of class \tcode{\mbox{_ExprT}}
 	as if by class member access lookup~(\cxxref{basic.lookup.classref}), and if it finds at least one declaration, 
 	\tcode{await_ready}, \tcode{await_suspend} and \tcode{await_resume} are
-	\tcode{__expr.await_ready()}, \tcode{__expr.await_suspend(_CoroutineHandle)} and \tcode{__expr.await_resume()},
+	\tcode{__expr.await_ready()}, \tcode{__expr.await_suspend(_ResumableHandle)} and \tcode{__expr.await_resume()},
 	respectively;
 	
 	\item otherwise, \textit{await_ready}, \textit{await_suspend} and \textit{await_resume} are 
-	\tcode{await_ready(__expr)}, \tcode{await_resume(__expr, _CoroutineHandle)} and \tcode{await_resume(__expr)} 
+	\tcode{await_ready(__expr)}, \tcode{await_resume(__expr, _ResumableHandle)} and \tcode{await_resume(__expr)} 
 	respectively, where 
 	\tcode{await_ready}, \tcode{await_suspend} and \tcode{await_resume} are 
 	looked up up in the associated namespaces~(\cxxref{basic.lookup.argdep}).
@@ -103,12 +103,12 @@ determined as follows:
 
 \enterexample
 \begin{codeblock}
-	int result = await async([]{return 5;})
+	int result = await async([]{return 5;});
 \end{codeblock}
 \exitexample%
 
 \pnum
-An \tcode{await} expression may appears as unevaluated operand (\cxxref{expr.typeid}, \cxxref{expr.sizeof}, \cxxref{expr.unary.noexcept}, \cxxref{dcl.type.simple}). Presence of such await expression does not make enclosing function resumable and can be used to examine the type of an await expression.
+An \tcode{await} expression may appears as an unevaluated operand (\cxxref{expr.typeid}, \cxxref{expr.sizeof}, \cxxref{expr.unary.noexcept}, \cxxref{dcl.type.simple}). A presence of such await expression does not make enclosing function resumable and can be used to examine the type of an await expression.
  
 \enterexample
 \begin{codeblock}	
@@ -126,6 +126,6 @@ int main() {
 \pnum
 An \tcode{await} expression may only appear in the resumable functions 
 that have eventual return type, i.e. have \tcode{set_result} member
-function defined in a promise of the enclosing resumable function.
+function defined in a \term{promise type} (\ref{dcl.fct.def.resumable}) of the enclosing resumable function.
 
 If this requirement is not satisfied, the program is not well-formed and diagnostic is required.
