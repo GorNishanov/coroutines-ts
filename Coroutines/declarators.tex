@@ -121,6 +121,11 @@ references to their copies .
 \pnum
 If a parameter copy/move is required, class object moves are performed according to the rules described in Copying and moving class objects (\cxxref{class.copy}).
 
+\pnum
+an exception, objects with automatic storage duration (\cxxref{basic.stc.auto}) that have been
+for \term{resumable function state} is freed
+and the search for a handler starts in the scope of the calling function. 
+
 %\begin{codeblock}
 %R f(T1 a, T2 b) {
 %  // specialize resumable_traits to discover customization points
