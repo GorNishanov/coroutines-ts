@@ -31,6 +31,7 @@ Add subsection 5.3.9.
 \rSec2[expr.await]{Await}
 
 \pnum
+The \tcode{await} operator is used to suspend evaluation of the enclosing resumable function (\ref{dcl.fct.def.resumable}) while awaiting
 for completion of the computation represented by the operand expression.
 
 \pnum
@@ -107,6 +108,7 @@ determined as follows:
 %\exitexample%
 
 \pnum
+An \tcode{await} expression may appear as an unevaluated operand (\cxxref{expr.typeid}, \cxxref{expr.sizeof}, \cxxref{expr.unary.noexcept}, \cxxref{dcl.type.simple}). The presence of such an \tcode{await} expression does not make the enclosing function resumable and can be used to examine the type of an \tcode{await} expression.
  
 \enterexample
 \begin{codeblock}	
