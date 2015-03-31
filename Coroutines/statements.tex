@@ -32,7 +32,7 @@ Add subclause 6.5.5.
 A \tcode{for await} statement of the form
 
 \begin{ncbnf}
-	\terminal{for await(} for-range-declaration : expression \terminal{)} statement
+	\terminal{for await (} for-range-declaration : expression \terminal{)} statement
 \end{ncbnf}
 
 is equivalent to
@@ -51,14 +51,13 @@ is equivalent to
 \end{codeblock}
 
 where \tcode{__range}, \tcode{__begin}, 
-\textit{range-init}, \textit{begin-expr} and \textit{end-expr} are defined as in the range-based for statement \cxxref{stmt.ranged}.
+\textit{range-init}, \textit{begin-expr}, and \textit{end-expr} are defined as in the range-based for statement \cxxref{stmt.ranged}.
 
 \pnum
-A \tcode{for await} statement may only appear in the resumable functions 
-that have eventual return type, i.e. have \tcode{set_result} member
-function defined in a promise type of the enclosing resumable function.
+A \tcode{for await} statement may only appear in a resumable function 
+with an eventual return type, i.e a resumable function shall have the \tcode{set_result} member
+function defined in its \term{promise type} (\ref{dcl.fct.def.resumable}).
 
-If this requirement is not satisfied, the program is not well-formed and diagnostic is required.
 \setcounter{section}{5}
 \rSec1[stmt.jump]{Jump statements}%
 
@@ -166,22 +165,22 @@ Add sections \ref{stmt.return.resumable} and \ref{stmt.yield}.
 %In this section function refers to resumable function only.
 %The return statement in non-resumable functions is described in \ref{stmt.return}
 %\exitnote
-\enternote
-In this section, \tcode{_Pr} refers to the \term{promise object}
-of the enclosing resumable function.
-\exitnote
 
 \pnum
 A resumable function returns to its caller by the \tcode{return} statement
-or when suspended at \term{suspend-resume point}.
+or when suspended at a \term{suspend-resume point}.
 
 \pnum
-A return statement
+  In this clause, \tcode{_Pr} refers to the \term{promise object}
+  of the enclosing resumable function.
+  
+\pnum
+A \tcode{return} statement
 with neither an \grammarterm{expression} nor a \grammarterm{braced-init-list}
 can be used only in resumable functions
-that do not produce an eventual value or have eventual return type of \tcode{void}. In the latter case, completion of the resumable function
+that do not produce an eventual value or have an eventual return type of \tcode{void}. In the latter case, completion of the resumable function
 is reported by calling \tcode{_Pr.set_result()}.
-A return statement with an expression of non-void type can be used only
+A \tcode{return} statement with an expression of non-\tcode{void} type can be used only
 in resumable functions producing an eventual value; the value of the expression is supplied to a promise of the resumable function by calling 
 \tcode{_Pr.set_result(\grammarterm{expression})} or
 \tcode{_Pr.set_result(\grammarterm{braced-init-list})}.
@@ -189,27 +188,27 @@ in resumable functions producing an eventual value; the value of the expression 
 \enterexample
 
 \begin{codeblock}
-	std::future<std::pair<std::string,int>> f(const char* p, int x) {
-		await g();
-		return {p,x};
-	}
+  std::future<std::pair<std::string,int>> f(const char* p, int x) {
+    await g();
+    return {p,x};
+  }
 \end{codeblock}
 \exitexample
 
 Flowing off the end of a function is equivalent to a \tcode{return} with
-no value; program is not well-formed if this happens in a eventual-value-returning resumable function.
+no value; the program is not well-formed if this happens in an eventual-value-returning resumable function.
 
 \pnum
-A return statement with an expression of type \tcode{void}
+A \tcode{return} statement with an expression of type \tcode{void}
 can be used only in functions without an eventual return type 
-or with an eventual return type of void; the expression is evaluated just before the function
+or with an eventual return type of \tcode{void}; the expression is evaluated just before the function
 returns to its caller.
 
 \pnum
-Prior to returning to the caller, resumable function evaluates
-\tcode{_Pr.final_suspend()} predicate. If the predicate returns
-true, resumable function suspends at \term{final suspend point} (\ref{dcl.fct.def.resumable}),
-otherwise, resumable function flows off the end of the function-body and destroys \term{resumable funciton state} and frees any extra memory dynamically allocated to store the state.
+Prior to returning to the caller, a resumable function evaluates
+\tcode{_Pr.final_suspend()} predicate. If \tcode{_Pr.final_suspend()} contextually converted to \tcode{bool} evaluates to
+\tcode{true}, the resumable function suspends at \term{final suspend point} (\ref{dcl.fct.def.resumable}),
+otherwise, resumable function flows off the end of the function-body and destroys the \term{resumable function state} and frees any extra memory dynamically allocated to store the state.
 
 %\enternote
 %If resumable function instance lifetime is controlled 
@@ -230,14 +229,14 @@ A yield statement of the form
   yield V;
 \end{codeblock}
 
-where \tcode{V} is either \grammarterm{expression} or \grammarterm{braced-init-list} is equivalent to:
+where \tcode{V} is either an \grammarterm{expression} or a \grammarterm{braced-init-list} is equivalent to:
 
 \begin{codeblock}
   _Pr.yield_value(V);
   @\textit{suspend-resume-point}
 \end{codeblock}
 
-If \tcode{_Pr.yield_value(V)} expression is of type \tcode{void}, otherwise it is equivalent to:
+If a \tcode{_Pr.yield_value(V)} expression is of type \tcode{void}, otherwise it is equivalent to:
 
 \begin{codeblock}
   if (_Pr.yield_value(V)) {
@@ -252,7 +251,7 @@ A \tcode{yield} statement may only appear if \tcode{yield_value} member
 function is defined in the promise type of the enclosing resumable function.
 
 \pnum
-Promise object may have more than one overload of \tcode{yield_value}.
+A promise object may have more than one overload of \tcode{yield_value}.
 
 \enterexample
 \begin{codeblock}
@@ -267,6 +266,6 @@ Promise object may have more than one overload of \tcode{yield_value}.
   }
 \end{codeblock}
 
-Promise for flatten function should contain overloads that can accept a value of type \tcode{int} and a value of type \tcode{recursive_generator<int>}.
-In the case of a former, yielding a value is unconditional. In the case of the latter, nested generator may produce an empty sequence of values and thus suspension at the yield point shall not happen and corresponding \tcode{yield_value} must return false. 
+The promise for \tcode{flatten} function should contain overloads that can accept a value of type \tcode{int} and a value of type \tcode{recursive_generator<int>}.
+In the former case, yielding a value is unconditional. In the latter case, the nested generator may produce an empty sequence of values and thus suspension at the yield point shall not happen and corresponding \tcode{yield_value} contextually converted to \tcode{bool} must evaluate to \tcode{false}. 
 \exitexample

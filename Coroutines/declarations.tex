@@ -33,7 +33,7 @@ add paragraphs 16 through 18.
 \begin{quote}
 \setcounter{Paras}{15}
 \pnum
-If a resumable function with a declared return type that contains a placeholder type has multiple \tcode{yield} statements, the return type is deduced for each
+If a resumable function has a declared return type that contains a placeholder type has multiple \tcode{yield} statements, the return type is deduced for each
 \tcode{yield} statement. If the type deduced is not the same in each
 deduction, the program is ill-formed.
 
@@ -42,13 +42,13 @@ If a resumable function with a declared return type that contains a placeholder 
 
 \begin{itemize}
 \item If a \tcode{yield} statement and either an \tcode{await} expression or a \tcode{for await} statement are present, then
-the return type is \tcode{std::experimental::async_stream<T>}, where T is deduced from the \tcode{yield} statements.
+the return type is \tcode{std::experimental::async_stream<T>}, where \tcode{T} is deduced from the \tcode{yield} statements.
 
 \item Otherwise, if an \tcode{await} expression or a \tcode{for await} statement are present in a function, then
-the return type is \tcode{std::experimental::task<T>} where type T is deduced from 
+the return type is \tcode{std::experimental::task<T>} where type \tcode{T} is deduced from 
 \tcode{return} statements.
 
-\item Otherwise, if a \tcode{yield} statement is present in a function, then return type is
+\item Otherwise, if a \tcode{yield} statement is present in a function, then the return type is \linebreak
 \tcode{std::experimental::generator<T>},
 where \tcode{T} is deduced from the \tcode{yield} statements.
 
