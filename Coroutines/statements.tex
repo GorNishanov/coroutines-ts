@@ -167,7 +167,7 @@ Add sections \ref{stmt.return.resumable} and \ref{stmt.yield}.
 %The return statement in non-resumable functions is described in \ref{stmt.return}
 %\exitnote
 \enternote
-In this section, \tcode{_Pr} refers to the promise object
+In this section, \tcode{_Pr} refers to the \term{promise object}
 of the enclosing resumable function.
 \exitnote
 
@@ -208,7 +208,7 @@ returns to its caller.
 \pnum
 Prior to returning to the caller, resumable function evaluates
 \tcode{_Pr.final_suspend()} predicate. If the predicate returns
-true, resumable function suspends at \term{final suspend point},
+true, resumable function suspends at \term{final suspend point} (\ref{dcl.fct.def.resumable}),
 otherwise, resumable function flows off the end of the function-body and destroys \term{resumable funciton state} and frees any extra memory dynamically allocated to store the state.
 
 %\enternote
@@ -230,18 +230,18 @@ A yield statement of the form
   yield V;
 \end{codeblock}
 
-where \textit{V} is either \grammarterm{expression} or \grammarterm{braced-init-list} is equivalent to:
+where \tcode{V} is either \grammarterm{expression} or \grammarterm{braced-init-list} is equivalent to:
 
 \begin{codeblock}
   _Pr.yield_value(V);
-  suspend-resume-point
+  @\textit{suspend-resume-point}
 \end{codeblock}
 
 If \tcode{_Pr.yield_value(V)} expression is of type \tcode{void}, otherwise it is equivalent to:
 
 \begin{codeblock}
   if (_Pr.yield_value(V)) {
-    suspend-resume-point
+    @\textit{suspend-resume-point}@
   }
 \end{codeblock}
 
@@ -249,7 +249,7 @@ Where \tcode{_Pr} is a \term{promise object} (\ref{dcl.fct.def.resumable}) of th
 
 \pnum
 A \tcode{yield} statement may only appear if \tcode{yield_value} member
-function is defined in a promise of the enclosing resumable function.
+function is defined in the promise type of the enclosing resumable function.
 
 \pnum
 Promise object may have more than one overload of \tcode{yield_value}.
@@ -259,7 +259,7 @@ Promise object may have more than one overload of \tcode{yield_value}.
   recursive_generator<int> flatten(node* n)
   {
     if (n == nullptr)
-    return;
+      return;
     
     yield flatten(n->left);
     yield n->value;

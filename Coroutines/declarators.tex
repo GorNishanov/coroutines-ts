@@ -45,7 +45,7 @@ and functions in the instantiation of struct template
 \pnum
 For a resumable function \tcode{f}, Let \tcode{R} be a return type and $P_1$, $P_2$, ..., $P_n$
 be types of parameters. If \tcode{f} is a non-static member function then $P_1$ denotes the type of the implicit \tcode{this} parameter. 
-Resumable traits for function \tcode{f} is an insantiation of
+Resumable traits for function \tcode{f} is an instantiation of
 struct template \tcode{std::experimental::resumable_traits<R,P1,...,PN>}.
 Let \tcode{F} be a \grammarterm{function-body}
 \footnote{
@@ -76,7 +76,7 @@ where type alias \tcode{_Tr} and local variable \tcode{_Pr} are
 defined for
 exposition only and
 \textit{stop-or-propate} is \tcode{throw} 
-if promise_type does not have \tcode{set_exception} member function, and \tcode{_Pr.set_exception(std::current_exception())} otherwise. An object denoted as \tcode{_Pr} is a \defn{promise object} of
+if promise_type does not have \tcode{set_exception} member function defined, and \tcode{_Pr.set_exception(std::current_exception())} otherwise. An object denoted as \tcode{_Pr} is a \defn{promise object} of
 a resumable function and its type is a \defn{promise type}
 of the resumable function.
 
@@ -109,11 +109,14 @@ the control flows off the end of the function or
 caller of the resumable function. For the first suspend, the return value is obtained by invoking member function 
 \tcode{get_return_object} (\ref{resumable.promise})
 of the \term{promise object} of the resumable function.
+For the subsequent suspends, if any, the resumable function
+is invoked via resumption members functions of
+\tcode{resumable_handle} (\ref{resumable.handle}) and no return value is expected.
 
 \pnum
 An invocation of a resumable function may incur a move operation for the parameters that may be accessed in the \grammarterm{function-body}
-of resumable function after a resume. These copies
-are defined in the same scope as \term{promise object}. 
+of resumable function after a resume. 
+%These copies are defined in the same scope as a \term{promise object}. 
 References to those parameters in the \grammarterm{function-body}
 of the resumable function are replaced with 
 references to their copies .
@@ -122,7 +125,7 @@ references to their copies .
 If a parameter copy/move is required, class object moves are performed according to the rules described in Copying and moving class objects (\cxxref{class.copy}).
 
 \pnum
-If a parameter move, \tcode{get_return_object()} or promise object construction throws
+If a parameter move, a call to \tcode{get_return_object} or a promise object construction throws
 an exception, objects with automatic storage duration (\cxxref{basic.stc.auto}) that have been
 constructed are destroyed in the reverse order of their construction, any memory dynamically allocated 
 for \term{resumable function state} is freed

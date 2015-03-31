@@ -387,3 +387,48 @@ if \tcode{p.initial_suspend()} evaluates to \tcode{true}, resumable function wil
 if \tcode{p.final_suspend()} evaluates to \tcode{true}, resumable function will suspend at \textit{final suspend point} (\ref{dcl.fct.def.resumable}).
 \\ 
 \end{concepttable}
+
+\enterexample
+This example illustrates full implementation
+of a promise type for a simple generator.
+\begin{codeblock}
+  #include <iostream>
+  #include <experimental/resumable>
+  
+  struct generator {
+    struct promise_type {
+      int current_value;
+      auto get_return_object() { return generator{this}; }
+      auto initial_suspend() { return true; }
+      auto final_suspend() { return true; }
+      void yield_value(int value) { current_value = value; }
+    };
+    
+    bool move_next() {
+      coro.resume();
+      return !coro.done();
+    }
+    
+    int current_value() { return coro.promise().current_value; }
+    
+    generator() = default;
+    ~generator() { if (coro) { coro.destroy(); } }
+  private:
+    generator(promise_type* myPromise):
+       coro(std::experimental::resumable_handle<promise_type>::from_promise(myPromise)) {
+    }
+    std::experimental::resumable_handle<promise_type> coro;
+  };
+  
+  generator f() {
+    yield 1;
+    yield 2;
+  } 
+  
+  int main() {
+    auto g = f();
+    while (g.move_next()) std::cout << g.current_value() << std::endl;
+  }
+  
+\end{codeblock}
+\exitexample
