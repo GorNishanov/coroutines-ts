@@ -169,7 +169,7 @@ namespace std {
       using resumable_handle<>::resumable_handle;
       resumable_handle& operator=(nullptr_t) noexcept;
       
-      // \ref{resumable.handle.prom} construct/reset
+      // \ref{resumable.handle.prom} export/import
       static resumable_handle from_promise(Promise*) noexcept;		
       Promise& promise() noexcept;		
       Promise const& promise() const noexcept;
