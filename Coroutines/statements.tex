@@ -220,26 +220,40 @@ otherwise, resumable function flows off the end of the function-body and destroy
 %when the task completes, \tcode{_Pr.final_suspend()} would return false.
 %\exitnote
 
-\rSec2[stmt.yield]{Yield statement}%
+\rSec2[stmt.yield]{The yield statement}%
 
 \pnum
-A yield statement of the form
+For a \tcode{yield} statement of the form
 
 \begin{codeblock}
-  yield V;
+  yield @\textit{expression}@;
 \end{codeblock}
 
-where \tcode{V} is either an \grammarterm{expression} or a \grammarterm{braced-init-list} is equivalent to:
+let \textit{yielded-value} be equivalent to the \grammarterm{expression} surrounded
+by parentheses
+
+\begin{ncbnf}
+  \terminal{(} expression \terminal{)}
+\end{ncbnf}
+
+and for a \tcode{yield} statement of the form
 
 \begin{codeblock}
-  _Pr.yield_value(V);
+  yield @\textit{braced-init-list}@;
+\end{codeblock}
+
+let \textit{yielded-value} be equivalent to the \grammarterm{braced-init-list}. In each case,
+a \tcode{yield} statement is equivalent to
+
+\begin{codeblock}
+  _Pr.yield_value(@\textit{yielded-value}@);
   @\textit{suspend-resume-point}
 \end{codeblock}
 
-If a \tcode{_Pr.yield_value(V)} expression is of type \tcode{void}, otherwise it is equivalent to:
+If a \tcode{_Pr.yield_value(\textit{yielded-value})} expression is of type \tcode{void}, otherwise it is equivalent to:
 
 \begin{codeblock}
-  if (_Pr.yield_value(V)) {
+  if (_Pr.yield_value(@\textit{yielded-value}@)) {
     @\textit{suspend-resume-point}@
   }
 \end{codeblock}
@@ -247,7 +261,7 @@ If a \tcode{_Pr.yield_value(V)} expression is of type \tcode{void}, otherwise it
 Where \tcode{_Pr} is a \term{promise object} (\ref{dcl.fct.def.resumable}) of the enclosing resumable function.
 
 \pnum
-A \tcode{yield} statement may only appear if \tcode{yield_value} member
+A \tcode{yield} statement may only appear if a \tcode{yield_value} member
 function is defined in the promise type of the enclosing resumable function.
 
 \pnum
