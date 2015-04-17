@@ -32,8 +32,9 @@ one or more \term{suspend-resume point}{}s.
 
 \pnum
 \defn{Suspend-resume points} are created by \tcode{await} operator (\ref{expr.await}) in potentially-evaluated expression,
-\tcode{yield} statement (\ref{stmt.yield}) 
-or \tcode{for await} statement (\ref{stmt.for.await}).
+\tcode{yield} statement (\ref{stmt.yield}), 
+or \tcode{for await} statement (\ref{stmt.for.await}). Every resumable function
+also has an implicit initial and final \textit{suspend-resume-point} as described later in this clause. 
 
 \pnum
 Resumable functions need a set of related types and functions
@@ -63,7 +64,7 @@ should behave as if its body were:
      if (_Pr.initial_suspend()) {
        suspend-resume-point // initial suspend point
      }
-     try { @\grammarterm{function-body}@ }
+     try { F }
      catch(...) {
        @\textit{stop-or-propagate}@;
      }
@@ -75,13 +76,14 @@ should behave as if its body were:
 where type alias \tcode{_Tr} and local variable \tcode{_Pr} are 
 defined for
 exposition only and
-\textit{stop-or-propate} is \tcode{throw} 
-if promise_type does not have \tcode{set_exception} member function defined, and \tcode{_Pr.set_exception(std::current_exception())} otherwise. An object denoted as \tcode{_Pr} is a \defn{promise object} of
+\textit{stop-or-propagate} is \tcode{throw} 
+if \tcode{promise_type} does not have \tcode{set_exception} member function defined, and \tcode{_Pr.set_exception(std::current_exception())} otherwise. An object denoted as \tcode{_Pr} is a \defn{promise object} of
 a resumable function and its type is a \defn{promise type}
 of the resumable function.
+%\pnum
+An execution of a resumable function is suspended when it reaches a suspend-resume point.
 
 \pnum
-Execution of a resumable function is suspended when it reaches a suspend-resume point.
 A suspended resumable function can be resumed
 to continue execution by invoking
 resumption member functions (\ref{resumable.handle.resumption}) of an object of \tcode{resumable_handle<P>} type
@@ -125,7 +127,7 @@ references to their copies .
 If a parameter copy/move is required, class object moves are performed according to the rules described in Copying and moving class objects (\cxxref{class.copy}).
 
 \pnum
-If a parameter move, a call to \tcode{get_return_object} or a promise object construction throws
+If a parameter move, a call to \tcode{get_return_object}, or a promise object construction throws
 an exception, objects with automatic storage duration (\cxxref{basic.stc.auto}) that have been
 constructed are destroyed in the reverse order of their construction, any memory dynamically allocated 
 for \term{resumable function state} is freed
