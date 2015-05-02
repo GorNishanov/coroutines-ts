@@ -38,7 +38,10 @@ for completion of the computation represented by the operand expression.
 The presence of an \tcode{await} operator in a potentially-evaluated expression makes the enclosing function a resumable function.
 
 \pnum
-The \tcode{await} operator shall not appear in a potentially-evaluated expression in a catch clause of a try block.
+An \tcode{await} expression shall not appear in a potentially-evaluated expression in a catch clause of a try block.
+
+\pnum
+An \tcode{await} expression shall not appear in an \grammarterm{initializer-clause} of a default parameter (\cxxref{dcl.fct.default}).
 
 %\rSec2[expr.await.evaluation]{Evaluation of await operator}
 
