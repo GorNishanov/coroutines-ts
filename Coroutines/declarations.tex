@@ -33,24 +33,25 @@ constraints:
 \end{itemize}
 \end{quote}
 
-\ednote{
-  Though in the current proposal we do not allow constexpr resumable functions,
-  we envision that generator style resumable function with yield statements
-  can be constexpr with some restrictions.
-  The following example is a part of this editorial note and should not be included in the \Cpp standard.}
+%\ednote{
+%  Though in the current proposal we do not allow constexpr resumable functions,
+%  we envision that generator style resumable function with yield statements
+%  can be constexpr with some restrictions.
+%  The following example is a part of this editorial note and should not be included in the \Cpp standard.}
+%
+%\enterexample \tcode{constexpr} \textit{pack generators} looks promising and may be explored in the future in a separate proposal. The teaser snippet:
+%  
+%\begin{codeblock} 
+%  constexpr auto int_range(int from, int to_excl) {
+%    for (int k = from; k<to_excl; ++k) {
+%      yield k;  // Produce a new value.
+%    }
+%  }
+%      
+%  int digits[] = { int_range(0, 9)... };
+%\end{codeblock} 
+%\exitexample
 
-\enterexample \tcode{constexpr} \textit{pack generators} looks promising and may be explored in the future in a separate proposal. The teaser snippet:
-  
-\begin{codeblock} 
-  constexpr auto int_range(int from, int to_excl) {
-    for (int k = from; k<to_excl; ++k) {
-      yield k;  // Produce a new value.
-    }
-  }
-      
-  int digits[] = { int_range(0, 9)... };
-\end{codeblock} 
-\exitexample
 %%
 %% Auto specifier
 %%
