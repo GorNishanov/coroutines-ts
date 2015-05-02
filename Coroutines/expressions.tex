@@ -95,8 +95,8 @@ determined as follows:
 	\tcode{__expr.await_ready()}, \tcode{__expr.await_suspend(_ResumableHandle)} and \tcode{__expr.await_resume()},
 	respectively;
 	
-	\item otherwise, \textit{await_ready}, \textit{await_suspend} and \textit{await_resume} are 
-	\tcode{await_ready(__expr)}, \tcode{await_resume(__expr, _ResumableHandle)}, and \tcode{await_resume(__expr)} 
+	\item otherwise, \textit{await-ready}, \textit{await-suspend} and \textit{await-resume} are 
+	\tcode{await_ready(__expr)}, \tcode{await_suspend(__expr, _ResumableHandle)}, and \tcode{await_resume(__expr)} 
 	respectively, where 
 	\tcode{await_ready}, \tcode{await_suspend}, and \tcode{await_resume} are 
 	looked up in the associated namespaces~(\cxxref{basic.lookup.argdep}).
