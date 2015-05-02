@@ -108,7 +108,7 @@ $a_1$, $a_2$, ... $a_n$ denote parameters passed to a resumable function. If it 
   If \tcode{get_allocator} is not present, 
   implementation shall use \tcode{std::allocator<char>}.
 \\ \rowsep
-  \tcode{X::get_return_object_on_allocatoin_failure()}     &
+  \tcode{X::get_return_object_on_allocation_failure()}     &
 \textit{(optional)} If present, it is assumed that an
 allocator's \tcode{allocate} function will violate the standard requirements and return \tcode{nullptr} in case of an
 allocation failure. If a resumable function requires dynamic allocation, it must check if an \tcode{allocate} returns nullptr, and if so it shall use the expression \tcode{X::get_return_object_on_allocation_failure()} to construct the return value and return back to the caller.
