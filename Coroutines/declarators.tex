@@ -133,6 +133,10 @@ constructed are destroyed in the reverse order of their construction, any memory
 for \term{resumable function state} is freed
 and the search for a handler starts in the scope of the calling function. 
 
+\pnum
+A resumable function shall not have an ellipsis parameter specification. 
+
+
 %\begin{codeblock}
 %R f(T1 a, T2 b) {
 %  // specialize resumable_traits to discover customization points
