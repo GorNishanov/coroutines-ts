@@ -6,14 +6,61 @@
 \rSec0[dcl.dcl]{Declarations}
 
 %%
+%% constexpr specifier
+%%
+\setcounter{section}{1}
+\setcounter{subsection}{4}
+\rSec2[dcl.constexpr]{The \tcode{constexpr} specifier}%
+
+Add the underlined text as the last item in the list in paragraph 3. Note that
+the preceding (unmodified) items in the \Cpp Standard are elided in this
+document.
+
+\begin{quote}
+  \setcounter{Paras}{2}
+\pnum
+\indextext{specifier!\idxcode{constexpr}!function}
+\indextext{constexpr function}
+The definition of a \tcode{constexpr} function shall satisfy the following
+constraints:
+
+\begin{itemize}
+  \item \ldots
+  \item \ldots
+  \item \ldots
+  \item \ldots
+  \item \added{it shall not be resumable (\ref{dcl.fct.def.resumable})};
+\end{itemize}
+\end{quote}
+
+\ednote{
+  Though in the current proposal we do not allow constexpr resumable functions.
+  We envision that generator style resumable function with yield statements
+  can be constexpr with some restrictions.
+  \br
+  The following example is a part of this editorial note and should not be included in the \Cpp standard.}
+
+\enterexample \tcode{constexpr} \textit{pack generators} looks promising and may be explored in the future in a separate proposal. The teaser snippet:
+  
+\begin{codeblock} 
+  constexpr auto int_range(int from, int to_excl) {
+    for (int k = from; k<to_excl; ++k) {
+      yield k;  // Produce a new value.
+    }
+  }
+      
+  int digits[] = { int_range(0, 9)... };
+\end{codeblock} 
+\exitexample
+%%
 %% Auto specifier
 %%
 \setcounter{section}{1}
-\setcounter{subsection}{5}
+\setcounter{subsection}{6}
 \setcounter{subsubsection}{3}
 \rSec3[dcl.spec.auto]{\tcode{auto} specifier}
 
-Add underlined text to paragraph two.
+Add the underlined text to paragraph two.
 
 \begin{quote}
 \setcounter{Paras}{1}
