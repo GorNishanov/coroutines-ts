@@ -345,9 +345,9 @@ resumable promise types.
 return object prior to reaching the first suspend-resume point,
 a \tcode{return} statement or flowing off the end of the function.
 	\\ \rowsep
-	\tcode{p.set_result(v)}     &  
+	\tcode{p.return_value(v)}     &  
 If present, an enclosing resumable function supports an
-eventual value of a type that \tcode{v} can be converted to. \tcode{set_result} is invoked by
+eventual value of a type that \tcode{v} can be converted to. \tcode{return_value} is invoked by
 a resumable function when 
 a return statement
 with an \grammarterm{expression} 
@@ -360,15 +360,15 @@ with an \grammarterm{expression}
 or a \grammarterm{braced-init-list}
 statement in the body results in a compile time error.
 	\\ \rowsep
-	\tcode{p.set_result()}     &   
-If present, an enclosing resumable function supports an eventual value of type \tcode{void}. \tcode{set_result} is invoked by
+	\tcode{p.return_void()}     &   
+If present, an enclosing resumable function supports an eventual value of type \tcode{void}. \tcode{return_void} is invoked by
 a resumable function when 
 a return statement
 without an \grammarterm{expression} 
 nor a \grammarterm{braced-init-list}
 is encountered in a resumable function or
 control flows to the end of the function.
-A promise type must contain at most one declaration of \tcode{set_result}.
+A promise type shall not define both \tcode{return_void} and \tcode{return_value} member functions.
 	\\ \rowsep
 	\tcode{p.set_exception(e)} & 
 \tcode{set_exception} is invoked by a resumable function when an

@@ -55,8 +55,8 @@ where \tcode{__range}, \tcode{__begin},
 
 \pnum
 A \tcode{for await} statement may only appear in a resumable function 
-with an eventual return type, i.e a resumable function shall have the \tcode{set_result} member
-function defined in its \term{promise type} (\ref{dcl.fct.def.resumable}).
+with an eventual return type, i.e a resumable function shall have the \tcode{return_value} or \tcode{return_void} member
+functions defined in its \term{promise type} (\ref{dcl.fct.def.resumable}).
 
 \setcounter{section}{5}
 \rSec1[stmt.jump]{Jump statements}%
@@ -180,11 +180,11 @@ A \tcode{return} statement
 with neither an \grammarterm{expression} nor a \grammarterm{braced-init-list}
 can be used only in resumable functions
 that do not produce an eventual value or have an eventual return type of \tcode{void}. In the latter case, completion of the resumable function
-is reported by calling \tcode{_Pr.set_result()}.
+is reported by calling \tcode{_Pr.return_void()}.
 A \tcode{return} statement with an expression of non-\tcode{void} type can be used only
 in resumable functions producing an eventual value; the value of the expression is supplied to a promise of the resumable function by calling 
-\tcode{_Pr.set_result(\grammarterm{expression})} or
-\tcode{_Pr.set_result(\grammarterm{braced-init-list})}.
+\tcode{_Pr.return_value(\grammarterm{expression})} or
+\tcode{_Pr.return_value(\grammarterm{braced-init-list})}.
 
 \enterexample
 

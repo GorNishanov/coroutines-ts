@@ -128,5 +128,5 @@ int main() {
 
 \pnum
 An \tcode{await} expression may only appear in a resumable function 
-with an eventual return type, i.e a resumable function shall have the \tcode{set_result} member
-function defined in its \term{promise type} (\ref{dcl.fct.def.resumable}).
+with an eventual return type, i.e a resumable function shall have the \tcode{return_value} or \tcode{return_void} member
+functions defined in its \term{promise type} (\ref{dcl.fct.def.resumable}).
