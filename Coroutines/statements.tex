@@ -197,7 +197,11 @@ in resumable functions producing an eventual value; the value of the expression 
 \exitexample
 
 Flowing off the end of a function is equivalent to a \tcode{return} with
-no value; the program is not well-formed if this happens in an eventual-value-returning resumable function.
+no value; 
+this results in an implementation-defined behavior in an eventual-value-returning resumable function.
+\enternote
+One possible implementation is to call std::terminate() in this case.
+\exitnote
 
 \pnum
 A \tcode{return} statement with an expression of type \tcode{void}
