@@ -37,6 +37,11 @@ or \tcode{for await} statement (\ref{stmt.for.await}). Every resumable function
 also has an implicit initial and final \textit{suspend-resume-point} as described later in this clause. 
 
 \pnum
+\enternote
+From the perspective of the caller, a resumable function is just a function with that particular signature. The fact that a function is implemented as resumable is unobservable by the caller. 
+\exitnote
+
+\pnum
 Resumable functions need a set of related types and functions
 to complete the definition of their semantics.
 These types and functions are provided as a set of member types or typedefs
