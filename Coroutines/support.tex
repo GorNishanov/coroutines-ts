@@ -117,9 +117,9 @@ allocation failure. If a resumable function requires dynamic allocation, it must
 
 \rSec3[resumable.traits.primary]{Struct template \tcode{resumable_traits}}
 \pnum The header \tcode{<resumable>} shall define
-primary struct template \tcode{resumable_traits} as follows.
+primary struct template \tcode{resumable_traits} as follows:
 
-\pnum The requirements for the members are given in clause \ref{resumable.traits.requirements}.
+%\pnum The requirements for the members are given in clause \ref{resumable.traits.requirements}.
 \indexlibrary{\idxcode{resumable_traits}}%
 \begin{codeblock}
 namespace std {
@@ -411,8 +411,7 @@ of a promise type for a simple generator.
     
     int current_value() { return coro.promise().current_value; }
     
-    generator() = default;
-    ~generator() { if (coro) { coro.destroy(); } }
+    ~generator() { coro.destroy(); }
   private:
     generator(promise_type* myPromise):
        coro(std::experimental::resumable_handle<promise_type>::from_promise(myPromise)) {

@@ -88,6 +88,15 @@ of the resumable function.
 %\pnum
 An execution of a resumable function is suspended when it reaches a suspend-resume point.
 
+\pnum 
+A \defn{suspension} of a resumable function returns control to the current
+caller of the resumable function. For the first suspend, the return value is obtained by invoking member function 
+\tcode{get_return_object} (\ref{resumable.promise})
+of the \term{promise object} of the resumable function.
+For the subsequent suspends, if any, the resumable function
+is invoked via resumption members functions of
+\tcode{resumable_handle} (\ref{resumable.handle}) and no return value is expected.
+
 \pnum
 A suspended resumable function can be resumed
 to continue execution by invoking
@@ -110,15 +119,6 @@ a resumable function.
 \term{Resumable function state} is destroyed when
 the control flows off the end of the function or
 \tcode{destroy} member function (\ref{resumable.handle.resumption}) of \tcode{resumable_handle} object associated with that function is invoked.
-
-\pnum 
-\defn{Suspension} of a resumable function returns control to the current
-caller of the resumable function. For the first suspend, the return value is obtained by invoking member function 
-\tcode{get_return_object} (\ref{resumable.promise})
-of the \term{promise object} of the resumable function.
-For the subsequent suspends, if any, the resumable function
-is invoked via resumption members functions of
-\tcode{resumable_handle} (\ref{resumable.handle}) and no return value is expected.
 
 \pnum
 An invocation of a resumable function may incur a move operation for the parameters that may be accessed in the \grammarterm{function-body}
