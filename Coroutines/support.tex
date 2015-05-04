@@ -167,10 +167,10 @@ namespace std {
     {
       // \ref{resumable.handle.con} construct/reset
       using resumable_handle<>::resumable_handle;
+      resumable_handle(Promise*) noexcept;		
       resumable_handle& operator=(nullptr_t) noexcept;
       
-      // \ref{resumable.handle.prom} export/import
-      static resumable_handle from_promise(Promise*) noexcept;		
+      // \ref{resumable.handle.prom} promise access
       Promise& promise() noexcept;		
       Promise const& promise() const noexcept;
     };
@@ -192,6 +192,17 @@ A default constructed \tcode{resumable_handle} object has no target.
 \end{itemdecl}
 \begin{itemdescr}
   \pnum\postconditions \tcode{!*this}.
+\end{itemdescr}
+
+\begin{itemdecl}
+  resumable_handle(Promise* p) noexcept;	
+\end{itemdecl}
+\begin{itemdescr}
+  \pnum
+  \precondition \tcode{p} points to a promise object of a resumable function.
+  
+  \pnum
+	\pnum\postconditions \tcode{!*this} and \tcode{&this->promise() == p}.
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -265,17 +276,7 @@ A default constructed \tcode{resumable_handle} object has no target.
   at final suspend point, otherwise \tcode{false}.
 \end{itemdescr}
 
-\rSec3[resumable.handle.prom]{\tcode{resumable_handle} to/from promise}
-\begin{itemdecl}
-  static resumable_handle from_promise(Promise* p) noexcept;	
-\end{itemdecl}
-\begin{itemdescr}
-  \pnum
-  \precondition \tcode{p} points to a promise object of a resumable function.
-  
-  \pnum
-  \returns \tcode{resumable_handle} referring to that resumable function.
-\end{itemdescr}
+\rSec3[resumable.handle.prom]{\tcode{resumable_handle} promise access}
 \begin{itemdecl}
   Promise& promise() noexcept;		
   Promise const& promise() const noexcept;
@@ -413,8 +414,8 @@ of a promise type for a simple generator.
     
     ~generator() { coro.destroy(); }
   private:
-    generator(promise_type* myPromise):
-       coro(std::experimental::resumable_handle<promise_type>::from_promise(myPromise)) {
+    explicit generator(promise_type* myPromise) : coro(myPromise) 
+    {
     }
     std::experimental::resumable_handle<promise_type> coro;
   };
