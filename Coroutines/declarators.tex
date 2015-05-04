@@ -31,7 +31,7 @@ A function is \defn{resumable} if it contains
 one or more \term{suspend-resume point}{}s. 
 
 \pnum
-\defn{Suspend-resume points} are created by \tcode{await} operator (\ref{expr.await}) in potentially-evaluated expression,
+\defn{Suspend-resume points} are introduced by \tcode{await} operator (\ref{expr.await}) in potentially-evaluated expression,
 \tcode{yield} statement (\ref{stmt.yield}), 
 or \tcode{for await} statement (\ref{stmt.for.await}). Every resumable function
 also has an implicit initial and final \textit{suspend-resume-point} as described later in this clause. 

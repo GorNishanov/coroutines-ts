@@ -234,6 +234,8 @@ A default constructed \tcode{resumable_handle} object has no target.
   \precondition *this refers to a suspended resumable function
   
   \pnum
+  \effects resumes the execution of a target function. If the function was suspended
+  at the final suspend point, std::terminate is called (\cxxref{except.terminate}).
 \end{itemdescr}
 
 \begin{itemdecl}
