@@ -93,7 +93,7 @@ a trait class instantiated as described in \ref{dcl.fct.def.resumable};
 $a_1$, $a_2$, ... $a_n$ denote parameters passed to a resumable function. If it is a member function, than $a_1$ denotes implicit \tcode{this} parameter.
 
 \begin{concepttable}{\tcode{resumable_traits} requirements}{tab:resumable.traits.requirements}
-  {p{1.6in}p{4.15in}}
+  {p{2.4in}p{3.35in}}
   \topline
   Expression          &   Behavior \\ \capsep
   \tcode{X::promise_type}     &
@@ -106,7 +106,20 @@ $a_1$, $a_2$, ... $a_n$ denote parameters passed to a resumable function. If it 
   to dynamically allocate memory for objects with automatic
   storage duration in a resumable function if required.
   If \tcode{get_allocator} is not present, 
-  implementation shall use \tcode{std::allocator<char>}.
+  the implementation shall use \tcode{std::allocator<char>}.
+  \\ \rowsep
+  \tcode{X::construct_promise(X::promise_type* $p$)}        &
+  \textit{(optional)} Constructs a \tcode{X::promise_type} at the given
+  address $p$ (\cxxref{expr.new}). 
+  If \tcode{construct_promise} is not present, 
+  the implementation shall in-place construct the promise_type (use 
+  \tcode{::new (p) X::promise_type()}).
+  \\ \rowsep
+  \tcode{X::destruct_promise(X::promise_type* $p$)}        &
+  \textit{(optional)} Destruct a \tcode{X::promise_type} at the given
+  address $p$.
+  If \tcode{destruct_promise} is not present, 
+  the implementation shall use \tcode{p->~X::promise_type()}.
 \\ \rowsep
   \tcode{X::get_return_object_on_allocation_failure()}     &
 \textit{(optional)} If present, it is assumed that an
