@@ -201,15 +201,15 @@ A default constructed \tcode{resumable_handle} object has no target.
   \pnum
   \precondition \tcode{p} points to a promise object of a resumable function.
   
-  \pnum
-	\pnum\postconditions \tcode{!*this} and \tcode{&this->promise() == p}.
+	\pnum
+  \postconditions \tcode{!*this} and \tcode{addressof(this->promise()) == p}.
 \end{itemdescr}
 
 \begin{itemdecl}
   resumable_handle& operator=(nullptr_t) noexcept;
 \end{itemdecl}
 \begin{itemdescr}
-	\pnum\postconditions \tcode{!*this}.
+	\pnum\postconditions \tcode{this->operator bool() == false}.
   
   \pnum\returns \tcode{*this}.
 \end{itemdescr}
