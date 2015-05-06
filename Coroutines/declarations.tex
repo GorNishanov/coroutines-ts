@@ -29,13 +29,13 @@ constraints:
   \item \ldots
   \item \ldots
   \item \ldots
-  \item \added{it shall not be resumable (\ref{dcl.fct.def.resumable})};
+  \item \added{it shall not be coroutine (\ref{dcl.fct.def.coroutine})};
 \end{itemize}
 \end{quote}
 
 %\ednote{
-%  Though in the current proposal we do not allow constexpr resumable functions,
-%  we envision that generator style resumable function with yield statements
+%  Though in the current proposal we do not allow constexpr coroutine functions,
+%  we envision that generator style coroutine function with yield statements
 %  can be constexpr with some restrictions.
 %  The following example is a part of this editorial note and should not be included in the \Cpp standard.}
 %
@@ -80,12 +80,12 @@ add paragraphs 16 through 18.
 \begin{quote}
 \setcounter{Paras}{15}
 \pnum
-If a resumable function has a declared return type that contains a placeholder type has multiple \tcode{yield} statements, the return type is deduced for each
+If a coroutine function has a declared return type that contains a placeholder type has multiple \tcode{yield} statements, the return type is deduced for each
 \tcode{yield} statement. If the type deduced is not the same in each
 deduction, the program is ill-formed.
 
 \pnum
-If a resumable function with a declared return type that contains a placeholder type, then the return type of the resumable function is deduced as follows:
+If a coroutine function with a declared return type that contains a placeholder type, then the return type of the coroutine function is deduced as follows:
 
 \begin{itemize}
 \item If a \tcode{yield} statement and either an \tcode{await} expression or a \tcode{for await} statement are present, then
@@ -129,4 +129,4 @@ named~(\ref{dcl.spec.auto}) --- the program is ill-formed.
 \ednote{Class templates \tcode{std::experimental::generator}, 
 \tcode{std::experimental::task}, and \linebreak
 \tcode{std::experimental::async_stream} are not specified in this proposal
-and will be developed as more experience with resumable functions is accumulated.}
+and will be developed as more experience with coroutine functions is accumulated.}

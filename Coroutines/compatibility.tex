@@ -1,7 +1,7 @@
 %!TEX root = std.tex
 \infannex{diff}{Compatibility}
 
-\rSec1[diff.iso]{\Cpp extensions for Resumable Functions and ISO \Cpp 2014}
+\rSec1[diff.iso]{\Cpp extensions for Coroutine Functions and ISO \Cpp 2014}
 
 \pnum
 This subclause lists the differences between \Cpp with Concepts
@@ -11,18 +11,18 @@ and ISO \Cpp, by the chapters of this document.
 
 \ref{lex.key}
 \change New Keywords\\
-New keywords are added to \Cpp extensions for resumable functions;
+New keywords are added to \Cpp extensions for coroutine functions;
 see \ref{lex.key}.
 \rationale
 These keywords were added in order to implement the semantics of the
 new features. In particular, the \tcode{yield} keyword is added
 to allow a function to yield zero or more values prior to completion. The \tcode{await} keyword is
-added to enable a suspension of a resumable function while
+added to enable a suspension of a coroutine function while
 awaiting on completion of asynchronous computation.
 \effect
 Change to semantics of well-defined feature.
 Any ISO \Cpp programs that used any of these keywords as identifiers
-are not valid \Cpp programs with resumable functions.
+are not valid \Cpp programs with coroutine functions.
 \difficulty
 Syntactic transformation.
 Converting one specific program is easy.

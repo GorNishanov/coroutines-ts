@@ -6,7 +6,7 @@
 \pnum
 This Technical Specification describes extensions to the C++ 
 Programming Language (\ref{intro.refs}) that
-enables definition of resumable functions. These extensions include 
+enables definition of coroutine functions. These extensions include 
 new syntactic forms and modifications to existing language semantics.
 
 \pnum
@@ -39,7 +39,7 @@ the original, unmodified text in the \Cpp Standard.
 
 %\rSec1[intro.defs]{Terms and definitions}
 %
-%Add the definitions of ``suspend-resume-point'' and ``resumable function''.
+%Add the definitions of ``suspend-resume-point'' and ``coroutine function''.
 %
 %\setcounter{subsection}{26}
 %\begin{quote}
@@ -53,8 +53,8 @@ the original, unmodified text in the \Cpp Standard.
 %\end{quote}
 %
 %\begin{quote}
-%	\indexdefn{resumable function}%
-%	\definition{resumable function}{defns.resumable.function}
+%	\indexdefn{coroutine function}%
+%	\definition{coroutine function}{defns.coroutine.function}
 %	A function defined with \grammarterm{function-body} that
 %	contains one or more suspend-resume-points.
 %\end{quote}
@@ -99,12 +99,12 @@ column in Table~\ref{tab:info.features}.
 No header files should be required to test macros describing the presence
 of support for language features.
 
-\begin{floattable}{Feature-test macros for resumable functions}{tab:info.features}
+\begin{floattable}{Feature-test macros for coroutine functions}{tab:info.features}
 {ll}
 \topline
 \lhdr{Macro name suffix} & \rhdr{Value} \\
 \capsep
-\tcode{resumable}  & \tcode{201599}      \\
+\tcode{coroutine}  & \tcode{201599}      \\
 \end{floattable}
 
 %\rSec1[intro.ack]{Acknowledgments}
@@ -128,6 +128,6 @@ An instance of each object with automatic storage
 duration~(\cxxref{basic.stc.auto}) is associated with each entry into its 
 block. Such an object exists and retains its last-stored value during 
 the execution of the block and while the block is suspended (by a call 
-of a function\added{, suspension of a resumable function (\ref{dcl.fct.def.resumable})}, 
+of a function\added{, suspension of a coroutine function (\ref{dcl.fct.def.coroutine})}, 
 or receipt of a signal). 
 \end{quote}

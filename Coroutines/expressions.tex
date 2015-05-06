@@ -31,11 +31,11 @@ Add subsection 5.3.9.
 \rSec2[expr.await]{Await}
 
 \pnum
-The \tcode{await} operator is used to suspend evaluation of the enclosing resumable function (\ref{dcl.fct.def.resumable}) while awaiting
+The \tcode{await} operator is used to suspend evaluation of the enclosing coroutine function (\ref{dcl.fct.def.coroutine}) while awaiting
 for completion of the computation represented by the operand expression.
 
 \pnum
-The presence of an \tcode{await} operator in a potentially-evaluated expression makes the enclosing function a resumable function.
+The presence of an \tcode{await} operator in a potentially-evaluated expression makes the enclosing function a coroutine function.
 
 \pnum
 An \tcode{await} expression shall not appear in a potentially-evaluated expression in a catch clause of a try block.
@@ -81,8 +81,8 @@ if the type of \textit{await-suspend-expr} is \tcode{void}, otherwise it is equi
 
 where \tcode{__expr} is a variable defined for
 exposition only, and \tcode{_ExprT} is the type of the
-\grammarterm{cast-expression}, and \tcode{_ResumableHandle}
-is an object of the \tcode{resumable_handle} type specialized for an enclosing function,
+\grammarterm{cast-expression}, and \tcode{_CoroutineHandle}
+is an object of the \tcode{coroutine_handle} type specialized for an enclosing function,
 and \textit{await-ready-expr}, \textit{await-suspend-expr}, and \textit{await-expr} are
 determined as follows:
 
@@ -92,11 +92,11 @@ determined as follows:
 	looked up in the scope of class \tcode{\mbox{_ExprT}}
 	as if by class member access lookup~(\cxxref{basic.lookup.classref}), and if it finds at least one declaration, 
 	\tcode{await_ready}, \tcode{await_suspend}, and \tcode{await_resume} are
-	\tcode{__expr.await_ready()}, \tcode{__expr.await_suspend(_ResumableHandle)} and \tcode{__expr.await_resume()},
+	\tcode{__expr.await_ready()}, \tcode{__expr.await_suspend(_CoroutineHandle)} and \tcode{__expr.await_resume()},
 	respectively;
 	
 	\item otherwise, \textit{await-ready}, \textit{await-suspend} and \textit{await-resume} are 
-	\tcode{await_ready(__expr)}, \tcode{await_suspend(__expr, _ResumableHandle)}, and \tcode{await_resume(__expr)} 
+	\tcode{await_ready(__expr)}, \tcode{await_suspend(__expr, _CoroutineHandle)}, and \tcode{await_resume(__expr)} 
 	respectively, where 
 	\tcode{await_ready}, \tcode{await_suspend}, and \tcode{await_resume} are 
 	looked up in the associated namespaces~(\cxxref{basic.lookup.argdep}).
@@ -111,7 +111,7 @@ determined as follows:
 %\exitexample%
 
 \pnum
-An \tcode{await} expression may appear as an unevaluated operand (\cxxref{expr.typeid}, \cxxref{expr.sizeof}, \cxxref{expr.unary.noexcept}, \cxxref{dcl.type.simple}). The presence of such an \tcode{await} expression does not make the enclosing function resumable and can be used to examine the type of an \tcode{await} expression.
+An \tcode{await} expression may appear as an unevaluated operand (\cxxref{expr.typeid}, \cxxref{expr.sizeof}, \cxxref{expr.unary.noexcept}, \cxxref{dcl.type.simple}). The presence of such an \tcode{await} expression does not make the enclosing function coroutine and can be used to examine the type of an \tcode{await} expression.
  
 \enterexample
 \begin{codeblock}	
@@ -127,6 +127,6 @@ int main() {
 \exitexample%
 
 \pnum
-An \tcode{await} expression may only appear in a resumable function 
-with an eventual return type, i.e a resumable function shall have the \tcode{return_value} or \tcode{return_void} member
-functions defined in its \term{promise type} (\ref{dcl.fct.def.resumable}).
+An \tcode{await} expression may only appear in a coroutine function 
+with an eventual return type, i.e a coroutine function shall have the \tcode{return_value} or \tcode{return_void} member
+functions defined in its \term{promise type} (\ref{dcl.fct.def.coroutine}).

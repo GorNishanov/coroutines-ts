@@ -54,9 +54,9 @@ where \tcode{__range}, \tcode{__begin},
 \textit{range-init}, \textit{begin-expr}, and \textit{end-expr} are defined as in the range-based for statement \cxxref{stmt.ranged}.
 
 \pnum
-A \tcode{for await} statement may only appear in a resumable function 
-with an eventual return type, i.e a resumable function shall have the \tcode{return_value} or \tcode{return_void} member
-functions defined in its \term{promise type} (\ref{dcl.fct.def.resumable}).
+A \tcode{for await} statement may only appear in a coroutine function 
+with an eventual return type, i.e a coroutine function shall have the \tcode{return_value} or \tcode{return_void} member
+functions defined in its \term{promise type} (\ref{dcl.fct.def.coroutine}).
 
 \setcounter{section}{5}
 \rSec1[stmt.jump]{Jump statements}%
@@ -85,8 +85,8 @@ Add a note:
 
 \begin{quote}
 \enternote
-In this section a function refers to non-resumable functions only.
-The return statement in resumable functions is described in \ref{stmt.return.resumable}
+In this section a function refers to non-coroutine functions only.
+The return statement in coroutine functions is described in \ref{stmt.return.coroutine}
 \exitnote
 \end{quote}
 
@@ -95,11 +95,11 @@ The return statement in resumable functions is described in \ref{stmt.return.res
 %\begin{quote}
 %\pnum
 %A function returns to its caller by the \tcode{return} statement.
-%\added{A resumable function also returns to its caller 
+%\added{A coroutine function also returns to its caller 
 %when suspended at suspend-resume point.}
 %
 %\pnum
-%\added{In a non-resumable function a}\removed{A} return statement
+%\added{In a non-coroutine function a}\removed{A} return statement
 %with neither an \grammarterm{expression} nor a \grammarterm{braced-init-list}
 %can be used only in functions
 %that do not return a value, that is, a function with the return type
@@ -107,13 +107,13 @@ The return statement in resumable functions is described in \ref{stmt.return.res
 %destructor~(\cxxref{class.dtor}).
 %\indextext{\idxcode{return}!constructor~and}%
 %\indextext{\idxcode{return}!constructor~and}%
-%\added{In a resumable function a  return statement
+%\added{In a coroutine function a  return statement
 %	with neither an \grammarterm{expression} nor a \grammarterm{braced-init-list}
 %	can be used only in functions
 %	with eventual return type \tcode{void}.}
 %A return statement with an expression of non-void type can be used only
-%in \added{non-resumable} functions returning a value
-%\added{or resumable functions returning an eventual value}; the value of the expression is returned
+%in \added{non-coroutine} functions returning a value
+%\added{or coroutine functions returning an eventual value}; the value of the expression is returned
 %to the caller of the function.
 %\indextext{conversion!return~type}%
 %The value of the expression is implicitly converted to the return type of the
@@ -134,12 +134,12 @@ The return statement in resumable functions is described in \ref{stmt.return.res
 %
 %Flowing off the end of a function is equivalent to a \tcode{return} with
 %no value; this results in undefined behavior in a value-returning
-%\added{non-resumable} function \added{or in an eventual-value-returning resumable function}.
+%\added{non-coroutine} function \added{or in an eventual-value-returning coroutine function}.
 %
 %\pnum
 %A return statement with an expression of type \tcode{void}
-%can be used only in \added{non-resumable} functions with a return type of
-%\cvqual{cv} \tcode{void} \added{or resumable functions with eventual return type of \tcode{void}}; 
+%can be used only in \added{non-coroutine} functions with a return type of
+%\cvqual{cv} \tcode{void} \added{or coroutine functions with eventual return type of \tcode{void}}; 
 %the expression is evaluated just before the function
 %returns to its caller.
 %\end{quote}
@@ -154,35 +154,35 @@ The return statement in resumable functions is described in \ref{stmt.return.res
 %\begin{quote}
 %\setcounter{Paras}{3}
 %\pnum 
-%In a resumable function return statement is replaced with
+%In a coroutine function return statement is replaced with
 %a call to __pr.set_result, where _p
 %\end{quote}
 
-Add sections \ref{stmt.return.resumable} and \ref{stmt.yield}.
+Add sections \ref{stmt.return.coroutine} and \ref{stmt.yield}.
 
-\rSec2[stmt.return.resumable]{The \tcode{return} statement in resumable functions}%
+\rSec2[stmt.return.coroutine]{The \tcode{return} statement in coroutine functions}%
 %\enternote
-%In this section function refers to resumable function only.
-%The return statement in non-resumable functions is described in \ref{stmt.return}
+%In this section function refers to coroutine function only.
+%The return statement in non-coroutine functions is described in \ref{stmt.return}
 %\exitnote
 
 \pnum
-A resumable function returns to its caller by the \tcode{return} statement
-or when suspended at a \term{suspend-resume point} (\ref{dcl.fct.def.resumable}).
+A coroutine function returns to its caller by the \tcode{return} statement
+or when suspended at a \term{suspend-resume point} (\ref{dcl.fct.def.coroutine}).
 
 \pnum
   In this clause, \tcode{_Pr} refers to the \term{promise object}  
-  (\ref{dcl.fct.def.resumable})
-  of the enclosing resumable function.
+  (\ref{dcl.fct.def.coroutine})
+  of the enclosing coroutine function.
   
 \pnum
 A \tcode{return} statement
 with neither an \grammarterm{expression} nor a \grammarterm{braced-init-list}
-can be used only in resumable functions
-that do not produce an eventual value or have an eventual return type of \tcode{void}. In the latter case, completion of the resumable function
+can be used only in coroutine functions
+that do not produce an eventual value or have an eventual return type of \tcode{void}. In the latter case, completion of the coroutine function
 is reported by calling \tcode{_Pr.return_void()}.
 A \tcode{return} statement with an expression of non-\tcode{void} type can be used only
-in resumable functions producing an eventual value; the value of the expression is supplied to a promise of the resumable function by calling 
+in coroutine functions producing an eventual value; the value of the expression is supplied to a promise of the coroutine function by calling 
 \tcode{_Pr.return_value(\grammarterm{expression})} or
 \tcode{_Pr.return_value(\grammarterm{braced-init-list})}.
 
@@ -198,7 +198,7 @@ in resumable functions producing an eventual value; the value of the expression 
 
 Flowing off the end of a function is equivalent to a \tcode{return} with
 no value; 
-this results in an implementation-defined behavior in an eventual-value-returning resumable function.
+this results in an implementation-defined behavior in an eventual-value-returning coroutine function.
 \enternote
 One possible implementation is to call std::terminate() in this case.
 \exitnote
@@ -210,18 +210,18 @@ or with an eventual return type of \tcode{void}; the expression is evaluated jus
 returns to its caller.
 
 \pnum
-Prior to returning to the caller, a resumable function evaluates
+Prior to returning to the caller, a coroutine function evaluates
 \tcode{_Pr.final_suspend()} predicate. If \tcode{_Pr.final_suspend()} contextually converted to \tcode{bool} evaluates to
-\tcode{true}, the resumable function suspends at \term{final suspend point} (\ref{dcl.fct.def.resumable}),
-otherwise, resumable function flows off the end of the function-body and destroys the \term{resumable function state} and frees any extra memory dynamically allocated to store the state.
+\tcode{true}, the coroutine function suspends at \term{final suspend point} (\ref{dcl.fct.def.coroutine}),
+otherwise, coroutine function flows off the end of the function-body and destroys the \term{coroutine function state} and frees any extra memory dynamically allocated to store the state.
 
 %\enternote
-%If resumable function instance lifetime is controlled 
+%If coroutine function instance lifetime is controlled 
 %by a RAII object, it is expected that \tcode{_Pr.final_suspend()} returns true
-%and resumable function state will be destroyed when
+%and coroutine function state will be destroyed when
 %destructor of an owner object runs.
 %
-%For detached tasks, where lifetime of the resumable function ends
+%For detached tasks, where lifetime of the coroutine function ends
 %when the task completes, \tcode{_Pr.final_suspend()} would return false.
 %\exitnote
 
@@ -263,11 +263,11 @@ If a \tcode{_Pr.yield_value(\textit{yielded-value})} expression is of type \tcod
   }
 \end{codeblock}
 
-Where \tcode{_Pr} is a \term{promise object} (\ref{dcl.fct.def.resumable}) of the enclosing resumable function.
+Where \tcode{_Pr} is a \term{promise object} (\ref{dcl.fct.def.coroutine}) of the enclosing coroutine function.
 
 \pnum
 A \tcode{yield} statement may only appear if a \tcode{yield_value} member
-function is defined in the promise type of the enclosing resumable function.
+function is defined in the promise type of the enclosing coroutine function.
 
 \pnum
 A promise object may have more than one overload of \tcode{yield_value}.

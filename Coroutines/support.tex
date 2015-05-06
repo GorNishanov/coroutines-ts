@@ -4,7 +4,7 @@
 
 \rSec1[support.general]{General}
 
-Add a row to Table~\ref{tab:lang.sup.lib.summary} for \tcode{<experimental/resumable>}
+Add a row to Table~\ref{tab:lang.sup.lib.summary} for \tcode{<experimental/coroutine>}
 
 
 \begin{libsumtab}{Language support library summary}{tab:lang.sup.lib.summary}
@@ -18,9 +18,9 @@ Add a row to Table~\ref{tab:lang.sup.lib.summary} for \tcode{<experimental/resum
 	\cxxref{support.rtti}        & Type identification       &   \tcode{<typeinfo>}  \\ \rowsep
 	\cxxref{support.exception}   & Exception handling        &   \tcode{<exception>} \\ \rowsep
 	\cxxref{support.initlist}    & Initializer lists & \tcode{<initializer_list>}    \\ \rowsep
-	\added{\ref{support.resumable}} 
-  & \added{Resumable functions support} 
-  & \added{\tcode{<experimental/resumable>}}    \\ \rowsep
+	\added{\ref{support.coroutine}} 
+  & \added{Coroutine functions support} 
+  & \added{\tcode{<experimental/coroutine>}}    \\ \rowsep
 	&                           &   \tcode{<csignal>}   \\
 	&                           &   \tcode{<csetjmp>}   \\
 	&                           &   \tcode{<cstdalign>} \\
@@ -31,146 +31,146 @@ Add a row to Table~\ref{tab:lang.sup.lib.summary} for \tcode{<experimental/resum
 \end{libsumtab}
 
 
-Add section \ref{support.resumable}
+Add section \ref{support.coroutine}
 
 \setcounter{section}{10}
-\rSec1[support.resumable]{Resumable functions support library}
+\rSec1[support.coroutine]{Coroutine functions support library}
 
 \pnum
 The header
-\tcode{<experimental/resumable>}
-defines several types providing compile and run-time support for resumable functions in a \Cpp program.
+\tcode{<experimental/coroutine>}
+defines several types providing compile and run-time support for coroutine functions in a \Cpp program.
 
-\synopsis{Header \tcode{<experimental/resumable>} synopsis}
+\synopsis{Header \tcode{<experimental/coroutine>} synopsis}
 
-\indextext{\idxhdr{experimental/resumable}}%
-\indexlibrary{\idxhdr{experimental/resumable}}%
+\indextext{\idxhdr{experimental/coroutine}}%
+\indexlibrary{\idxhdr{experimental/coroutine}}%
 \begin{codeblock}
 namespace std {
 namespace experimental {
-  // \ref{resumable.traits} resumable traits
+  // \ref{coroutine.traits} coroutine traits
   template <typename R, typename... ArgTypes>
-    class resumable_traits;
+    class coroutine_traits;
 	
-  // \ref{resumable.handle} resumable handle
+  // \ref{coroutine.handle} coroutine handle
   template <typename Promise = void>
-    class resumable_handle;		
+    class coroutine_handle;		
 	
-  bool operator == (resumable_handle<> x, resumable_handle<> y) noexcept;
-  bool operator < (resumable_handle<> x, resumable_handle<> y) noexcept;			
-  bool operator != (resumable_handle<> x, resumable_handle<> y) noexcept;
-  bool operator <= (resumable_handle<> x, resumable_handle<> y) noexcept;			
-  bool operator >= (resumable_handle<> x, resumable_handle<> y) noexcept;
-  bool operator > (resumable_handle<> x, resumable_handle<> y) noexcept;			
+  bool operator == (coroutine_handle<> x, coroutine_handle<> y) noexcept;
+  bool operator < (coroutine_handle<> x, coroutine_handle<> y) noexcept;			
+  bool operator != (coroutine_handle<> x, coroutine_handle<> y) noexcept;
+  bool operator <= (coroutine_handle<> x, coroutine_handle<> y) noexcept;			
+  bool operator >= (coroutine_handle<> x, coroutine_handle<> y) noexcept;
+  bool operator > (coroutine_handle<> x, coroutine_handle<> y) noexcept;			
 }
 }
 \end{codeblock}
 
-\rSec2[resumable.traits]{resumable traits}
+\rSec2[coroutine.traits]{coroutine traits}
 \pnum
 This subclause defines requirements on classes representing
-\term{resumable traits},
+\term{coroutine traits},
 and defines a primary struct template
-\tcode{resumable_traits<R,Args...>}
+\tcode{coroutine_traits<R,Args...>}
 that satisfies those requirements.
 
 %\pnum
-%Resumable functions need a set of related types and functions
+%Coroutine functions need a set of related types and functions
 %to complete the definition of their semantics.
 %These types and functions are provided as a set of member types or typedefs
 %and functions in the instantiation of struct template
-%\tcode{resumable_traits}. This subclause defines the semantics of these
+%\tcode{coroutine_traits}. This subclause defines the semantics of these
 %members.
 
 \pnum
-The \tcode{resumable_traits} may be specialized by the user 
-to customize semantics of resumable functions.
+The \tcode{coroutine_traits} may be specialized by the user 
+to customize semantics of coroutine functions.
 
-\rSec3[resumable.traits.requirements]{Resumable traits requirements}
+\rSec3[coroutine.traits.requirements]{Coroutine traits requirements}
 \pnum
-In Table~\ref{tab:resumable.traits.requirements}, X denotes 
-a trait class instantiated as described in \ref{dcl.fct.def.resumable};
-$a_1$, $a_2$, ... $a_n$ denote parameters passed to a resumable function. If it is a member function, than $a_1$ denotes implicit \tcode{this} parameter.
+In Table~\ref{tab:coroutine.traits.requirements}, X denotes 
+a trait class instantiated as described in \ref{dcl.fct.def.coroutine};
+$a_1$, $a_2$, ... $a_n$ denote parameters passed to a coroutine function. If it is a member function, than $a_1$ denotes implicit \tcode{this} parameter.
 
-\begin{concepttable}{\tcode{resumable_traits} requirements}{tab:resumable.traits.requirements}
+\begin{concepttable}{\tcode{coroutine_traits} requirements}{tab:coroutine.traits.requirements}
   {p{1.6in}p{4.15in}}
   \topline
   Expression          &   Behavior \\ \capsep
   \tcode{X::promise_type}     &
-  \tcode{X::promise_type} must be a type satisfying resumable promise requirements (\ref{resumable.promise}) 
-%  that completes the definition of resumable function semantics.
+  \tcode{X::promise_type} must be a type satisfying coroutine promise requirements (\ref{coroutine.promise}) 
+%  that completes the definition of coroutine function semantics.
   \\ \rowsep
   \tcode{X::get_allocator($a_1$, $a_2$, ... $a_n$)}        &
-  \textit{(optional)} Given a set of arguments passed to a resumable function,
+  \textit{(optional)} Given a set of arguments passed to a coroutine function,
   returns an allocator (\cxxref{allocator.requirements}) that implementation can use
   to dynamically allocate memory for objects with automatic
-  storage duration in a resumable function if required.
+  storage duration in a coroutine function if required.
   If \tcode{get_allocator} is not present, 
   implementation shall use \tcode{std::allocator<char>}.
 \\ \rowsep
   \tcode{X::get_return_object_on_allocation_failure()}     &
 \textit{(optional)} If present, it is assumed that an
 allocator's \tcode{allocate} function will violate the standard requirements and return \tcode{nullptr} in case of an
-allocation failure. If a resumable function requires dynamic allocation, it must check if an \tcode{allocate} returns nullptr, and if so it shall use the expression \tcode{X::get_return_object_on_allocation_failure()} to construct the return value and return back to the caller.
+allocation failure. If a coroutine function requires dynamic allocation, it must check if an \tcode{allocate} returns nullptr, and if so it shall use the expression \tcode{X::get_return_object_on_allocation_failure()} to construct the return value and return back to the caller.
   \\ 
 \end{concepttable}
 
-\rSec3[resumable.traits.primary]{Struct template \tcode{resumable_traits}}
-\pnum The header \tcode{<resumable>} shall define
-primary struct template \tcode{resumable_traits} as follows:
+\rSec3[coroutine.traits.primary]{Struct template \tcode{coroutine_traits}}
+\pnum The header \tcode{<coroutine>} shall define
+primary struct template \tcode{coroutine_traits} as follows:
 
-%\pnum The requirements for the members are given in clause \ref{resumable.traits.requirements}.
-\indexlibrary{\idxcode{resumable_traits}}%
+%\pnum The requirements for the members are given in clause \ref{coroutine.traits.requirements}.
+\indexlibrary{\idxcode{coroutine_traits}}%
 \begin{codeblock}
 namespace std {
 namespace experimental {
   template <typename R, typename... Args>
-  struct resumable_traits {
+  struct coroutine_traits {
     using promise_type = typename R::promise_type;
   };
 } // namespace experimental
 } // namespace std
 \end{codeblock}
 
-\rSec2[resumable.handle]{Struct template \tcode{resumable_handle}}
+\rSec2[coroutine.handle]{Struct template \tcode{coroutine_handle}}
 
-\indexlibrary{\idxcode{resumable_handle}}%
+\indexlibrary{\idxcode{coroutine_handle}}%
 \begin{codeblock}
 namespace std {
   namespace experimental {
     template <>
-    struct resumable_handle<void>
+    struct coroutine_handle<void>
     {
-      // \ref{resumable.handle.con} construct/reset
-      resumable_handle() noexcept;		
-      resumable_handle(std::nullptr_t) noexcept;
-      resumable_handle& operator=(nullptr_t) noexcept;
+      // \ref{coroutine.handle.con} construct/reset
+      coroutine_handle() noexcept;		
+      coroutine_handle(std::nullptr_t) noexcept;
+      coroutine_handle& operator=(nullptr_t) noexcept;
       
-      // \ref{resumable.handle.export} export/import
-      static resumable_handle from_address(void* addr) noexcept;		
+      // \ref{coroutine.handle.export} export/import
+      static coroutine_handle from_address(void* addr) noexcept;		
       void* to_address() const noexcept;
       
-      // \ref{resumable.handle.capacity} capacity
+      // \ref{coroutine.handle.capacity} capacity
       explicit operator bool() const noexcept;
       
-      // \ref{resumable.handle.resumption} resumption
+      // \ref{coroutine.handle.resumption} resumption
       void operator()() const;
       void resume() const;	
       void destroy() const;
       
-      // \ref{resumable.handle.completion} completion check
+      // \ref{coroutine.handle.completion} completion check
       bool done() const noexcept; 
     };
     
     template <typename Promise>
-    struct resumable_handle : resumable_handle<>
+    struct coroutine_handle : coroutine_handle<>
     {
-      // \ref{resumable.handle.con} construct/reset
-      using resumable_handle<>::resumable_handle;
-      resumable_handle(Promise*) noexcept;		
-      resumable_handle& operator=(nullptr_t) noexcept;
+      // \ref{coroutine.handle.con} construct/reset
+      using coroutine_handle<>::coroutine_handle;
+      coroutine_handle(Promise*) noexcept;		
+      coroutine_handle& operator=(nullptr_t) noexcept;
       
-      // \ref{resumable.handle.prom} promise access
+      // \ref{coroutine.handle.prom} promise access
       Promise& promise() noexcept;		
       Promise const& promise() const noexcept;
     };
@@ -179,34 +179,34 @@ namespace std {
 \end{codeblock}
 
 \pnum
-The struct template \tcode{resumable_handle}
-can be used to refer to a suspended or executing resumable function.
-Such function is called a \textit{target} of \tcode{resumable_handle}.
-A default constructed \tcode{resumable_handle} object has no target.
+The struct template \tcode{coroutine_handle}
+can be used to refer to a suspended or executing coroutine function.
+Such function is called a \textit{target} of \tcode{coroutine_handle}.
+A default constructed \tcode{coroutine_handle} object has no target.
 
 
-\rSec3[resumable.handle.con]{\tcode{resumable_handle} construct/reset}
+\rSec3[coroutine.handle.con]{\tcode{coroutine_handle} construct/reset}
 \begin{itemdecl}
-  resumable_handle() noexcept;		
-  resumable_handle(std::nullptr_t) noexcept;
+  coroutine_handle() noexcept;		
+  coroutine_handle(std::nullptr_t) noexcept;
 \end{itemdecl}
 \begin{itemdescr}
   \pnum\postconditions \tcode{!*this}.
 \end{itemdescr}
 
 \begin{itemdecl}
-  resumable_handle(Promise* p) noexcept;	
+  coroutine_handle(Promise* p) noexcept;	
 \end{itemdecl}
 \begin{itemdescr}
   \pnum
-  \precondition \tcode{p} points to a promise object of a resumable function.
+  \precondition \tcode{p} points to a promise object of a coroutine function.
   
 	\pnum
   \postconditions \tcode{!*this} and \tcode{addressof(this->promise()) == p}.
 \end{itemdescr}
 
 \begin{itemdecl}
-  resumable_handle& operator=(nullptr_t) noexcept;
+  coroutine_handle& operator=(nullptr_t) noexcept;
 \end{itemdecl}
 \begin{itemdescr}
 	\pnum\postconditions \tcode{this->operator bool() == false}.
@@ -214,18 +214,18 @@ A default constructed \tcode{resumable_handle} object has no target.
   \pnum\returns \tcode{*this}.
 \end{itemdescr}
 
-\rSec3[resumable.handle.export]{\tcode{resumable_handle} export/import}
+\rSec3[coroutine.handle.export]{\tcode{coroutine_handle} export/import}
 \begin{itemdecl}
-  static resumable_handle from_address(void* addr) noexcept;		
+  static coroutine_handle from_address(void* addr) noexcept;		
   void* to_address() const noexcept;
 \end{itemdecl}
 
 \begin{itemdescr}
   \pnum
-  \postconditions \tcode{resumable_traits<>::from_address(this->to_address()) == *this}.
+  \postconditions \tcode{coroutine_traits<>::from_address(this->to_address()) == *this}.
 \end{itemdescr}
 
-\rSec3[resumable.handle.capacity]{\tcode{resumable_handle} capacity}
+\rSec3[coroutine.handle.capacity]{\tcode{coroutine_handle} capacity}
 \begin{itemdecl}
   explicit operator bool() const noexcept;
 \end{itemdecl}
@@ -235,14 +235,14 @@ A default constructed \tcode{resumable_handle} object has no target.
   \returns \tcode{true} if \tcode{*this} has a target, otherwise \tcode{false}.
 \end{itemdescr}
 
-\rSec3[resumable.handle.resumption]{\tcode{resumable_handle} resumption}
+\rSec3[coroutine.handle.resumption]{\tcode{coroutine_handle} resumption}
 \begin{itemdecl}
   void operator()() const;
   void resume() const;	
 \end{itemdecl}
 \begin{itemdescr}
   \pnum
-  \precondition *this refers to a suspended resumable function
+  \precondition *this refers to a suspended coroutine function
   
   \pnum
   \effects resumes the execution of a target function. If the function was suspended
@@ -254,29 +254,29 @@ A default constructed \tcode{resumable_handle} object has no target.
 \end{itemdecl}
 \begin{itemdescr}
   \pnum
-  \precondition *this refers to a suspended resumable function
+  \precondition *this refers to a suspended coroutine function
   
   \pnum
   \effects objects with automatic storage duration that are in scope
-  at the suspend point are destroyed in the reverse order of the construction. If resumable function required dynamic allocation
+  at the suspend point are destroyed in the reverse order of the construction. If coroutine function required dynamic allocation
   for the objects with automatic storage duration, the memory
   is freed.
 \end{itemdescr}
 
-\rSec3[resumable.handle.completion]{\tcode{resumable_handle} completion check}
+\rSec3[coroutine.handle.completion]{\tcode{coroutine_handle} completion check}
 \begin{itemdecl}
   bool done() const noexcept; 
 \end{itemdecl}
 \begin{itemdescr}
   \pnum
-  \precondition *this refers to a suspended resumable function
+  \precondition *this refers to a suspended coroutine function
   
   \pnum
   \returns \tcode{true} if target function is suspended
   at final suspend point, otherwise \tcode{false}.
 \end{itemdescr}
 
-\rSec3[resumable.handle.prom]{\tcode{resumable_handle} promise access}
+\rSec3[coroutine.handle.prom]{\tcode{coroutine_handle} promise access}
 \begin{itemdecl}
   Promise& promise() noexcept;		
   Promise const& promise() const noexcept;
@@ -284,21 +284,21 @@ A default constructed \tcode{resumable_handle} object has no target.
 
 \begin{itemdescr}
   \pnum
-  \precondition *this refers to a resumable function
+  \precondition *this refers to a coroutine function
   
   \pnum
   \returns a reference to a promise of the target function.
 \end{itemdescr}
 
 
-\rSec2[resumable.promise]{Resumable promise requirements}
+\rSec2[coroutine.promise]{Coroutine promise requirements}
 
 \pnum
-A user supplies the definition of the resumable promise to implement 
-desired high-level semantics associated with a resumable functions
-discovered via instantiation of struct template \tcode{resumable_traits}.
+A user supplies the definition of the coroutine promise to implement 
+desired high-level semantics associated with a coroutine functions
+discovered via instantiation of struct template \tcode{coroutine_traits}.
 The following tables describe the requirements on
-resumable promise types.
+coroutine promise types.
 
 %\pnum
 %The template struct \tcode{allocator_traits}~(\ref{allocator.traits}) supplies
@@ -328,32 +328,32 @@ resumable promise types.
 	\hline
 	\lhdr{Variable} &   \rhdr{Definition}   \\  \capsep
 	\endhead
-	\tcode{P}    &   a resumable promise type       \\ \rowsep
+	\tcode{P}    &   a coroutine promise type       \\ \rowsep
 	\tcode{p}       &   a value of type \tcode{P} \\ \rowsep
 	\tcode{e}       &   a value of \tcode{std::exception_ptr} type   \\ \rowsep
-	\tcode{h}       &   a value of \tcode{std::experimental::resumable_handle<P>} type    \\ \rowsep
+	\tcode{h}       &   a value of \tcode{std::experimental::coroutine_handle<P>} type    \\ \rowsep
 	\tcode{v}      &   an \grammarterm{expression} or \grammarterm{braced-init-list}   \\ \rowsep
 \end{libreqtab2}
 
-\indextext{requirements!\idxcode{ResumablePromise}}%
-\begin{concepttable}{\tcode{ResumablePromise} requirements}{ResumablePromise}
+\indextext{requirements!\idxcode{CoroutinePromise}}%
+\begin{concepttable}{\tcode{CoroutinePromise} requirements}{CoroutinePromise}
 	{p{1.6in}p{4.15in}}
 	\topline
 	Expression          &   Note \\ \capsep
 	\tcode{P\{\}}     &   Construct an object of type \tcode{P}\\ \rowsep
 	\tcode{p.get_return_object()}        &
-\tcode{get_return_object} is invoked by the resumable function to construct the
+\tcode{get_return_object} is invoked by the coroutine function to construct the
 return object prior to reaching the first suspend-resume point,
 a \tcode{return} statement or flowing off the end of the function.
 	\\ \rowsep
 	\tcode{p.return_value(v)}     &  
-If present, an enclosing resumable function supports an
+If present, an enclosing coroutine function supports an
 eventual value of a type that \tcode{v} can be converted to. \tcode{return_value} is invoked by
-a resumable function when 
+a coroutine function when 
 a return statement
 with an \grammarterm{expression} 
 or a \grammarterm{braced-init-list}
-is encountered in a resumable function.
+is encountered in a coroutine function.
 
 If a promise type does not satisfy this requirement, the presence of 
 a return statement
@@ -362,30 +362,30 @@ or a \grammarterm{braced-init-list}
 statement in the body results in a compile time error.
 	\\ \rowsep
 	\tcode{p.return_void()}     &   
-If present, an enclosing resumable function supports an eventual value of type \tcode{void}. \tcode{return_void} is invoked by
-a resumable function when 
+If present, an enclosing coroutine function supports an eventual value of type \tcode{void}. \tcode{return_void} is invoked by
+a coroutine function when 
 a return statement
 without an \grammarterm{expression} 
 nor a \grammarterm{braced-init-list}
-is encountered in a resumable function or
+is encountered in a coroutine function or
 control flows to the end of the function.
 A promise type shall not define both \tcode{return_void} and \tcode{return_value} member functions.
 	\\ \rowsep
 	\tcode{p.set_exception(e)} & 
-\tcode{set_exception} is invoked by a resumable function when an
-unhandled exception occurs within a \grammarterm{function-body} of the resumable
+\tcode{set_exception} is invoked by a coroutine function when an
+unhandled exception occurs within a \grammarterm{function-body} of the coroutine
 function.
 If promise does not provide \tcode{set_exception}, an unhandled exception
-will propagate from a resumable functions normally.
+will propagate from a coroutine functions normally.
 \\ \rowsep
 	\tcode{p.yield_value(v)}     &   
-Must be present for the enclosing resumable function to support \tcode{yield} statement.
+Must be present for the enclosing coroutine function to support \tcode{yield} statement.
 	\\ \rowsep
 	\tcode{p.initial_suspend()}     &
-if \tcode{p.initial_suspend()} evaluates to \tcode{true}, resumable function will suspend at \textit{initial suspend point} (\ref{dcl.fct.def.resumable}).
+if \tcode{p.initial_suspend()} evaluates to \tcode{true}, coroutine function will suspend at \textit{initial suspend point} (\ref{dcl.fct.def.coroutine}).
 	   \\ \rowsep
 	\tcode{p.final_suspend()}     &  
-if \tcode{p.final_suspend()} evaluates to \tcode{true}, resumable function will suspend at \textit{final suspend point} (\ref{dcl.fct.def.resumable}).
+if \tcode{p.final_suspend()} evaluates to \tcode{true}, coroutine function will suspend at \textit{final suspend point} (\ref{dcl.fct.def.coroutine}).
 \\ 
 \end{concepttable}
 
@@ -394,7 +394,7 @@ This example illustrates full implementation
 of a promise type for a simple generator.
 \begin{codeblock}
   #include <iostream>
-  #include <experimental/resumable>
+  #include <experimental/coroutine>
   
   struct generator {
     struct promise_type {
@@ -417,7 +417,7 @@ of a promise type for a simple generator.
     explicit generator(promise_type* myPromise) : coro(myPromise) 
     {
     }
-    std::experimental::resumable_handle<promise_type> coro;
+    std::experimental::coroutine_handle<promise_type> coro;
   };
   
   generator f() {

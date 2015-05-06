@@ -13,46 +13,46 @@ Add paragraph 16.
 \begin{quote}
 \setcounter{Paras}{15}
 \pnum
-A function can not be resumable (\ref{dcl.fct.def.resumable}) if the \grammarterm{parameter-declaration-clause} terminates with an ellipsis.
+A function can not be coroutine (\ref{dcl.fct.def.coroutine}) if the \grammarterm{parameter-declaration-clause} terminates with an ellipsis.
 \end{quote}
 
 \setcounter{section}{3}
 \rSec1[dcl.fct.def]{Function definitions}
 
-Add subsection \ref{dcl.fct.def.resumable}
+Add subsection \ref{dcl.fct.def.coroutine}
 
 \setcounter{subsection}{3}
-\rSec2[dcl.fct.def.resumable]{Resumable Functions}
+\rSec2[dcl.fct.def.coroutine]{Coroutine Functions}
 
-%\rSec3[resumable.definitions]{Definitions}
+%\rSec3[coroutine.definitions]{Definitions}
 
 \pnum
-A function is \defn{resumable} if it contains
+A function is \defn{coroutine} if it contains
 one or more \term{suspend-resume point}{}s. 
 
 \pnum
 \defn{Suspend-resume points} are introduced by \tcode{await} operator (\ref{expr.await}) in potentially-evaluated expression,
 \tcode{yield} statement (\ref{stmt.yield}), 
-or \tcode{for await} statement (\ref{stmt.for.await}). Every resumable function
+or \tcode{for await} statement (\ref{stmt.for.await}). Every coroutine function
 also has an implicit initial and final \textit{suspend-resume-point} as described later in this clause. 
 
 \pnum
 \enternote
-From the perspective of the caller, a resumable function is just a function with that particular signature. The fact that a function is implemented as resumable is unobservable by the caller. 
+From the perspective of the caller, a coroutine function is just a function with that particular signature. The fact that a function is implemented as coroutine is unobservable by the caller. 
 \exitnote
 
 \pnum
-Resumable functions need a set of related types and functions
+Coroutine functions need a set of related types and functions
 to complete the definition of their semantics.
 These types and functions are provided as a set of member types or typedefs
 and functions in the instantiation of struct template
-\tcode{resumable_traits} (\ref{resumable.traits}). 
+\tcode{coroutine_traits} (\ref{coroutine.traits}). 
 
 \pnum
-For a resumable function \tcode{f}, Let \tcode{R} be a return type and $P_1$, $P_2$, ..., $P_n$
+For a coroutine function \tcode{f}, Let \tcode{R} be a return type and $P_1$, $P_2$, ..., $P_n$
 be types of parameters. If \tcode{f} is a non-static member function then $P_1$ denotes the type of the implicit \tcode{this} parameter. 
-Resumable traits for function \tcode{f} is an instantiation of
-struct template \tcode{std::experimental::resumable_traits<R,P1,...,PN>}.
+Coroutine traits for function \tcode{f} is an instantiation of
+struct template \tcode{std::experimental::coroutine_traits<R,P1,...,PN>}.
 Let \tcode{F} be a \grammarterm{function-body}
 \footnote{
 Due to requirement of having suspend-resume points,
@@ -60,11 +60,11 @@ Due to requirement of having suspend-resume points,
 \grammarterm{compound-statement} or 
 \grammarterm{function-try-block}.
 }
-of that function. Then, the resumable function 
+of that function. Then, the coroutine function 
 should behave as if its body were:
 \begin{codeblock}
   {
-     using _Tr = std::experimental::resumable_traits<R,P1,...,PN>;
+     using _Tr = std::experimental::coroutine_traits<R,P1,...,PN>;
      _Tr::promise_type _Pr;
      if (_Pr.initial_suspend()) {
        suspend-resume-point // initial suspend point
@@ -83,49 +83,49 @@ defined for
 exposition only and
 \textit{stop-or-propagate} is \tcode{throw} 
 if \tcode{promise_type} does not have \tcode{set_exception} member function defined, and \tcode{_Pr.set_exception(std::current_exception())} otherwise. An object denoted as \tcode{_Pr} is a \defn{promise object} of
-a resumable function and its type is a \defn{promise type}
-of the resumable function.
+a coroutine function and its type is a \defn{promise type}
+of the coroutine function.
 %\pnum
-An execution of a resumable function is suspended when it reaches a suspend-resume point.
+An execution of a coroutine function is suspended when it reaches a suspend-resume point.
 
 \pnum 
-A \defn{suspension} of a resumable function returns control to the current
-caller of the resumable function. For the first suspend, the return value is obtained by invoking member function 
-\tcode{get_return_object} (\ref{resumable.promise})
-of the \term{promise object} of the resumable function.
-For the subsequent suspends, if any, the resumable function
+A \defn{suspension} of a coroutine function returns control to the current
+caller of the coroutine function. For the first suspend, the return value is obtained by invoking member function 
+\tcode{get_return_object} (\ref{coroutine.promise})
+of the \term{promise object} of the coroutine function.
+For the subsequent suspends, if any, the coroutine function
 is invoked via resumption members functions of
-\tcode{resumable_handle} (\ref{resumable.handle}) and no return value is expected.
+\tcode{coroutine_handle} (\ref{coroutine.handle}) and no return value is expected.
 
 \pnum
-A suspended resumable function can be resumed
+A suspended coroutine function can be resumed
 to continue execution by invoking
-resumption member functions (\ref{resumable.handle.resumption}) of an object of \tcode{resumable_handle<P>} type
-associated with this instance of a resumable function, where type P
+resumption member functions (\ref{coroutine.handle.resumption}) of an object of \tcode{coroutine_handle<P>} type
+associated with this instance of a coroutine function, where type P
 is a \term{promise type} of the function. 
 
 \pnum
-A resumable function may require to allocate
+A coroutine function may require to allocate
 memory to store objects with automatic storage duration
-local to the resumable function. If so, it must
+local to the coroutine function. If so, it must
 use the allocator object obtained as described in 
-Table~\ref{tab:resumable.traits.requirements} in clause \ref{resumable.traits}.
+Table~\ref{tab:coroutine.traits.requirements} in clause \ref{coroutine.traits}.
 
 \pnum
-A \defn{resumable function state} consist of 
+A \defn{coroutine function state} consist of 
 storage for objects with automatic storage duration
 that are live at the current point of execution or suspension of 
-a resumable function.
-\term{Resumable function state} is destroyed when
+a coroutine function.
+\term{Coroutine function state} is destroyed when
 the control flows off the end of the function or
-\tcode{destroy} member function (\ref{resumable.handle.resumption}) of \tcode{resumable_handle} object associated with that function is invoked.
+\tcode{destroy} member function (\ref{coroutine.handle.resumption}) of \tcode{coroutine_handle} object associated with that function is invoked.
 
 \pnum
-An invocation of a resumable function may incur a move operation for the parameters that may be accessed in the \grammarterm{function-body}
-of resumable function after a resume. 
+An invocation of a coroutine function may incur a move operation for the parameters that may be accessed in the \grammarterm{function-body}
+of coroutine function after a resume. 
 %These copies are defined in the same scope as a \term{promise object}. 
 References to those parameters in the \grammarterm{function-body}
-of the resumable function are replaced with 
+of the coroutine function are replaced with 
 references to their copies .
 
 \pnum
@@ -135,17 +135,17 @@ If a parameter copy/move is required, class object moves are performed according
 If a parameter move, a call to \tcode{get_return_object}, or a promise object construction throws
 an exception, objects with automatic storage duration (\cxxref{basic.stc.auto}) that have been
 constructed are destroyed in the reverse order of their construction, any memory dynamically allocated 
-for \term{resumable function state} is freed
+for \term{coroutine function state} is freed
 and the search for a handler starts in the scope of the calling function. 
 
 \pnum
-A resumable function shall not have an ellipsis parameter specification. 
+A coroutine function shall not have an ellipsis parameter specification. 
 
 
 %\begin{codeblock}
 %R f(T1 a, T2 b) {
-%  // specialize resumable_traits to discover customization points
-%  using _Traits = std::experimental::resumable_traits<R,T1,T2>;
+%  // specialize coroutine_traits to discover customization points
+%  using _Traits = std::experimental::coroutine_traits<R,T1,T2>;
 %  <allocate memory for automatic variables>
 %  <transfer parameters as needed>
 %  <prepare return value>
@@ -157,7 +157,7 @@ A resumable function shall not have an ellipsis parameter specification.
 %void __resume_f(_Context* context) {
 %  try {
 %  } catch(...) {
-%  <handle exception as requiested by the resumable promise>
+%  <handle exception as requiested by the coroutine promise>
 %}
 %__end:  
 %if (__promise.final_suspend()) {
