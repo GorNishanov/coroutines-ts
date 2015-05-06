@@ -38,7 +38,7 @@ also has an implicit initial and final \textit{suspend-resume-point} as describe
 
 \pnum
 \enternote
-From the perspective of the caller, a coroutine function is just a function with that particular signature. The fact that a function is implemented as coroutine is unobservable by the caller. 
+From the perspective of the caller, a coroutine is just a function with that particular signature. The fact that a function is implemented as coroutine is unobservable by the caller. 
 \exitnote
 
 \pnum
@@ -49,7 +49,7 @@ and functions in the instantiation of struct template
 \tcode{coroutine_traits} (\ref{coroutine.traits}). 
 
 \pnum
-For a coroutine function \tcode{f}, Let \tcode{R} be a return type and $P_1$, $P_2$, ..., $P_n$
+For a coroutine \tcode{f}, Let \tcode{R} be a return type and $P_1$, $P_2$, ..., $P_n$
 be types of parameters. If \tcode{f} is a non-static member function then $P_1$ denotes the type of the implicit \tcode{this} parameter. 
 Coroutine traits for function \tcode{f} is an instantiation of
 struct template \tcode{std::experimental::coroutine_traits<R,P1,...,PN>}.
@@ -60,7 +60,7 @@ Due to requirement of having suspend-resume points,
 \grammarterm{compound-statement} or 
 \grammarterm{function-try-block}.
 }
-of that function. Then, the coroutine function 
+of that function. Then, the coroutine 
 should behave as if its body were:
 \begin{codeblock}
   {
@@ -83,17 +83,17 @@ defined for
 exposition only and
 \textit{stop-or-propagate} is \tcode{throw} 
 if \tcode{promise_type} does not have \tcode{set_exception} member function defined, and \tcode{_Pr.set_exception(std::current_exception())} otherwise. An object denoted as \tcode{_Pr} is a \defn{promise object} of
-a coroutine function and its type is a \defn{promise type}
-of the coroutine function.
+a coroutine and its type is a \defn{promise type}
+of the coroutine.
 %\pnum
-An execution of a coroutine function is suspended when it reaches a suspend-resume point.
+An execution of a coroutine is suspended when it reaches a suspend-resume point.
 
 \pnum 
-A \defn{suspension} of a coroutine function returns control to the current
-caller of the coroutine function. For the first suspend, the return value is obtained by invoking member function 
+A \defn{suspension} of a coroutine returns control to the current
+caller of the coroutine. For the first suspend, the return value is obtained by invoking member function 
 \tcode{get_return_object} (\ref{coroutine.promise})
-of the \term{promise object} of the coroutine function.
-For the subsequent suspends, if any, the coroutine function
+of the \term{promise object} of the coroutine.
+For the subsequent suspends, if any, the coroutine
 is invoked via resumption members functions of
 \tcode{coroutine_handle} (\ref{coroutine.handle}) and no return value is expected.
 
@@ -101,13 +101,13 @@ is invoked via resumption members functions of
 A suspended coroutine function can be resumed
 to continue execution by invoking
 resumption member functions (\ref{coroutine.handle.resumption}) of an object of \tcode{coroutine_handle<P>} type
-associated with this instance of a coroutine function, where type P
+associated with this instance of a coroutine, where type P
 is a \term{promise type} of the function. 
 
 \pnum
 A coroutine function may require to allocate
 memory to store objects with automatic storage duration
-local to the coroutine function. If so, it must
+local to the coroutine. If so, it must
 use the allocator object obtained as described in 
 Table~\ref{tab:coroutine.traits.requirements} in clause \ref{coroutine.traits}.
 
@@ -115,17 +115,17 @@ Table~\ref{tab:coroutine.traits.requirements} in clause \ref{coroutine.traits}.
 A \defn{coroutine function state} consist of 
 storage for objects with automatic storage duration
 that are live at the current point of execution or suspension of 
-a coroutine function.
+a coroutine.
 \term{Coroutine function state} is destroyed when
 the control flows off the end of the function or
 \tcode{destroy} member function (\ref{coroutine.handle.resumption}) of \tcode{coroutine_handle} object associated with that function is invoked.
 
 \pnum
-An invocation of a coroutine function may incur a move operation for the parameters that may be accessed in the \grammarterm{function-body}
+An invocation of a coroutine may incur a move operation for the parameters that may be accessed in the \grammarterm{function-body}
 of coroutine function after a resume. 
 %These copies are defined in the same scope as a \term{promise object}. 
 References to those parameters in the \grammarterm{function-body}
-of the coroutine function are replaced with 
+of the coroutine are replaced with 
 references to their copies .
 
 \pnum

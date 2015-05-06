@@ -54,8 +54,8 @@ where \tcode{__range}, \tcode{__begin},
 \textit{range-init}, \textit{begin-expr}, and \textit{end-expr} are defined as in the range-based for statement \cxxref{stmt.ranged}.
 
 \pnum
-A \tcode{for await} statement may only appear in a coroutine function 
-with an eventual return type, i.e a coroutine function shall have the \tcode{return_value} or \tcode{return_void} member
+A \tcode{for await} statement may only appear in a coroutine 
+with an eventual return type, i.e a coroutine shall have the \tcode{return_value} or \tcode{return_void} member
 functions defined in its \term{promise type} (\ref{dcl.fct.def.coroutine}).
 
 \setcounter{section}{5}
@@ -85,8 +85,8 @@ Add a note:
 
 \begin{quote}
 \enternote
-In this section a function refers to non-coroutine functions only.
-The return statement in coroutine functions is described in \ref{stmt.return.coroutine}
+In this section a function refers to non-coroutines only.
+The return statement in coroutines is described in \ref{stmt.return.coroutine}
 \exitnote
 \end{quote}
 
@@ -107,13 +107,13 @@ The return statement in coroutine functions is described in \ref{stmt.return.cor
 %destructor~(\cxxref{class.dtor}).
 %\indextext{\idxcode{return}!constructor~and}%
 %\indextext{\idxcode{return}!constructor~and}%
-%\added{In a coroutine function a  return statement
+%\added{In a coroutine a  return statement
 %	with neither an \grammarterm{expression} nor a \grammarterm{braced-init-list}
 %	can be used only in functions
 %	with eventual return type \tcode{void}.}
 %A return statement with an expression of non-void type can be used only
 %in \added{non-coroutine} functions returning a value
-%\added{or coroutine functions returning an eventual value}; the value of the expression is returned
+%\added{or coroutines returning an eventual value}; the value of the expression is returned
 %to the caller of the function.
 %\indextext{conversion!return~type}%
 %The value of the expression is implicitly converted to the return type of the
@@ -139,7 +139,7 @@ The return statement in coroutine functions is described in \ref{stmt.return.cor
 %\pnum
 %A return statement with an expression of type \tcode{void}
 %can be used only in \added{non-coroutine} functions with a return type of
-%\cvqual{cv} \tcode{void} \added{or coroutine functions with eventual return type of \tcode{void}}; 
+%\cvqual{cv} \tcode{void} \added{or coroutines with eventual return type of \tcode{void}}; 
 %the expression is evaluated just before the function
 %returns to its caller.
 %\end{quote}
@@ -154,16 +154,16 @@ The return statement in coroutine functions is described in \ref{stmt.return.cor
 %\begin{quote}
 %\setcounter{Paras}{3}
 %\pnum 
-%In a coroutine function return statement is replaced with
+%In a coroutine return statement is replaced with
 %a call to __pr.set_result, where _p
 %\end{quote}
 
 Add sections \ref{stmt.return.coroutine} and \ref{stmt.yield}.
 
-\rSec2[stmt.return.coroutine]{The \tcode{return} statement in coroutine functions}%
+\rSec2[stmt.return.coroutine]{The \tcode{return} statement in coroutines}%
 %\enternote
 %In this section function refers to coroutine function only.
-%The return statement in non-coroutine functions is described in \ref{stmt.return}
+%The return statement in non-coroutines is described in \ref{stmt.return}
 %\exitnote
 
 \pnum
@@ -178,11 +178,11 @@ or when suspended at a \term{suspend-resume point} (\ref{dcl.fct.def.coroutine})
 \pnum
 A \tcode{return} statement
 with neither an \grammarterm{expression} nor a \grammarterm{braced-init-list}
-can be used only in coroutine functions
-that do not produce an eventual value or have an eventual return type of \tcode{void}. In the latter case, completion of the coroutine function
+can be used only in coroutines
+that do not produce an eventual value or have an eventual return type of \tcode{void}. In the latter case, completion of the coroutine
 is reported by calling \tcode{_Pr.return_void()}.
 A \tcode{return} statement with an expression of non-\tcode{void} type can be used only
-in coroutine functions producing an eventual value; the value of the expression is supplied to a promise of the coroutine function by calling 
+in coroutines producing an eventual value; the value of the expression is supplied to a promise of the coroutine by calling 
 \tcode{_Pr.return_value(\grammarterm{expression})} or
 \tcode{_Pr.return_value(\grammarterm{braced-init-list})}.
 
@@ -210,9 +210,9 @@ or with an eventual return type of \tcode{void}; the expression is evaluated jus
 returns to its caller.
 
 \pnum
-Prior to returning to the caller, a coroutine function evaluates
+Prior to returning to the caller, a coroutine evaluates
 \tcode{_Pr.final_suspend()} predicate. If \tcode{_Pr.final_suspend()} contextually converted to \tcode{bool} evaluates to
-\tcode{true}, the coroutine function suspends at \term{final suspend point} (\ref{dcl.fct.def.coroutine}),
+\tcode{true}, the coroutine suspends at \term{final suspend point} (\ref{dcl.fct.def.coroutine}),
 otherwise, coroutine function flows off the end of the function-body and destroys the \term{coroutine function state} and frees any extra memory dynamically allocated to store the state.
 
 %\enternote
@@ -221,7 +221,7 @@ otherwise, coroutine function flows off the end of the function-body and destroy
 %and coroutine function state will be destroyed when
 %destructor of an owner object runs.
 %
-%For detached tasks, where lifetime of the coroutine function ends
+%For detached tasks, where lifetime of the coroutine ends
 %when the task completes, \tcode{_Pr.final_suspend()} would return false.
 %\exitnote
 

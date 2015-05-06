@@ -39,7 +39,7 @@ Add section \ref{support.coroutine}
 \pnum
 The header
 \tcode{<experimental/coroutine>}
-defines several types providing compile and run-time support for coroutine functions in a \Cpp program.
+defines several types providing compile and run-time support for coroutines in a \Cpp program.
 
 \synopsis{Header \tcode{<experimental/coroutine>} synopsis}
 
@@ -84,13 +84,13 @@ that satisfies those requirements.
 
 \pnum
 The \tcode{coroutine_traits} may be specialized by the user 
-to customize semantics of coroutine functions.
+to customize semantics of coroutines.
 
 \rSec3[coroutine.traits.requirements]{Coroutine traits requirements}
 \pnum
 In Table~\ref{tab:coroutine.traits.requirements}, X denotes 
 a trait class instantiated as described in \ref{dcl.fct.def.coroutine};
-$a_1$, $a_2$, ... $a_n$ denote parameters passed to a coroutine function. If it is a member function, than $a_1$ denotes implicit \tcode{this} parameter.
+$a_1$, $a_2$, ... $a_n$ denote parameters passed to a coroutine. If it is a member function, than $a_1$ denotes implicit \tcode{this} parameter.
 
 \begin{concepttable}{\tcode{coroutine_traits} requirements}{tab:coroutine.traits.requirements}
   {p{1.6in}p{4.15in}}
@@ -101,17 +101,17 @@ $a_1$, $a_2$, ... $a_n$ denote parameters passed to a coroutine function. If it 
 %  that completes the definition of coroutine function semantics.
   \\ \rowsep
   \tcode{X::get_allocator($a_1$, $a_2$, ... $a_n$)}        &
-  \textit{(optional)} Given a set of arguments passed to a coroutine function,
+  \textit{(optional)} Given a set of arguments passed to a coroutine,
   returns an allocator (\cxxref{allocator.requirements}) that implementation can use
   to dynamically allocate memory for objects with automatic
-  storage duration in a coroutine function if required.
+  storage duration in a coroutine if required.
   If \tcode{get_allocator} is not present, 
   implementation shall use \tcode{std::allocator<char>}.
 \\ \rowsep
   \tcode{X::get_return_object_on_allocation_failure()}     &
 \textit{(optional)} If present, it is assumed that an
 allocator's \tcode{allocate} function will violate the standard requirements and return \tcode{nullptr} in case of an
-allocation failure. If a coroutine function requires dynamic allocation, it must check if an \tcode{allocate} returns nullptr, and if so it shall use the expression \tcode{X::get_return_object_on_allocation_failure()} to construct the return value and return back to the caller.
+allocation failure. If a coroutine requires dynamic allocation, it must check if an \tcode{allocate} returns nullptr, and if so it shall use the expression \tcode{X::get_return_object_on_allocation_failure()} to construct the return value and return back to the caller.
   \\ 
 \end{concepttable}
 
@@ -199,7 +199,7 @@ A default constructed \tcode{coroutine_handle} object has no target.
 \end{itemdecl}
 \begin{itemdescr}
   \pnum
-  \precondition \tcode{p} points to a promise object of a coroutine function.
+  \precondition \tcode{p} points to a promise object of a coroutine.
   
 	\pnum
   \postconditions \tcode{!*this} and \tcode{addressof(this->promise()) == p}.
@@ -284,7 +284,7 @@ A default constructed \tcode{coroutine_handle} object has no target.
 
 \begin{itemdescr}
   \pnum
-  \precondition *this refers to a coroutine function
+  \precondition *this refers to a coroutine
   
   \pnum
   \returns a reference to a promise of the target function.
@@ -295,7 +295,7 @@ A default constructed \tcode{coroutine_handle} object has no target.
 
 \pnum
 A user supplies the definition of the coroutine promise to implement 
-desired high-level semantics associated with a coroutine functions
+desired high-level semantics associated with a coroutines
 discovered via instantiation of struct template \tcode{coroutine_traits}.
 The following tables describe the requirements on
 coroutine promise types.
@@ -342,18 +342,18 @@ coroutine promise types.
 	Expression          &   Note \\ \capsep
 	\tcode{P\{\}}     &   Construct an object of type \tcode{P}\\ \rowsep
 	\tcode{p.get_return_object()}        &
-\tcode{get_return_object} is invoked by the coroutine function to construct the
+\tcode{get_return_object} is invoked by the coroutine to construct the
 return object prior to reaching the first suspend-resume point,
 a \tcode{return} statement or flowing off the end of the function.
 	\\ \rowsep
 	\tcode{p.return_value(v)}     &  
 If present, an enclosing coroutine function supports an
 eventual value of a type that \tcode{v} can be converted to. \tcode{return_value} is invoked by
-a coroutine function when 
+a coroutine when 
 a return statement
 with an \grammarterm{expression} 
 or a \grammarterm{braced-init-list}
-is encountered in a coroutine function.
+is encountered in a coroutine.
 
 If a promise type does not satisfy this requirement, the presence of 
 a return statement
@@ -363,20 +363,20 @@ statement in the body results in a compile time error.
 	\\ \rowsep
 	\tcode{p.return_void()}     &   
 If present, an enclosing coroutine function supports an eventual value of type \tcode{void}. \tcode{return_void} is invoked by
-a coroutine function when 
+a coroutine when 
 a return statement
 without an \grammarterm{expression} 
 nor a \grammarterm{braced-init-list}
-is encountered in a coroutine function or
+is encountered in a coroutine or
 control flows to the end of the function.
 A promise type shall not define both \tcode{return_void} and \tcode{return_value} member functions.
 	\\ \rowsep
 	\tcode{p.set_exception(e)} & 
-\tcode{set_exception} is invoked by a coroutine function when an
+\tcode{set_exception} is invoked by a coroutine when an
 unhandled exception occurs within a \grammarterm{function-body} of the coroutine
 function.
 If promise does not provide \tcode{set_exception}, an unhandled exception
-will propagate from a coroutine functions normally.
+will propagate from a coroutines normally.
 \\ \rowsep
 	\tcode{p.yield_value(v)}     &   
 Must be present for the enclosing coroutine function to support \tcode{yield} statement.

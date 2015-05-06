@@ -35,7 +35,7 @@ The \tcode{await} operator is used to suspend evaluation of the enclosing corout
 for completion of the computation represented by the operand expression.
 
 \pnum
-The presence of an \tcode{await} operator in a potentially-evaluated expression makes the enclosing function a coroutine function.
+The presence of an \tcode{await} operator in a potentially-evaluated expression makes the enclosing function a coroutine.
 
 \pnum
 An \tcode{await} expression shall not appear in a potentially-evaluated expression in a catch clause of a try block.
@@ -127,6 +127,6 @@ int main() {
 \exitexample%
 
 \pnum
-An \tcode{await} expression may only appear in a coroutine function 
-with an eventual return type, i.e a coroutine function shall have the \tcode{return_value} or \tcode{return_void} member
+An \tcode{await} expression may only appear in a coroutine 
+with an eventual return type, i.e a coroutine shall have the \tcode{return_value} or \tcode{return_void} member
 functions defined in its \term{promise type} (\ref{dcl.fct.def.coroutine}).
