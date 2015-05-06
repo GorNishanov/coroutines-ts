@@ -95,11 +95,11 @@ The return statement in coroutines is described in \ref{stmt.return.coroutine}
 %\begin{quote}
 %\pnum
 %A function returns to its caller by the \tcode{return} statement.
-%\added{A coroutine function also returns to its caller 
+%\added{A coroutine also returns to its caller 
 %when suspended at suspend-resume point.}
 %
 %\pnum
-%\added{In a non-coroutine function a}\removed{A} return statement
+%\added{In a non-coroutine a}\removed{A} return statement
 %with neither an \grammarterm{expression} nor a \grammarterm{braced-init-list}
 %can be used only in functions
 %that do not return a value, that is, a function with the return type
@@ -134,7 +134,7 @@ The return statement in coroutines is described in \ref{stmt.return.coroutine}
 %
 %Flowing off the end of a function is equivalent to a \tcode{return} with
 %no value; this results in undefined behavior in a value-returning
-%\added{non-coroutine} function \added{or in an eventual-value-returning coroutine function}.
+%\added{non-coroutine} function \added{or in an eventual-value-returning coroutine}.
 %
 %\pnum
 %A return statement with an expression of type \tcode{void}
@@ -162,18 +162,18 @@ Add sections \ref{stmt.return.coroutine} and \ref{stmt.yield}.
 
 \rSec2[stmt.return.coroutine]{The \tcode{return} statement in coroutines}%
 %\enternote
-%In this section function refers to coroutine function only.
+%In this section function refers to coroutine only.
 %The return statement in non-coroutines is described in \ref{stmt.return}
 %\exitnote
 
 \pnum
-A coroutine function returns to its caller by the \tcode{return} statement
+A coroutine returns to its caller by the \tcode{return} statement
 or when suspended at a \term{suspend-resume point} (\ref{dcl.fct.def.coroutine}).
 
 \pnum
   In this clause, \tcode{_Pr} refers to the \term{promise object}  
   (\ref{dcl.fct.def.coroutine})
-  of the enclosing coroutine function.
+  of the enclosing coroutine.
   
 \pnum
 A \tcode{return} statement
@@ -198,7 +198,7 @@ in coroutines producing an eventual value; the value of the expression is suppli
 
 Flowing off the end of a function is equivalent to a \tcode{return} with
 no value; 
-this results in an implementation-defined behavior in an eventual-value-returning coroutine function.
+this results in an implementation-defined behavior in an eventual-value-returning coroutine.
 \enternote
 One possible implementation is to call std::terminate() in this case.
 \exitnote
@@ -213,12 +213,11 @@ returns to its caller.
 Prior to returning to the caller, a coroutine evaluates
 \tcode{_Pr.final_suspend()} predicate. If \tcode{_Pr.final_suspend()} contextually converted to \tcode{bool} evaluates to
 \tcode{true}, the coroutine suspends at \term{final suspend point} (\ref{dcl.fct.def.coroutine}),
-otherwise, coroutine function flows off the end of the function-body and destroys the \term{coroutine function state} and frees any extra memory dynamically allocated to store the state.
 
 %\enternote
-%If coroutine function instance lifetime is controlled 
+%If coroutine instance lifetime is controlled 
 %by a RAII object, it is expected that \tcode{_Pr.final_suspend()} returns true
-%and coroutine function state will be destroyed when
+%and coroutine state will be destroyed when
 %destructor of an owner object runs.
 %
 %For detached tasks, where lifetime of the coroutine ends
@@ -263,11 +262,11 @@ If a \tcode{_Pr.yield_value(\textit{yielded-value})} expression is of type \tcod
   }
 \end{codeblock}
 
-Where \tcode{_Pr} is a \term{promise object} (\ref{dcl.fct.def.coroutine}) of the enclosing coroutine function.
+Where \tcode{_Pr} is a \term{promise object} (\ref{dcl.fct.def.coroutine}) of the enclosing coroutine.
 
 \pnum
 A \tcode{yield} statement may only appear if a \tcode{yield_value} member
-function is defined in the promise type of the enclosing coroutine function.
+function is defined in the promise type of the enclosing coroutine.
 
 \pnum
 A promise object may have more than one overload of \tcode{yield_value}.

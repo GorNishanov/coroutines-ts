@@ -33,7 +33,7 @@ one or more \term{suspend-resume point}{}s.
 \pnum
 \defn{Suspend-resume points} are introduced by \tcode{await} operator (\ref{expr.await}) in potentially-evaluated expression,
 \tcode{yield} statement (\ref{stmt.yield}), 
-or \tcode{for await} statement (\ref{stmt.for.await}). Every coroutine function
+or \tcode{for await} statement (\ref{stmt.for.await}). Every coroutine
 also has an implicit initial and final \textit{suspend-resume-point} as described later in this clause. 
 
 \pnum
@@ -42,7 +42,7 @@ From the perspective of the caller, a coroutine is just a function with that par
 \exitnote
 
 \pnum
-Coroutine functions need a set of related types and functions
+Coroutines need a set of related types and functions
 to complete the definition of their semantics.
 These types and functions are provided as a set of member types or typedefs
 and functions in the instantiation of struct template
@@ -98,31 +98,31 @@ is invoked via resumption members functions of
 \tcode{coroutine_handle} (\ref{coroutine.handle}) and no return value is expected.
 
 \pnum
-A suspended coroutine function can be resumed
+A suspended coroutine can be resumed
 to continue execution by invoking
 resumption member functions (\ref{coroutine.handle.resumption}) of an object of \tcode{coroutine_handle<P>} type
 associated with this instance of a coroutine, where type P
 is a \term{promise type} of the function. 
 
 \pnum
-A coroutine function may require to allocate
+A coroutine may require to allocate
 memory to store objects with automatic storage duration
 local to the coroutine. If so, it must
 use the allocator object obtained as described in 
 Table~\ref{tab:coroutine.traits.requirements} in clause \ref{coroutine.traits}.
 
 \pnum
-A \defn{coroutine function state} consist of 
+A \defn{coroutine state} consist of 
 storage for objects with automatic storage duration
 that are live at the current point of execution or suspension of 
 a coroutine.
-\term{Coroutine function state} is destroyed when
+\term{Coroutine state} is destroyed when
 the control flows off the end of the function or
 \tcode{destroy} member function (\ref{coroutine.handle.resumption}) of \tcode{coroutine_handle} object associated with that function is invoked.
 
 \pnum
 An invocation of a coroutine may incur a move operation for the parameters that may be accessed in the \grammarterm{function-body}
-of coroutine function after a resume. 
+of coroutine after a resume. 
 %These copies are defined in the same scope as a \term{promise object}. 
 References to those parameters in the \grammarterm{function-body}
 of the coroutine are replaced with 
@@ -135,11 +135,11 @@ If a parameter copy/move is required, class object moves are performed according
 If a parameter move, a call to \tcode{get_return_object}, or a promise object construction throws
 an exception, objects with automatic storage duration (\cxxref{basic.stc.auto}) that have been
 constructed are destroyed in the reverse order of their construction, any memory dynamically allocated 
-for \term{coroutine function state} is freed
+for \term{coroutine state} is freed
 and the search for a handler starts in the scope of the calling function. 
 
 \pnum
-A coroutine function shall not have an ellipsis parameter specification. 
+A coroutine shall not have an ellipsis parameter specification. 
 
 
 %\begin{codeblock}
