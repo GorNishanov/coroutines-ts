@@ -37,9 +37,9 @@ of the referenced document (including any amendments) applies.
 
 ISO/IEC 14882:2014 is hereafter called the \defn{\Cpp Standard}.
 %
-Beginning with section 1.9 below, all clause and section numbers, titles,
+Beginning with section 1.4 below, all clause and section numbers, titles,
 and symbolic references in [brackets] refer to the corresponding elements of the \Cpp Standard. Sections 1.1 through 1.5 of this Technical
-Specification are introductory material and are unrelated to the similarly-numbered sections of the C++ Standard.
+Specification are introductory material and are unrelated to the similarly-numbered sections of the \Cpp Standard.
 
 % NOTES: N4302 use transaction memory edits to fix this. 
 
@@ -89,35 +89,14 @@ in terms of the behavior of programs.
 %%
 \rSec1[intro.features]{Feature-testing recommendations (Informative)}
 
-\pnum
-For the sake of improved portability between partial implementations of various
-C++ standards, WG21 (the ISO Technical Committee for the \Cpp Programming
-Language) recommends that implementers and programmers follow the guidelines in
-this section concerning feature-test macros. 
-\enternote 
-WG21's SD-6 makes similar recommendations for the \Cpp Standard.
-\exitnote
-
-\pnum
-Implementers who provide a new standard feature should define a macro with the
-recommended name, in the same circumstances under which the feature is available
-(for example, taking into account relevant command-line options), to indicate
-the presence of support for that feature. Implementers should define that macro
-with the value specified in the most recent version of this technical
-specification that they have implemented. The recommended macro name is
-\tcode{__cpp_experimental_} followed by the string in the ``Macro name suffix''
-column in Table~\ref{tab:info.features}.
-
-\pnum
-No header files should be required to test macros describing the presence
-of support for language features.
+An implementation that provides support for this Technical Specification shall define the feature test macro in Table~\ref{tab:info.features}.
 
 \begin{floattable}{Feature-test macros for coroutines}{tab:info.features}
-{ll}
+{lll}
 \topline
-\lhdr{Macro name suffix} & \rhdr{Value} \\
+\lhdr{Name} & \chdr{Value} & \rhdr{Header} \\
 \capsep
-\tcode{coroutine}  & \tcode{201511}      \\
+\tcode{__cpp_coroutine}  & \tcode{201511} & \textit{predeclared}      \\
 \end{floattable}
 
 %\rSec1[intro.ack]{Acknowledgments}
