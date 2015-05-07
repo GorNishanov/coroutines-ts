@@ -213,6 +213,7 @@ returns to its caller.
 Prior to returning to the caller, a coroutine evaluates
 \tcode{_Pr.final_suspend()} predicate. If \tcode{_Pr.final_suspend()} contextually converted to \tcode{bool} evaluates to
 \tcode{true}, the coroutine suspends at \term{final suspend point} (\ref{dcl.fct.def.coroutine}),
+otherwise, the coroutine flows off the end of the function-body and destroys the \term{coroutine state} and frees the memory dynamically allocated (if any) to store the state.
 
 %\enternote
 %If coroutine instance lifetime is controlled 

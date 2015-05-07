@@ -19,7 +19,7 @@ Add a row to Table~\ref{tab:lang.sup.lib.summary} for \tcode{<experimental/corou
 	\cxxref{support.exception}   & Exception handling        &   \tcode{<exception>} \\ \rowsep
 	\cxxref{support.initlist}    & Initializer lists & \tcode{<initializer_list>}    \\ \rowsep
 	\added{\ref{support.coroutine}} 
-  & \added{Coroutine functions support} 
+  & \added{Coroutines support} 
   & \added{\tcode{<experimental/coroutine>}}    \\ \rowsep
 	&                           &   \tcode{<csignal>}   \\
 	&                           &   \tcode{<csetjmp>}   \\
@@ -34,7 +34,7 @@ Add a row to Table~\ref{tab:lang.sup.lib.summary} for \tcode{<experimental/corou
 Add section \ref{support.coroutine}
 
 \setcounter{section}{10}
-\rSec1[support.coroutine]{Coroutine functions support library}
+\rSec1[support.coroutine]{Coroutines support library}
 
 \pnum
 The header
@@ -75,7 +75,7 @@ and defines a primary struct template
 that satisfies those requirements.
 
 %\pnum
-%Coroutine functions need a set of related types and functions
+%Coroutines need a set of related types and functions
 %to complete the definition of their semantics.
 %These types and functions are provided as a set of member types or typedefs
 %and functions in the instantiation of struct template
@@ -98,7 +98,7 @@ $a_1$, $a_2$, ... $a_n$ denote parameters passed to a coroutine. If it is a memb
   Expression          &   Behavior \\ \capsep
   \tcode{X::promise_type}     &
   \tcode{X::promise_type} must be a type satisfying coroutine promise requirements (\ref{coroutine.promise}) 
-%  that completes the definition of coroutine function semantics.
+%  that completes the definition of coroutine semantics.
   \\ \rowsep
   \tcode{X::get_allocator($a_1$, $a_2$, ... $a_n$)}        &
   \textit{(optional)} Given a set of arguments passed to a coroutine,
@@ -180,7 +180,7 @@ namespace std {
 
 \pnum
 The struct template \tcode{coroutine_handle}
-can be used to refer to a suspended or executing coroutine function.
+can be used to refer to a suspended or executing coroutine.
 Such function is called a \textit{target} of \tcode{coroutine_handle}.
 A default constructed \tcode{coroutine_handle} object has no target.
 
@@ -242,7 +242,7 @@ A default constructed \tcode{coroutine_handle} object has no target.
 \end{itemdecl}
 \begin{itemdescr}
   \pnum
-  \precondition *this refers to a suspended coroutine function
+  \precondition *this refers to a suspended coroutine
   
   \pnum
   \effects resumes the execution of a target function. If the function was suspended
@@ -254,11 +254,11 @@ A default constructed \tcode{coroutine_handle} object has no target.
 \end{itemdecl}
 \begin{itemdescr}
   \pnum
-  \precondition *this refers to a suspended coroutine function
+  \precondition *this refers to a suspended coroutine
   
   \pnum
   \effects objects with automatic storage duration that are in scope
-  at the suspend point are destroyed in the reverse order of the construction. If coroutine function required dynamic allocation
+  at the suspend point are destroyed in the reverse order of the construction. If coroutine required dynamic allocation
   for the objects with automatic storage duration, the memory
   is freed.
 \end{itemdescr}
@@ -269,7 +269,7 @@ A default constructed \tcode{coroutine_handle} object has no target.
 \end{itemdecl}
 \begin{itemdescr}
   \pnum
-  \precondition *this refers to a suspended coroutine function
+  \precondition *this refers to a suspended coroutine
   
   \pnum
   \returns \tcode{true} if target function is suspended
@@ -347,7 +347,7 @@ return object prior to reaching the first suspend-resume point,
 a \tcode{return} statement or flowing off the end of the function.
 	\\ \rowsep
 	\tcode{p.return_value(v)}     &  
-If present, an enclosing coroutine function supports an
+If present, an enclosing coroutine supports an
 eventual value of a type that \tcode{v} can be converted to. \tcode{return_value} is invoked by
 a coroutine when 
 a return statement
@@ -362,7 +362,7 @@ or a \grammarterm{braced-init-list}
 statement in the body results in a compile time error.
 	\\ \rowsep
 	\tcode{p.return_void()}     &   
-If present, an enclosing coroutine function supports an eventual value of type \tcode{void}. \tcode{return_void} is invoked by
+If present, an enclosing coroutine supports an eventual value of type \tcode{void}. \tcode{return_void} is invoked by
 a coroutine when 
 a return statement
 without an \grammarterm{expression} 
@@ -379,13 +379,13 @@ If promise does not provide \tcode{set_exception}, an unhandled exception
 will propagate from a coroutines normally.
 \\ \rowsep
 	\tcode{p.yield_value(v)}     &   
-Must be present for the enclosing coroutine function to support \tcode{yield} statement.
+Must be present for the enclosing coroutine to support \tcode{yield} statement.
 	\\ \rowsep
 	\tcode{p.initial_suspend()}     &
-if \tcode{p.initial_suspend()} evaluates to \tcode{true}, coroutine function will suspend at \textit{initial suspend point} (\ref{dcl.fct.def.coroutine}).
+if \tcode{p.initial_suspend()} evaluates to \tcode{true}, the coroutine will suspend at \textit{initial suspend point} (\ref{dcl.fct.def.coroutine}).
 	   \\ \rowsep
 	\tcode{p.final_suspend()}     &  
-if \tcode{p.final_suspend()} evaluates to \tcode{true}, coroutine function will suspend at \textit{final suspend point} (\ref{dcl.fct.def.coroutine}).
+if \tcode{p.final_suspend()} evaluates to \tcode{true}, the coroutine will suspend at \textit{final suspend point} (\ref{dcl.fct.def.coroutine}).
 \\ 
 \end{concepttable}
 
