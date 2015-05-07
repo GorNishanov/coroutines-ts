@@ -19,20 +19,20 @@ Iteration statements specify looping.
 	\terminal{do} statement \terminal{while (} expression \terminal{) ;}\br
 	\terminal{for (} for-init-statement condition\opt \terminal{;} expression\opt \terminal{)} statement\br
 	\terminal{for (} for-range-declaration \terminal{:} for-range-initializer \terminal{)} statement\br
-	\added{\terminal{for await (} for-range-declaration \terminal{:} for-range-initializer \terminal{)} statement}
+	\added{\terminal{cofor (} for-range-declaration \terminal{:} for-range-initializer \terminal{)} statement}
 \end{bnf}
 \end{quote}
 
 Add subclause 6.5.5.
 
 \setcounter{subsection}{4}
-\rSec2[stmt.for.await]{The await-for statement}%
+\rSec2[stmt.for.await]{The cofor statement}%
 
 \pnum
-A \tcode{for await} statement of the form
+A \tcode{cofor} statement of the form
 
 \begin{ncbnf}
-	\terminal{for await (} for-range-declaration : expression \terminal{)} statement
+	\terminal{cofor (} for-range-declaration : expression \terminal{)} statement
 \end{ncbnf}
 
 is equivalent to
@@ -40,10 +40,10 @@ is equivalent to
 \begin{codeblock}
 	{
 		auto && __range = range-init;
-		for ( auto __begin = await begin-expr,
+		for ( auto __begin = coawait begin-expr,
 		__end = end-expr;
 		__begin != __end;
-		await ++__begin ) {
+		coawait ++__begin ) {
 			@\textit{for-range-declaration}@ = *__begin;
 			@\textit{statement}@
 		}
@@ -54,14 +54,14 @@ where \tcode{__range}, \tcode{__begin},
 \textit{range-init}, \textit{begin-expr}, and \textit{end-expr} are defined as in the range-based for statement \cxxref{stmt.ranged}.
 
 \pnum
-A \tcode{for await} statement may only appear in a coroutine 
+A \tcode{cofor} statement may only appear in a coroutine 
 with an eventual return type, i.e a coroutine shall have the \tcode{return_value} or \tcode{return_void} member
 functions defined in its \term{promise type} (\ref{dcl.fct.def.coroutine}).
 
 \setcounter{section}{5}
 \rSec1[stmt.jump]{Jump statements}%
 
-In paragraph 1 add productions for \tcode{yield} statement.
+In paragraph 1 add productions for \tcode{coyield} and \tcode{coreturn} statement.
 
 \begin{quote}
 \begin{bnf}
@@ -70,8 +70,10 @@ In paragraph 1 add productions for \tcode{yield} statement.
 	\terminal{continue ;}\br
 	\terminal{return} expression\opt \terminal{;}\br
 	\terminal{return} braced-init-list \terminal{;}\br
-	\added{\terminal{yield} expression \terminal{;}}\br
-	\added{\terminal{yield} braced-init-list \terminal{;}}\br
+	\added{\terminal{coreturn} expression \terminal{;}}\br
+  \added{\terminal{coreturn} braced-init-list{;}}\br
+  \added{\terminal{coyield} expression \terminal{;}}\br
+	\added{\terminal{coyield} braced-init-list \terminal{;}}\br
 	\terminal{goto} identifier \terminal{;}
 \end{bnf}
 \end{quote}
@@ -81,14 +83,17 @@ In paragraph 1 add productions for \tcode{yield} statement.
 \indextext{\idxcode{return}}%
 \indextext{function~return|see{\tcode{return}}}%
 
-Add a note:
+\pnum
+Using a \tcode{return} statement in the coroutine makes the program ill-formed. 
 
-\begin{quote}
-\enternote
-In this section a function refers to non-coroutines only.
-The return statement in coroutines is described in \ref{stmt.return.coroutine}
-\exitnote
-\end{quote}
+%Add a note:
+%
+%\begin{quote}
+%\enternote
+%In this section a function refers to non-coroutines only.
+%The return statement in coroutines is described in \ref{stmt.return.coroutine}
+%\exitnote
+%\end{quote}
 
 %Modify paragraphs 1 through 3 as follows.
 %
@@ -160,15 +165,18 @@ The return statement in coroutines is described in \ref{stmt.return.coroutine}
 
 Add sections \ref{stmt.return.coroutine} and \ref{stmt.yield}.
 
-\rSec2[stmt.return.coroutine]{The \tcode{return} statement in coroutines}%
+\rSec2[stmt.return.coroutine]{The \tcode{coreturn} statement}%
 %\enternote
 %In this section function refers to coroutine only.
 %The return statement in non-coroutines is described in \ref{stmt.return}
 %\exitnote
 
 \pnum
-A coroutine returns to its caller by the \tcode{return} statement
+A coroutine returns to its caller by the \tcode{coreturn} statement
 or when suspended at a \term{suspend-resume point} (\ref{dcl.fct.def.coroutine}).
+
+\pnum
+Using a \tcode{return} statement in the coroutine makes the program ill-formed.
 
 \pnum
   In this clause, \tcode{_Pr} refers to the \term{promise object}  
@@ -231,7 +239,7 @@ otherwise, the coroutine flows off the end of the function-body and destroys the
 For a \tcode{yield} statement of the form
 
 \begin{codeblock}
-  yield @\textit{expression}@;
+  coyield @\textit{expression}@;
 \end{codeblock}
 
 let \textit{yielded-value} be equivalent to the \grammarterm{expression} surrounded
@@ -244,7 +252,7 @@ by parentheses
 and for a \tcode{yield} statement of the form
 
 \begin{codeblock}
-  yield @\textit{braced-init-list}@;
+  coyield @\textit{braced-init-list}@;
 \end{codeblock}
 
 let \textit{yielded-value} be equivalent to the \grammarterm{braced-init-list}. In each case,
@@ -277,11 +285,11 @@ A promise object may have more than one overload of \tcode{yield_value}.
   recursive_generator<int> flatten(node* n)
   {
     if (n == nullptr)
-      return;
+      coreturn;
     
-    yield flatten(n->left);
-    yield n->value;
-    yield flatten(n->right);
+    coyield flatten(n->left);
+    coyield n->value;
+    coyield flatten(n->right);
   }
 \end{codeblock}
 
