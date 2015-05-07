@@ -221,8 +221,8 @@ behavior in a coroutine with non-\tcode{void} return type.
 \pnum
 Prior to returning to the caller, a coroutine evaluates
 the \tcode{\textit{p}.final_suspend()} predicate. If \tcode{\textit{p}.final_suspend()} contextually converted to \tcode{bool} evaluates to
-\tcode{true}, the coroutine suspends at \term{final suspend point} (\ref{dcl.fct.def.coroutine}),
-otherwise, the coroutine destroys the \term{coroutine state} and frees the memory dynamically allocated (if any) to store the state.
+\tcode{true}, the coroutine suspends at final suspend point (\ref{dcl.fct.def.coroutine}),
+otherwise, the coroutine destroys the coroutine state (\ref{dcl.fct.def.coroutine}) and frees the memory dynamically allocated (if any) to store the state.
 
 \pnum
 A \tcode{coreturn} statement with an expression of type \textit{cv-void}

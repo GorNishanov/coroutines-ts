@@ -108,13 +108,13 @@ the return type is \tcode{std::experimental::async_stream<T>}, where \tcode{T} i
 
 %NOTE Jens text
 
-\item Otherwise, if an \tcode{coawait} expression or a \tcode{for await} statement are present in a function, then
+\item Otherwise, if an \tcode{coawait} expression or a \tcode{cofor} statement are present in a function, then
 the return type is \tcode{std::experimental::task<T>} where type \tcode{T} is deduced from 
 \tcode{coreturn} statements as if \tcode{coreturn} were a \tcode{return} statement in a function with declared type \tcode{auto} without a \grammarterm{trailing-return-type}.
 
 %NOTE: as if 
 
-\item Otherwise, if a \tcode{yield} statement is present in a function, then the return type is \linebreak
+\item Otherwise, if a \tcode{coyield} statement is present in a function, then the return type is \linebreak
 \tcode{std::experimental::generator<T>},
 where \tcode{T} is deduced from the \tcode{coyield} statements  as if \tcode{coyield} were a \tcode{return} statement in a function with declared type \tcode{auto} without a \grammarterm{trailing-return-type}.
 
@@ -145,7 +145,7 @@ The templates  \tcode{std::experimental::generator},
 if the appropriate headers are not included prior to a use --- even an implicit use in which the type is not
 named~(\ref{dcl.spec.auto}) --- the program is ill-formed.
 \end{quote}
-\ednote{Class templates \tcode{std::experimental::generator}, 
-\tcode{std::experimental::task}, and \linebreak
-\tcode{std::experimental::async_stream} are not specified in this proposal
-and will be developed as more experience with coroutines is accumulated.}
+%\ednote{Class templates \tcode{std::experimental::generator}, 
+%\tcode{std::experimental::task}, and \linebreak
+%\tcode{std::experimental::async_stream} are not specified in this proposal
+%and will be developed as more experience with coroutines is accumulated.}
