@@ -83,7 +83,7 @@ add paragraphs 16 through 18.
 \setcounter{Paras}{15}
 
 %integrate with paragraph 9
-\ednote{Incomplete edit. See if it can be integrated with paragraph 9.}
+\ednote{Incomplete edit. See if the next paragraph can be integrated with paragraph 9.}
 
 \pnum
 If a coroutine has a declared return type that contains a placeholder type has multiple \tcode{coyield}/\tcode{coreturn} statements, the return type is deduced for each
@@ -94,12 +94,12 @@ deduction, the program is ill-formed.
 If a coroutine has a declared return type that contains a placeholder type, then the return type of the coroutine is deduced as follows:
 
 \begin{itemize}
-\item If a \tcode{coyield} statement and either an \tcode{await} expression or a \tcode{cofor} statement are present, then
+\item If a \tcode{coyield} statement and either an \tcode{coawait} expression or a \tcode{cofor} statement are present, then
 the return type is \tcode{std::experimental::async_stream<T>}, where \tcode{T} is deduced from the \tcode{coyield} statements as if \tcode{coyield} were a \tcode{return} statement in a function with declared type \tcode{auto} without a \grammarterm{trailing-return-type}.
 
 %NOTE Jens text
 
-\item Otherwise, if an \tcode{await} expression or a \tcode{for await} statement are present in a function, then
+\item Otherwise, if an \tcode{coawait} expression or a \tcode{for await} statement are present in a function, then
 the return type is \tcode{std::experimental::task<T>} where type \tcode{T} is deduced from 
 \tcode{coreturn} statements as if \tcode{coreturn} were a \tcode{return} statement in a function with declared type \tcode{auto} without a \grammarterm{trailing-return-type}.
 
