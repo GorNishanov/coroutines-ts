@@ -194,7 +194,7 @@ or when suspended at a suspend-resume point (\ref{dcl.fct.def.coroutine}). A \tc
   of the enclosing coroutine.
   
 \pnum
-  If the promise type (\ref{dcl.fct.def.coroutine}) of the coroutine defines the member function \tcode{return_void}, the coroutine is considered to have an \term{eventual return type} of \tcode{void}, otherwise, if the promise type (\ref{dcl.fct.def.coroutine}) of the coroutine defines the member function \tcode{return_value}, the coroutine is considered to have an eventual return value of non-\tcode{void} type, otherwise, the coroutine is not considered to have an eventual return type.
+  If the promise type (\ref{dcl.fct.def.coroutine}) of the coroutine defines the member function \tcode{return_void}, the coroutine is considered to have an \term{eventual return type} of \tcode{void}, otherwise, if the promise type (\ref{dcl.fct.def.coroutine}) of the coroutine defines the member function \tcode{return_value}, the coroutine is considered to have a non-\tcode{void} eventual return  type, otherwise, the coroutine is considered not to have an eventual return type.
   
 \pnum
 A \tcode{coreturn} statement
@@ -205,39 +205,31 @@ is signaled to the promise of the coroutine by calling \tcode{\textit{p}.return_
 A \tcode{coreturn} statement with an expression of non-\tcode{void} type can be used only
 in coroutines producing an eventual value; the value of the expression is supplied to the promise of the coroutine by calling 
 \tcode{\textit{p}.return_value(\grammarterm{expression})} or
-\tcode{\textit{p}.return_value(\grammarterm{braced-init-list})}.
+\tcode{\textit{p}.return_value(\grammarterm{braced-init-list})}. Flowing off the end of a coroutine is equivalent to a \tcode{coreturn} with no value; this results in undefined
+behavior in a coroutine with non-\tcode{void} return type.
 
-\enterexample
-
-\begin{codeblock}
-  std::future<std::pair<std::string,int>> f(const char* p, int x) {
-    coawait g();
-    coreturn {p,x};
-  }
-\end{codeblock}
-\exitexample
-
-Flowing off the end of a coroutine is equivalent to a \tcode{coreturn} with
-no operand; 
-
-% NOTE: Parallel to return
-%in an eventual-value-returning coroutine.
-\enternote
-One possible implementation is to call std::terminate() in this case.
-\exitnote
-
-\pnum
-A \tcode{coreturn} statement with an expression of type \textit{cv-void}
-can be used only in functions without an eventual return type 
-or with an eventual return type of \tcode{void}; the expression is evaluated just before the call to \tcode{_Pr.return_void()}.
+%\enterexample
+%
+%\begin{codeblock}
+%  std::future<std::pair<std::string,int>> f(const char* p, int x) {
+%    coawait g();
+%    coreturn {p,x};
+%  }
+%\end{codeblock}
+%\exitexample
 
 % NOTE: check the core issue list
 
 \pnum
 Prior to returning to the caller, a coroutine evaluates
-the \tcode{_Pr.final_suspend()} predicate. If \tcode{_Pr.final_suspend()} contextually converted to \tcode{bool} evaluates to
+the \tcode{\textit{p}.final_suspend()} predicate. If \tcode{\textit{p}.final_suspend()} contextually converted to \tcode{bool} evaluates to
 \tcode{true}, the coroutine suspends at \term{final suspend point} (\ref{dcl.fct.def.coroutine}),
-otherwise, the coroutine flows off the end of the function-body and destroys the \term{coroutine state} and frees the memory dynamically allocated (if any) to store the state.
+otherwise, the coroutine destroys the \term{coroutine state} and frees the memory dynamically allocated (if any) to store the state.
+
+\pnum
+A \tcode{coreturn} statement with an expression of type \textit{cv-void}
+can be used only in functions without an eventual return type 
+or with an eventual return type of \tcode{void}; the expression is evaluated just before the call to \tcode{\textit{p}.final_suspend()} and \tcode{\textit{p}.return_void()} respectively.
 
 % this is fishy ^^^^ 
 
