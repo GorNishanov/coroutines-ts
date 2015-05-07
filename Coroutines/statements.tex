@@ -186,16 +186,14 @@ Add this section to \ref{stmt.jump}.
 A coroutine returns to its caller by the \tcode{coreturn} statement
 or when suspended at a suspend-resume point (\ref{dcl.fct.def.coroutine}). A \tcode{coreturn} statement shall not appear in a function other than a coroutine.
 
-% NOTES: Italic lowercase p
+\pnum
+  If the promise type (\ref{dcl.fct.def.coroutine}) of the coroutine defines the member function \tcode{return_void}, the coroutine is considered to have an \term{eventual return type} of \tcode{void}, otherwise, if the promise type (\ref{dcl.fct.def.coroutine}) of the coroutine defines the member function \tcode{return_value}, the coroutine is considered to have a non-\tcode{void} eventual return  type, otherwise, the coroutine is considered not to have an eventual return type. If the promise type defines both \tcode{return_value} and \tcode{return_void} member functions, the program is ill-formed.
 
 \pnum
-  In this section, \textit{p} refers to the promise object  
-  (\ref{dcl.fct.def.coroutine})
-  of the enclosing coroutine.
-  
-\pnum
-  If the promise type (\ref{dcl.fct.def.coroutine}) of the coroutine defines the member function \tcode{return_void}, the coroutine is considered to have an \term{eventual return type} of \tcode{void}, otherwise, if the promise type (\ref{dcl.fct.def.coroutine}) of the coroutine defines the member function \tcode{return_value}, the coroutine is considered to have a non-\tcode{void} eventual return  type, otherwise, the coroutine is considered not to have an eventual return type.
-  
+In this section, \textit{p} refers to the promise object  
+(\ref{dcl.fct.def.coroutine})
+of the enclosing coroutine.
+
 \pnum
 A \tcode{coreturn} statement
 with neither an \grammarterm{expression} nor a \grammarterm{braced-init-list}
@@ -251,49 +249,22 @@ Add this section to \ref{stmt.jump}.
 
 \begin{quote}
 
-Let \textit{yielded value} be the operand of the \tcode{coyield} statement. A \tcode{coyield} statement is equivalent to 
-
-%... stuff
-
-\pnum
-For a \tcode{coyield} statement of the form
+Let \textit{yielded value} be the operand of the \tcode{coyield} statement and \textit{p} be the promise object of the enclosing coroutine.
+If the result type of \tcode{\textit{p}.yield_value(\textit{yielded-value})} is of type \textit{cv-void}, then the \tcode{coyield} statement is equivalent to:
 
 \begin{codeblock}
-  coyield @\textit{expression}@;
+  @\textit{p}@.yield_value(@\textit{yielded-value}@);
+  @\textit{<suspend-resume point>}
 \end{codeblock}
 
-let \textit{yielded-value} be equivalent to the \grammarterm{expression} surrounded
-by parentheses
-
-% d
-
-\begin{ncbnf}
-  expression
-\end{ncbnf}
-
-and for a \tcode{yield} statement of the form
+otherwise, it is equivalent to:
 
 \begin{codeblock}
-  coyield @\textit{braced-init-list}@;
-\end{codeblock}
-
-let \textit{yielded-value} be equivalent to the \grammarterm{braced-init-list}. In each case,
-a \tcode{coyield} statement is equivalent to
-
-\begin{codeblock}
-  _Pr.yield_value(@\textit{yielded-value}@);
-  @\textit{suspend-resume-point}
-\end{codeblock}
-
-If a \tcode{_Pr.yield_value(\textit{yielded-value})} expression is of type \tcode{void}, otherwise it is equivalent to:
-
-\begin{codeblock}
-  if (_Pr.yield_value(@\textit{yielded-value}@)) {
-    @\textit{suspend-resume-point}@
+  if (@\textit{p}@.yield_value(@\textit{yielded-value}@)) {
+    @\textit{<suspend-resume point>}@
   }
+  
 \end{codeblock}
-
-Where \tcode{_Pr} is a \term{promise object} (\ref{dcl.fct.def.coroutine}) of the enclosing coroutine.
 
 %\pnum
 %A \tcode{coyield} statement may only appear if a \tcode{yield_value} member
@@ -301,27 +272,27 @@ Where \tcode{_Pr} is a \term{promise object} (\ref{dcl.fct.def.coroutine}) of th
 
 %NOTE: not pretty, can we remove the duplication
 %NOTE: make if first
-
-\pnum
-\enternote
-A promise object may have more than one overload of a \tcode{yield_value}.
-
-\enterexample
-\begin{codeblock}
-  recursive_generator<int> flatten(node* n)
-  {
-    if (n == nullptr)
-      coreturn;
-    
-    coyield flatten(n->left);
-    coyield n->value;
-    coyield flatten(n->right);
-  }
-\end{codeblock}
-
-The promise for the \tcode{flatten} function should contain overloads that can accept a value of type \tcode{int} and a value of type \tcode{recursive_generator<int>}.
-In the former case, yielding a value is unconditional. In the latter case, the nested generator may produce an empty sequence of values and thus suspension at the yield point no yielding occurs and  \tcode{yield_value} should return \tcode{false}. 
-\exitexample
-\exitnote
+%
+%\pnum
+%\enternote
+%A promise object may have more than one overload of a \tcode{yield_value}.
+%
+%\enterexample
+%\begin{codeblock}
+%  recursive_generator<int> flatten(node* n)
+%  {
+%    if (n == nullptr)
+%      coreturn;
+%    
+%    coyield flatten(n->left);
+%    coyield n->value;
+%    coyield flatten(n->right);
+%  }
+%\end{codeblock}
+%
+%The promise for the \tcode{flatten} function should contain overloads that can accept a value of type \tcode{int} and a value of type \tcode{recursive_generator<int>}.
+%In the former case, yielding a value is unconditional. In the latter case, the nested generator may produce an empty sequence of values and thus suspension at the yield point no yielding occurs and  \tcode{yield_value} should return \tcode{false}. 
+%\exitexample
+%\exitnote
 
 \end{quote}
