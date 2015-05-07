@@ -75,7 +75,16 @@ function contains a placeholder type, the return type of the function is
 deduced from \tcode{return},\added{ \tcode{coreturn}, and \tcode{coyield}} statements in the body of the function, if any.
 \end{quote}
 
-%NOTE
+Add the underlined text to paragraph 9.
+
+\begin{quote}
+\setcounter{Paras}{8}
+\pnum
+If a function with a declared return type that contains a placeholder type has
+multiple \tcode{return}\added{, \tcode{coreturn}, and \tcode{coyield}} statements, the return type is deduced for each
+\tcode{return}\added{, \tcode{coreturn}, and \tcode{coyield}} statement. If the type deduced is not the same in each
+deduction, the program is ill-formed.
+\end{quote}
 
 add paragraphs 16 through 18.
 
@@ -83,12 +92,12 @@ add paragraphs 16 through 18.
 \setcounter{Paras}{15}
 
 %integrate with paragraph 9
-\ednote{Incomplete edit. See if the next paragraph can be integrated with paragraph 9.}
-
-\pnum
-If a coroutine has a declared return type that contains a placeholder type has multiple \tcode{coyield}/\tcode{coreturn} statements, the return type is deduced for each
-\tcode{coyield}/\tcode{coreturn} statement. If the type deduced is not the same in each
-deduction, the program is ill-formed.
+%\ednote{Incomplete edit. See if the next paragraph can be integrated with paragraph 9.}
+%
+%\pnum
+%If a coroutine has a declared return type that contains a placeholder type has multiple \tcode{coyield}/\tcode{coreturn} statements, the return type is deduced for each
+%\tcode{coyield}/\tcode{coreturn} statement. If the type deduced is not the same in each
+%deduction, the program is ill-formed.
 
 \pnum
 If a coroutine has a declared return type that contains a placeholder type, then the return type of the coroutine is deduced as follows:
