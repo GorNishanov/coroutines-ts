@@ -18,6 +18,11 @@ Modifications made directly to existing text from the International
 Standard use \added{underlining} to represent added text and
 \removed{strikethrough} to represent deleted text.
 
+\rSec1[intro.ack]{Acknowledgements}
+
+This work is the result of collaboration of researchers in industry and academia, including CppDes Microsoft group and the WG21 study group SG1. We wish to thank people who made valuable contributions within and outside these groups, including Jens Maurer, Artur Laksberg, Chandler Carruth, Gabriel Dos Reis, Deon Brewis, James McNellis, Stephan T. Lavavej, Herb Sutter, Pablo Halpern, Robert Schumacher, Michael Wong, Niklas Gustafsson, Nick Maliwacki, Vladimir Petter, Shahms King, Slava Kuznetsov, Tongari J, Lawrence Crowl, and many others not named here who contributed to
+the discussion.
+
 \rSec1[intro.refs]{Normative references}
 
 \pnum
@@ -36,6 +41,8 @@ The numbering of Clauses, sections, and paragraphs in this document
 reflects the numbering in the \Cpp Standard. References to Clauses
 and sections not appearing in this Technical Specification refer to
 the original, unmodified text in the \Cpp Standard.
+
+% NOTES: N4302 use transaction memory edits to fix this. 
 
 %\rSec1[intro.defs]{Terms and definitions}
 %
@@ -66,7 +73,17 @@ the original, unmodified text in the \Cpp Standard.
 
 \pnum
 Conformance requirements for this specification are the same as those 
-defined in \ref{intro.compliance} in the \Cpp Standard.
+defined in section 1.4 in the \Cpp Standard. Beginning with section 1.9 below, all clause and section numbers, titles,
+and symbolic references in [brackets] refer to the corresponding elements of the C++ Standard. Sections 1.1 through 1.5 of this Technical
+Specification are introductory material and are unrelated to the similarly-numbered sections of the C++ Standard.
+
+% NOTES:
+% \ref{intro.compliance}
+% got http://wiki.edg.com/twiki/pub/Wg21lenexa/CoreWorkingGroup/d4488.html
+% from CA1
+% grab table from there 201511
+
+1.2
 \enternote 
 Conformance is defined in terms of the behavior of programs.
 \exitnote
@@ -104,7 +121,7 @@ of support for language features.
 \topline
 \lhdr{Macro name suffix} & \rhdr{Value} \\
 \capsep
-\tcode{coroutine}  & \tcode{201599}      \\
+\tcode{coroutine}  & \tcode{201511}      \\
 \end{floattable}
 
 %\rSec1[intro.ack]{Acknowledgments}

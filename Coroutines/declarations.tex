@@ -29,7 +29,7 @@ constraints:
   \item \ldots
   \item \ldots
   \item \ldots
-  \item \added{it shall not be coroutine (\ref{dcl.fct.def.coroutine})};
+  \item \added{it shall not be a coroutine (\ref{dcl.fct.def.coroutine})};
 \end{itemize}
 \end{quote}
 
@@ -60,7 +60,7 @@ constraints:
 \setcounter{subsubsection}{3}
 \rSec3[dcl.spec.auto]{\tcode{auto} specifier}
 
-Add the underlined text to paragraph two.
+Add the underlined text to paragraph 2.
 
 \begin{quote}
 \setcounter{Paras}{1}
@@ -72,49 +72,59 @@ in any context where such a declarator is valid. If the function declarator
 includes a \grammarterm{trailing-return-type}~(\cxxref{dcl.fct}), that specifies
 the declared return type of the function. If the declared return type of the
 function contains a placeholder type, the return type of the function is
-deduced from \tcode{return} statements in the body of the function \added{and/or \tcode{yield} statements}, if any.
+deduced from \tcode{return},\added{ \tcode{coreturn}, and \tcode{coyield}} statements in the body of the function, if any.
 \end{quote}
+
+%NOTE
 
 add paragraphs 16 through 18.
 
 \begin{quote}
 \setcounter{Paras}{15}
+
+%integrate with paragraph 9
+\ednote{Incomplete edit. See if it can be integrated with paragraph 9.}
+
 \pnum
-If a coroutine has a declared return type that contains a placeholder type has multiple \tcode{yield} statements, the return type is deduced for each
-\tcode{yield} statement. If the type deduced is not the same in each
+If a coroutine has a declared return type that contains a placeholder type has multiple \tcode{coyield}/\tcode{coreturn} statements, the return type is deduced for each
+\tcode{coyield}/\tcode{coreturn} statement. If the type deduced is not the same in each
 deduction, the program is ill-formed.
 
 \pnum
-If a coroutine with a declared return type that contains a placeholder type, then the return type of the coroutine is deduced as follows:
+If a coroutine has a declared return type that contains a placeholder type, then the return type of the coroutine is deduced as follows:
 
 \begin{itemize}
-\item If a \tcode{yield} statement and either an \tcode{await} expression or a \tcode{for await} statement are present, then
-the return type is \tcode{std::experimental::async_stream<T>}, where \tcode{T} is deduced from the \tcode{yield} statements.
+\item If a \tcode{coyield} statement and either an \tcode{await} expression or a \tcode{cofor} statement are present, then
+the return type is \tcode{std::experimental::async_stream<T>}, where \tcode{T} is deduced from the \tcode{coyield} statements as if \tcode{coyield} were a \tcode{return} statement in a function with declared type \tcode{auto} without a \grammarterm{trailing-return-type}.
+
+%NOTE Jens text
 
 \item Otherwise, if an \tcode{await} expression or a \tcode{for await} statement are present in a function, then
 the return type is \tcode{std::experimental::task<T>} where type \tcode{T} is deduced from 
-\tcode{return} statements.
+\tcode{coreturn} statements as if \tcode{coreturn} were a \tcode{return} statement in a function with declared type \tcode{auto} without a \grammarterm{trailing-return-type}.
+
+%NOTE: as if 
 
 \item Otherwise, if a \tcode{yield} statement is present in a function, then the return type is \linebreak
 \tcode{std::experimental::generator<T>},
-where \tcode{T} is deduced from the \tcode{yield} statements.
+where \tcode{T} is deduced from the \tcode{coyield} statements  as if \tcode{coyield} were a \tcode{return} statement in a function with declared type \tcode{auto} without a \grammarterm{trailing-return-type}.
 
 \end{itemize}
 \enterexample
 \begin{codeblock}
 // deduces to std::experimental::generator<char>
-auto f() { for(auto ch: "Hello") yield ch; }
+auto f() { for(auto ch: "Hello") coyield ch; }
 
 // deduces to std::experimental::async_stream<int>
 auto ticks() {
   for(int tick = 0;; ++tick) {
-    yield tick;
-    await sleep_for(1ms);
+    coyield tick;
+    coawait sleep_for(1ms);
   }
 }
 
 // deduces to std::experimental::task<void>
-auto f() {  await g(); }
+auto f() {  coawait g(); }
 
 \end{codeblock}
 \exitexample

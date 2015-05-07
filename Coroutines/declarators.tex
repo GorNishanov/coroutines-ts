@@ -8,12 +8,13 @@
 \setcounter{subsection}{4}
 \rSec2[dcl.fct]{Functions}%
 
+%NOTES: Fix
 Add paragraph 16.
 
 \begin{quote}
 \setcounter{Paras}{15}
 \pnum
-A function can not be coroutine (\ref{dcl.fct.def.coroutine}) if the \grammarterm{parameter-declaration-clause} terminates with an ellipsis.
+If the \grammarterm{parameter-declaration-clause} terminates with an ellipsis that is not part of \grammarterm{abstract-declarator}, a function shall not be coroutine (\ref{dcl.fct.def.coroutine}) 
 \end{quote}
 
 \setcounter{section}{3}
@@ -22,46 +23,47 @@ A function can not be coroutine (\ref{dcl.fct.def.coroutine}) if the \grammarter
 Add subsection \ref{dcl.fct.def.coroutine}
 
 \setcounter{subsection}{3}
-\rSec2[dcl.fct.def.coroutine]{Coroutine Functions}
+\rSec2[dcl.fct.def.coroutine]{Coroutines}
 
 %\rSec3[coroutine.definitions]{Definitions}
 
 \pnum
-A function is \defn{coroutine} if it contains
-one or more \term{suspend-resume point}{}s. 
+A function is a \defn{coroutine} if it contains
+one or more suspend-resume points. 
 
 \pnum
-\defn{Suspend-resume points} are introduced by \tcode{await} operator (\ref{expr.await}) in potentially-evaluated expression,
-\tcode{yield} statement (\ref{stmt.yield}), 
-or \tcode{for await} statement (\ref{stmt.for.await}). Every coroutine
-also has an implicit initial and final \textit{suspend-resume-point} as described later in this clause. 
+A \defn{Suspend-resume point} is introduced by a potenitally-evaluated \tcode{coawait} operator (\ref{expr.await}) expression,
+a \tcode{coyield} statement (\ref{stmt.yield}), 
+% implicit NOTE: including implicit
+or a \tcode{cofor} statement (\ref{stmt.for.await}). Every coroutine
+also has an implicit initial and final suspend-resume point as described later in this section. 
 
 \pnum
 \enternote
-From the perspective of the caller, a coroutine is just a function with that particular signature. The fact that a function is implemented as coroutine is unobservable by the caller. 
+From the perspective of the caller, a coroutine is just a function with that particular signature. The fact that a function is implemented as a coroutine is unobservable by the caller. 
 \exitnote
 
 \pnum
-Coroutines need a set of related types and functions
+A coroutine needs a set of related types and functions
 to complete the definition of their semantics.
 These types and functions are provided as a set of member types or typedefs
-and functions in the instantiation of struct template
+and member functions in the specializations of struct template
 \tcode{coroutine_traits} (\ref{coroutine.traits}). 
 
 \pnum
-For a coroutine \tcode{f}, Let \tcode{R} be a return type and $P_1$, $P_2$, ..., $P_n$
-be types of parameters. If \tcode{f} is a non-static member function then $P_1$ denotes the type of the implicit \tcode{this} parameter. 
-Coroutine traits for function \tcode{f} is an instantiation of
-struct template \tcode{std::experimental::coroutine_traits<R,P1,...,PN>}.
-Let \tcode{F} be a \grammarterm{function-body}
-\footnote{
-Due to requirement of having suspend-resume points,
-\grammarterm{function-body} is either a
-\grammarterm{compound-statement} or 
-\grammarterm{function-try-block}.
-}
-of that function. Then, the coroutine 
-should behave as if its body were:
+For a coroutine \textit{f}, let \tcode{R} be the return type and $P_1$, $P_2$, ..., $P_n$
+be the types of the parameters. If \textit{f} is a non-static member function, then $P_1$ denotes the type of the implicit object parameter. 
+%Coroutine traits for function \tcode{f} is a specialization of
+%struct template \tcode{std::experimental::coroutine_traits<R,P1,...,PN>}.
+Let \textit{F} be the \grammarterm{function-body}
+%\footnote{
+%Due to requirement of having suspend-resume points,
+%\grammarterm{function-body} is either a
+%\grammarterm{compound-statement} or 
+%\grammarterm{function-try-block}.
+%}
+of \textit{f}. Then, the coroutine 
+behaves as if its body were:
 \begin{codeblock}
   {
      using _Tr = std::experimental::coroutine_traits<R,P1,...,PN>;
@@ -69,7 +71,7 @@ should behave as if its body were:
      if (_Pr.initial_suspend()) {
        suspend-resume-point // initial suspend point
      }
-     try { F }
+     try { @\textit{F}@ }
      catch(...) {
        @\textit{stop-or-propagate}@;
      }
@@ -78,68 +80,103 @@ should behave as if its body were:
      }
   }
 \end{codeblock}
-where type alias \tcode{_Tr} and local variable \tcode{_Pr} are 
+where the type alias \tcode{_Tr} and the local variable \tcode{_Pr} are 
 defined for
 exposition only and
 \textit{stop-or-propagate} is \tcode{throw} 
-if \tcode{promise_type} does not have \tcode{set_exception} member function defined, and \tcode{_Pr.set_exception(std::current_exception())} otherwise. An object denoted as \tcode{_Pr} is a \defn{promise object} of
-a coroutine and its type is a \defn{promise type}
+if \tcode{_Tr::promise_type} does not declare a \tcode{set_exception} member function, and \tcode{_Pr.set_exception(std::current_exception())} otherwise. An object denoted as \tcode{_Pr} is the \defn{promise object} of
+a \textit{f} and its type is a \defn{promise type}
 of the coroutine.
+
+%NOTE: not expand this in code
+%The promise type of f is the type of.
+%The promise object p is an object of promise type
+%promise type metavariable
+%do promise for the type, dodges typename
+
+The object denoted by _Pr is the promise object of f.
+
 %\pnum
 An execution of a coroutine is suspended when it reaches a suspend-resume point.
 
 \pnum 
 A \defn{suspension} of a coroutine returns control to the current
-caller of the coroutine. For the first suspend, the return value is obtained by invoking member function 
+caller of the coroutine. For the first suspend, the return value is obtained by invoking the member function 
 \tcode{get_return_object} (\ref{coroutine.promise})
-of the \term{promise object} of the coroutine.
-For the subsequent suspends, if any, the coroutine
-is invoked via resumption members functions of
-\tcode{coroutine_handle} (\ref{coroutine.handle}) and no return value is expected.
+of the promise object.
+\enternote
+For subsequent suspends, if any, the coroutine
+is invoked via resumption member functions of 
+%NOTE massage
+\tcode{std::experimental::coroutine_handle} (\ref{coroutine.handle}) and no return value is expected.
+\exitnote
 
 \pnum
 A suspended coroutine can be resumed
 to continue execution by invoking
-resumption member functions (\ref{coroutine.handle.resumption}) of an object of \tcode{coroutine_handle<P>} type
+a resumption member functions (\ref{coroutine.handle.resumption}) of an object of \tcode{coroutine_handle<P>} type
 associated with this instance of a coroutine, where type P
 is a \term{promise type} of the function. 
 
 \pnum
-A coroutine may require to allocate
+A coroutine may need to allocate
 memory to store objects with automatic storage duration
 local to the coroutine. If so, it must
 use the allocator object obtained as described in 
 Table~\ref{tab:coroutine.traits.requirements} in clause \ref{coroutine.traits}.
 
 \pnum
-A \defn{coroutine state} consist of 
+A \defn{coroutine state} consists of 
 storage for objects with automatic storage duration
 that are live at the current point of execution or suspension of 
 a coroutine.
-\term{Coroutine state} is destroyed when
+The \term{coroutine state} is destroyed when
 the control flows off the end of the function or
-\tcode{destroy} member function (\ref{coroutine.handle.resumption}) of \tcode{coroutine_handle} object associated with that function is invoked.
+the \tcode{destroy} member function (\ref{coroutine.handle.resumption}) of \tcode{coroutine_handle} object associated with that function is invoked.
 
-\pnum
-An invocation of a coroutine may incur a move operation for the parameters that may be accessed in the \grammarterm{function-body}
-of coroutine after a resume. 
+%introduce metavariable instead of talking about
+%coroutine_handle<>
+
+%\pnum
+%An invocation of a coroutine may incur a move operation for the parameters that may be accessed in the \grammarterm{function-body}
+%of coroutine after a resume. 
 %These copies are defined in the same scope as a \term{promise object}. 
-References to those parameters in the \grammarterm{function-body}
-of the coroutine are replaced with 
-references to their copies .
+%References to those parameters in the \grammarterm{function-body}
+%of the coroutine are replaced with 
+%references to their copies.
+
+%If a parameter copy/move is required, class object moves are performed according to the rules described in \cxxref{class.copy}.
+%%NOTE: whatever 
+%
+%struct S {
+%  int a;
+%  int b;
+%};
+%
+%new (p) S{move(a), move(b)};
+
+%NOTE: massage
+\pnum
+The coroutine state is copy-initialized with the parameter values considered as xvalues. 
+This copy may be elided.
+
+
+%NOTE: say something that we need to check
+%Will be moved to coroutine state and can elide the move.
+%syntactic constraint will be checked.
+
+%NOTE: eventual-return type not defined anywhere
 
 \pnum
-If a parameter copy/move is required, class object moves are performed according to the rules described in Copying and moving class objects (\cxxref{class.copy}).
+If the coroutine state initialization, a call to \tcode{get_return_object}, or a promise object construction throws
+an exception, 
+%objects with automatic storage duration (\cxxref{basic.stc.auto}) that have been
+%constructed are destroyed in the reverse order of their construction, 
+any memory dynamically allocated 
+for the coroutine state is freed.
+%and the search for a handler starts in the scope of the calling function. 
 
-\pnum
-If a parameter move, a call to \tcode{get_return_object}, or a promise object construction throws
-an exception, objects with automatic storage duration (\cxxref{basic.stc.auto}) that have been
-constructed are destroyed in the reverse order of their construction, any memory dynamically allocated 
-for \term{coroutine state} is freed
-and the search for a handler starts in the scope of the calling function. 
-
-\pnum
-A coroutine shall not have an ellipsis parameter specification. 
+%\pnum A coroutine shall not have an ellipsis parameter specification. 
 
 
 %\begin{codeblock}

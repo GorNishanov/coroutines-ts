@@ -4,6 +4,7 @@
 \setcounter{section}{4}
 \rSec1[stmt.iter]{Iteration statements}%
 Add underlined text to paragraph 1.
+%NOTE: change the grammar
 
 \begin{quote}
 \pnum
@@ -23,10 +24,11 @@ Iteration statements specify looping.
 \end{bnf}
 \end{quote}
 
+% goes inside and need fixing goes after
 Add subclause 6.5.5.
 
 \setcounter{subsection}{4}
-\rSec2[stmt.for.await]{The cofor statement}%
+\rSec2[stmt.for.await]{The \tcode{cofor} statement}%
 
 \pnum
 A \tcode{cofor} statement of the form
@@ -51,7 +53,7 @@ is equivalent to
 \end{codeblock}
 
 where \tcode{__range}, \tcode{__begin}, 
-\textit{range-init}, \textit{begin-expr}, and \textit{end-expr} are defined as in the range-based for statement \cxxref{stmt.ranged}.
+\textit{range-init}, \textit{begin-expr}, and \textit{end-expr} are defined as in the range-based \tcode{for} statement (\cxxref{stmt.ranged}).
 
 \pnum
 A \tcode{cofor} statement may only appear in a coroutine 
@@ -61,7 +63,8 @@ functions defined in its \term{promise type} (\ref{dcl.fct.def.coroutine}).
 \setcounter{section}{5}
 \rSec1[stmt.jump]{Jump statements}%
 
-In paragraph 1 add productions for \tcode{coyield} and \tcode{coreturn} statement.
+% Fix some
+In paragraph 1 add four productions to the grammar:
 
 \begin{quote}
 \begin{bnf}
@@ -70,8 +73,8 @@ In paragraph 1 add productions for \tcode{coyield} and \tcode{coreturn} statemen
 	\terminal{continue ;}\br
 	\terminal{return} expression\opt \terminal{;}\br
 	\terminal{return} braced-init-list \terminal{;}\br
-	\added{\terminal{coreturn} expression \terminal{;}}\br
-  \added{\terminal{coreturn} braced-init-list{;}}\br
+	\added{\terminal{coreturn} expression\opt \terminal{;}}\br
+  \added{\terminal{coreturn} braced-init-list \terminal{;}}\br
   \added{\terminal{coyield} expression \terminal{;}}\br
 	\added{\terminal{coyield} braced-init-list \terminal{;}}\br
 	\terminal{goto} identifier \terminal{;}
@@ -83,8 +86,15 @@ In paragraph 1 add productions for \tcode{coyield} and \tcode{coreturn} statemen
 \indextext{\idxcode{return}}%
 \indextext{function~return|see{\tcode{return}}}%
 
+% A
+Modify paragraph 1 to read:
+
+\begin{quote}
 \pnum
-Using a \tcode{return} statement in the coroutine makes the program ill-formed. 
+A function returns to its caller by the return statement. \added{Using a \tcode{return} statement in the coroutine makes the program ill-formed.}
+\end{quote}
+
+%NOTE
 
 %Add a note:
 %
@@ -163,9 +173,11 @@ Using a \tcode{return} statement in the coroutine makes the program ill-formed.
 %a call to __pr.set_result, where _p
 %\end{quote}
 
-Add sections \ref{stmt.return.coroutine} and \ref{stmt.yield}.
-
 \rSec2[stmt.return.coroutine]{The \tcode{coreturn} statement}%
+
+Add this section to \ref{stmt.jump}.
+
+\begin{quote}
 %\enternote
 %In this section function refers to coroutine only.
 %The return statement in non-coroutines is described in \ref{stmt.return}
@@ -173,24 +185,26 @@ Add sections \ref{stmt.return.coroutine} and \ref{stmt.yield}.
 
 \pnum
 A coroutine returns to its caller by the \tcode{coreturn} statement
-or when suspended at a \term{suspend-resume point} (\ref{dcl.fct.def.coroutine}).
+or when suspended at a suspend-resume point (\ref{dcl.fct.def.coroutine}). A \tcode{coreturn} statement shall not appear in a function other than a coroutine.
+
+% NOTES: Italic lowercase p
 
 \pnum
-Using a \tcode{return} statement in the coroutine makes the program ill-formed.
-
-\pnum
-  In this clause, \tcode{_Pr} refers to the \term{promise object}  
+  In this section, \tcode{_Pr} refers to the promise object  
   (\ref{dcl.fct.def.coroutine})
   of the enclosing coroutine.
   
 \pnum
-A \tcode{return} statement
+  If the promise type (\ref{dcl.fct.def.coroutine}) of the coroutine defines the member function \tcode{return_void}, the coroutine is considered to have an eventual return value of type \tcode{void}, otherwise, if the promise type (\ref{dcl.fct.def.coroutine}) of the coroutine defines the member function \tcode{return_value}, the coroutine is considered to have an eventual return value of non-\tcode{void} type, otherwise, the coroutine is not considered to have an eventual return value.
+  
+\pnum
+A \tcode{coreturn} statement
 with neither an \grammarterm{expression} nor a \grammarterm{braced-init-list}
 can be used only in coroutines
 that do not produce an eventual value or have an eventual return type of \tcode{void}. In the latter case, completion of the coroutine
-is reported by calling \tcode{_Pr.return_void()}.
-A \tcode{return} statement with an expression of non-\tcode{void} type can be used only
-in coroutines producing an eventual value; the value of the expression is supplied to a promise of the coroutine by calling 
+is signaled to the promise of the coroutine by calling \tcode{_Pr.return_void()}.
+A \tcode{coreturn} statement with an expression of non-\tcode{void} type can be used only
+in coroutines producing an eventual value; the value of the expression is supplied to the promise of the coroutine by calling 
 \tcode{_Pr.return_value(\grammarterm{expression})} or
 \tcode{_Pr.return_value(\grammarterm{braced-init-list})}.
 
@@ -198,30 +212,37 @@ in coroutines producing an eventual value; the value of the expression is suppli
 
 \begin{codeblock}
   std::future<std::pair<std::string,int>> f(const char* p, int x) {
-    await g();
-    return {p,x};
+    coawait g();
+    coreturn {p,x};
   }
 \end{codeblock}
 \exitexample
 
-Flowing off the end of a function is equivalent to a \tcode{return} with
-no value; 
-this results in an implementation-defined behavior in an eventual-value-returning coroutine.
+Flowing off the end of a coroutine is equivalent to a \tcode{coreturn} with
+no operand; 
+; this results in undefined
+behavior in a value-returning function.
+
+% NOTE: Parallel to return
+%in an eventual-value-returning coroutine.
 \enternote
 One possible implementation is to call std::terminate() in this case.
 \exitnote
 
 \pnum
-A \tcode{return} statement with an expression of type \tcode{void}
+A \tcode{coreturn} statement with an expression of type \textit{cv-void}
 can be used only in functions without an eventual return type 
-or with an eventual return type of \tcode{void}; the expression is evaluated just before the function
-returns to its caller.
+or with an eventual return type of \tcode{void}; the expression is evaluated just before the call to \tcode{_Pr.return_void()}.
+
+% NOTE: check the core issue list
 
 \pnum
 Prior to returning to the caller, a coroutine evaluates
-\tcode{_Pr.final_suspend()} predicate. If \tcode{_Pr.final_suspend()} contextually converted to \tcode{bool} evaluates to
+the \tcode{_Pr.final_suspend()} predicate. If \tcode{_Pr.final_suspend()} contextually converted to \tcode{bool} evaluates to
 \tcode{true}, the coroutine suspends at \term{final suspend point} (\ref{dcl.fct.def.coroutine}),
 otherwise, the coroutine flows off the end of the function-body and destroys the \term{coroutine state} and frees the memory dynamically allocated (if any) to store the state.
+
+% this is fishy ^^^^ 
 
 %\enternote
 %If coroutine instance lifetime is controlled 
@@ -233,10 +254,20 @@ otherwise, the coroutine flows off the end of the function-body and destroys the
 %when the task completes, \tcode{_Pr.final_suspend()} would return false.
 %\exitnote
 
-\rSec2[stmt.yield]{The yield statement}%
+\end{quote}
+
+\rSec2[stmt.yield]{The \tcode{coyield} statement}%
+
+Add this section to \ref{stmt.jump}.
+
+\begin{quote}
+
+Let \textit{yielded value} be the operand of the \tcode{coyield} statement. A \tcode{coyield} statement is equivalent to 
+
+%... stuff
 
 \pnum
-For a \tcode{yield} statement of the form
+For a \tcode{coyield} statement of the form
 
 \begin{codeblock}
   coyield @\textit{expression}@;
@@ -245,8 +276,10 @@ For a \tcode{yield} statement of the form
 let \textit{yielded-value} be equivalent to the \grammarterm{expression} surrounded
 by parentheses
 
+% d
+
 \begin{ncbnf}
-  \terminal{(} expression \terminal{)}
+  expression
 \end{ncbnf}
 
 and for a \tcode{yield} statement of the form
@@ -256,7 +289,7 @@ and for a \tcode{yield} statement of the form
 \end{codeblock}
 
 let \textit{yielded-value} be equivalent to the \grammarterm{braced-init-list}. In each case,
-a \tcode{yield} statement is equivalent to
+a \tcode{coyield} statement is equivalent to
 
 \begin{codeblock}
   _Pr.yield_value(@\textit{yielded-value}@);
@@ -273,12 +306,16 @@ If a \tcode{_Pr.yield_value(\textit{yielded-value})} expression is of type \tcod
 
 Where \tcode{_Pr} is a \term{promise object} (\ref{dcl.fct.def.coroutine}) of the enclosing coroutine.
 
-\pnum
-A \tcode{yield} statement may only appear if a \tcode{yield_value} member
-function is defined in the promise type of the enclosing coroutine.
+%\pnum
+%A \tcode{coyield} statement may only appear if a \tcode{yield_value} member
+%function is defined in the promise type of the enclosing coroutine.
+
+%NOTE: not pretty, can we remove the duplication
+%NOTE: make if first
 
 \pnum
-A promise object may have more than one overload of \tcode{yield_value}.
+\enternote
+A promise object may have more than one overload of a \tcode{yield_value}.
 
 \enterexample
 \begin{codeblock}
@@ -293,6 +330,9 @@ A promise object may have more than one overload of \tcode{yield_value}.
   }
 \end{codeblock}
 
-The promise for \tcode{flatten} function should contain overloads that can accept a value of type \tcode{int} and a value of type \tcode{recursive_generator<int>}.
-In the former case, yielding a value is unconditional. In the latter case, the nested generator may produce an empty sequence of values and thus suspension at the yield point shall not happen and corresponding \tcode{yield_value} contextually converted to \tcode{bool} must evaluate to \tcode{false}. 
+The promise for the \tcode{flatten} function should contain overloads that can accept a value of type \tcode{int} and a value of type \tcode{recursive_generator<int>}.
+In the former case, yielding a value is unconditional. In the latter case, the nested generator may produce an empty sequence of values and thus suspension at the yield point no yielding occurs and  \tcode{yield_value} should return \tcode{false}. 
 \exitexample
+\exitnote
+
+\end{quote}
