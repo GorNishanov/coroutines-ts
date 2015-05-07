@@ -42,10 +42,6 @@ In this section, add a new paragraph after paragraph 3.
 If in a potentially-evaluated context the \textit{expression} would contain a potentially-evaluated \tcode{coawait} expression, the program is ill-formed.
 \end{quote}
 
-%NOTES: 5.3.8
-%Fix indentation
-%Editing instructions inside sections
-
 \setcounter{subsection}{8}
 \rSec2[expr.await]{Coawait}
 
@@ -57,27 +53,88 @@ Add paragraph 5.3.9.
 The \tcode{coawait} operator is used to suspend evaluation of the enclosing coroutine (\ref{dcl.fct.def.coroutine}) while awaiting
 for completion of the computation represented by the operand expression.
 
-% NOTES: Put there restriction on
-% noexcept
-
-%\pnum
-%The presence of an \tcode{coawait} operator in a potentially-evaluated expression makes the enclosing function a coroutine.
-
 \pnum
 A potentially-evaluated 
 \tcode{coawait} expression shall only appear within the \grammarterm{compound-statement} of a \grammarterm{function-body} outside of a \grammarterm{handler} (\cxxref{except.handle}).
 In a \grammarterm{declaration-statement}, a potentially-evaluated \tcode{coawait} expression shall only appear in an \grammarterm{initializer} of that \grammarterm{declaration-statement}.
-A potentially-evaluated await expression shall not appear in a default argument (\cxxref{dcl.fct.default}).
+A potentially-evaluated \tcode{coawait} expression shall not appear in a default argument (\cxxref{dcl.fct.default}).
 
-%a\pnum
-%A \tcode{coawait} expression shall not appear in a potentially-evaluated expression in a \grammarterm{handler} (\cxxref{except.handle}).
-%A \tcode{coawait} expression shall not appear in an \grammarterm{initializer-clause} of a default parameter (\cxxref{dcl.fct.default}).
+\pnum
+Let \textit{T} be the type of the \grammarterm{cast-expression},
+\textit{e} be an r-value reference to the value of that expression,  \textit{p} be the promise object (\ref{dcl.fct.def.coroutine})
+of the enclosing coroutine, \textit{P} be the type of the promise object, \textit{h} be an object of \tcode{std::experimental::coroutine_handle<\textit{P}>} refering to the enclosing coroutine, and \textit{await-ready-expr}, \textit{await-suspend-expr}, and \textit{await-resume-expr} are expressions defined as follows:
+\begin{itemize}
+  \item if \textit{T}  is a class type, the \grammarterm{unqualified-id}{s}
+  \tcode{await_ready}, \tcode{await_suspend}, and \tcode{await_resume} are 
+  looked up in the scope of that class
+  as if by class member access lookup~(\cxxref{basic.lookup.classref}), and if it finds at least one declaration, 
+  \textit{await-ready}, \textit{await-suspend}, and \textit{await-resume} are
+  \tcode{\textit{e}.await_ready()}, \tcode{\textit{e}.await_suspend(\textit{h})} and \tcode{\textit{e}.await_resume()},
+  respectively;
+  
+  \item otherwise, \textit{await-ready}, \textit{await-suspend} and \textit{await-resume} are 
+  \tcode{await_ready(\textit{e})}, 
+  \tcode{await_suspend(\textit{e}, \textit{h})}, and \tcode{await_resume(\textit{e})} 
+  respectively, where 
+  \textit{await-ready}, \textit{await-suspend}, and \textit{await-resume} are 
+  looked up in the associated namespaces~(\cxxref{basic.lookup.argdep}).
+  \enternote Ordinary unqualified lookup~(\cxxref{basic.lookup.unqual}) is not
+  performed. \exitnote
 
-%\rSec2[expr.await.evaluation]{Evaluation of await operator}
+Then, if the type of \textit{await-suspend-expr} is \textit{cv-void}, then
 
-%\pnum
-%Let \textit{T} be the type of the \grammarterm{cast-expression} and \textit{p} be the promise object (\ref{dcl.fct.def.coroutine})
-%of the enclosing coroutine.
+\begin{ncbnf}
+  \terminal{coawait} cast-expression
+\end{ncbnf}
+is equivalent to:
+\begin{codeblock}
+(
+  ( 
+    (@\textit{await-ready-expr}@) ? 0
+    : (@\textit{await-suspend-expr}@, @\textit{<suspend-resume point>}@, 0)
+  )
+  , @\textit{await-resume-expr}@;
+)
+\end{codeblock}
+
+otherwise, it is equivalent to:
+
+\begin{codeblock}
+(
+  ( 
+    (@\textit{await-ready-expr}@ && !@\textit{await-suspend-expr}@) ? 0
+    : @\textit{<suspend-resume point>}@, 0)
+  )
+  , @\textit{await-resume-expr}@;
+)
+\end{codeblock}
+
+\pnum
+A \tcode{coawait} expression may only appear in a coroutine 
+with an eventual return type (\ref{stmt.return.coroutine}).
+
+\pnum
+\enternote
+A \tcode{coawait} expression may appear as an unevaluated operand (\cxxref{expr.typeid}, \cxxref{expr.sizeof}, \cxxref{expr.unary.noexcept}, \cxxref{dcl.type.simple}). The presence of such an \tcode{coawait} expression does not make the enclosing function a coroutine and can be used to examine the type of an \tcode{coawait} expression.
+
+\enterexample
+\begin{codeblock}	
+  std::future<int> f();
+  
+  int main() {
+    using t = decltype(await f()); // t is int
+    static_assert(sizeof(await f()) == sizeof(int));
+    cout << typeid(await f()).name() << endl;
+  }
+\end{codeblock}
+\exitexample%
+\exitnote
+
+\end{quote}
+%, i.e a coroutine shall have the \tcode{return_value} or \tcode{return_void} member
+%functions defined in its \term{promise type} 
+
+\rSec2[expr.await.old]{Old version of Coawait for wording comparison}
 
 \pnum
 A \tcode{coawait} expression of the form
@@ -92,13 +149,15 @@ block becomes the result of the expression}
 \begin{codeblock}
 {
   auto && __expr = @\grammarterm{cast-expression}@;
-  if ( !await-ready-expr ) {
-    await-suspend-expr;
-    @\textit{suspend-resume-point}@
+  if ( !@\textit{await-ready-expr}@ ) {
+    @\textit{await-suspend-expr}@;
+    @\textit{suspend-resume point}@
   }
   return await-resume-expr;
 }
 \end{codeblock}
+
+otherwise, the await expression is equivalent
 
 %NOTE:
 %The type, value category and value of an await expression are those of \texit{await-resume-expr}.
@@ -165,28 +224,3 @@ determined as follows:
 %	int result = await async([]{return 5;});
 %\end{codeblock}
 %\exitexample%
-
-\enternote
-An \tcode{coawait} expression may appear as an unevaluated operand (\cxxref{expr.typeid}, \cxxref{expr.sizeof}, \cxxref{expr.unary.noexcept}, \cxxref{dcl.type.simple}). The presence of such an \tcode{coawait} expression does not make the enclosing function a coroutine and can be used to examine the type of an \tcode{coawait} expression.
- 
-\enterexample
-\begin{codeblock}	
-std::future<int> f();
-	
-int main() {
-  using t = decltype(await f()); // t is int
-  static_assert(sizeof(await f()) == sizeof(int));
-  cout << typeid(await f()).name() << endl;
-}
-\end{codeblock}
-\exitexample%
-\exitnote
-
-
-\pnum
-An \tcode{coawait} expression may only appear in a coroutine 
-with an eventual return type (\ref{stmt.return.coroutine}).
-
-%, i.e a coroutine shall have the \tcode{return_value} or \tcode{return_void} member
-%functions defined in its \term{promise type} 
-\end{quote}
