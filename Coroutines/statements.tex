@@ -25,18 +25,20 @@ Iteration statements specify looping.
 \end{quote}
 
 % goes inside and need fixing goes after
-Add subclause 6.5.5.
 
 \setcounter{subsection}{4}
 \rSec2[stmt.for.await]{The \tcode{cofor} statement}%
 
+Add this section to \ref{stmt.iter}.
+
+
+\begin{quote}
 \pnum
 A \tcode{cofor} statement of the form
 
 \begin{ncbnf}
 	\terminal{cofor (} for-range-declaration : expression \terminal{)} statement
 \end{ncbnf}
-
 is equivalent to
 
 \begin{codeblock}
@@ -55,10 +57,7 @@ is equivalent to
 where \tcode{__range}, \tcode{__begin}, 
 \textit{range-init}, \textit{begin-expr}, and \textit{end-expr} are defined as in the range-based \tcode{for} statement (\cxxref{stmt.ranged}).
 
-\pnum
-A \tcode{cofor} statement may only appear in a coroutine 
-with an eventual return type, i.e a coroutine shall have the \tcode{return_value} or \tcode{return_void} member
-functions defined in its \term{promise type} (\ref{dcl.fct.def.coroutine}).
+\end{quote}
 
 \setcounter{section}{5}
 \rSec1[stmt.jump]{Jump statements}%
@@ -190,23 +189,23 @@ or when suspended at a suspend-resume point (\ref{dcl.fct.def.coroutine}). A \tc
 % NOTES: Italic lowercase p
 
 \pnum
-  In this section, \tcode{_Pr} refers to the promise object  
+  In this section, \textit{p} refers to the promise object  
   (\ref{dcl.fct.def.coroutine})
   of the enclosing coroutine.
   
 \pnum
-  If the promise type (\ref{dcl.fct.def.coroutine}) of the coroutine defines the member function \tcode{return_void}, the coroutine is considered to have an eventual return value of type \tcode{void}, otherwise, if the promise type (\ref{dcl.fct.def.coroutine}) of the coroutine defines the member function \tcode{return_value}, the coroutine is considered to have an eventual return value of non-\tcode{void} type, otherwise, the coroutine is not considered to have an eventual return value.
+  If the promise type (\ref{dcl.fct.def.coroutine}) of the coroutine defines the member function \tcode{return_void}, the coroutine is considered to have an \term{eventual return type} of \tcode{void}, otherwise, if the promise type (\ref{dcl.fct.def.coroutine}) of the coroutine defines the member function \tcode{return_value}, the coroutine is considered to have an eventual return value of non-\tcode{void} type, otherwise, the coroutine is not considered to have an eventual return type.
   
 \pnum
 A \tcode{coreturn} statement
 with neither an \grammarterm{expression} nor a \grammarterm{braced-init-list}
 can be used only in coroutines
-that do not produce an eventual value or have an eventual return type of \tcode{void}. In the latter case, completion of the coroutine
-is signaled to the promise of the coroutine by calling \tcode{_Pr.return_void()}.
+that do not have an eventual return type or have an eventual return type of \tcode{void}. In the latter case, completion of the coroutine
+is signaled to the promise of the coroutine by calling \tcode{\textit{p}.return_void()}.
 A \tcode{coreturn} statement with an expression of non-\tcode{void} type can be used only
 in coroutines producing an eventual value; the value of the expression is supplied to the promise of the coroutine by calling 
-\tcode{_Pr.return_value(\grammarterm{expression})} or
-\tcode{_Pr.return_value(\grammarterm{braced-init-list})}.
+\tcode{\textit{p}.return_value(\grammarterm{expression})} or
+\tcode{\textit{p}.return_value(\grammarterm{braced-init-list})}.
 
 \enterexample
 
@@ -220,8 +219,6 @@ in coroutines producing an eventual value; the value of the expression is suppli
 
 Flowing off the end of a coroutine is equivalent to a \tcode{coreturn} with
 no operand; 
-; this results in undefined
-behavior in a value-returning function.
 
 % NOTE: Parallel to return
 %in an eventual-value-returning coroutine.
