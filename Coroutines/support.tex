@@ -31,10 +31,35 @@ Add a row to Table~\ref{tab:lang.sup.lib.summary} for \tcode{<experimental/corou
 \end{libsumtab}
 
 
-Add section \ref{support.coroutine}
+\setcounter{section}{9}
+\rSec1[support.runtime]{Other runtime support}
+
+Add underlined text to paragraph 4.
+
+\begin{quote}
+\setcounter{Paras}{3}
+\pnum
+The function signature
+\indexlibrary{\idxcode{longjmp}}%
+\tcode{longjmp(jmp_buf jbuf, int val)}
+has more restricted behavior in this International Standard.
+A \tcode{setjmp}/\tcode{longjmp} call pair has undefined
+behavior if replacing the \tcode{setjmp} and \tcode{longjmp}
+by \tcode{catch} and \tcode{throw} would invoke any non-trivial destructors for any automatic
+objects.
+%
+\added{A \tcode{setjmp}/\tcode{longjmp} call pair has undefined
+behavior if invoked in a coroutine.}
+
+\xref ISO C~7.10.4, 7.8, 7.6, 7.12.
+\end{quote}
 
 \setcounter{section}{10}
 \rSec1[support.coroutine]{Coroutines support library}
+
+Add this section to clause \ref{language.support}.
+
+\begin{quote}
 
 \pnum
 The header
@@ -355,7 +380,7 @@ a coroutine when
 a \tcode{coreturn} statement
 with an \grammarterm{expression} 
 or a \grammarterm{braced-init-list}
-is encountered in a coroutine (\ref{stmt.return.coroutine}).
+is encountered in a coroutine (\ref{stmt.coroutine}).
 %If a promise type does not satisfy this requirement, the presence of 
 %a \tcode{coreturn} statement
 %with an \grammarterm{expression} 
@@ -365,7 +390,7 @@ is encountered in a coroutine (\ref{stmt.return.coroutine}).
 	\tcode{p.return_void()}     &   
 %If present, an enclosing coroutine supports an eventual value of type \tcode{void}. 
 If present, invoked when 
-a \tcode{coreturn} statement is encountered as described in (\ref{stmt.return.coroutine}).
+a \tcode{coreturn} statement is encountered as described in (\ref{stmt.coroutine}).
 A promise type shall not define both \tcode{return_void} and \tcode{return_value} member functions.
 	\\ \rowsep
 	\tcode{p.set_exception(e)} & 
@@ -433,3 +458,5 @@ of a promise type for a simple generator.
   
 \end{codeblock}
 \exitexample
+
+\end{quote}

@@ -150,9 +150,10 @@ the \tcode{destroy} member function (\ref{coroutine.handle.resumption}) of an ob
 
 %NOTE: massage
 \pnum
-The region of a coroutine state storing  parameters to the coroutine is copy-initialized with the parameter values considered as xvalues. 
-This copy may be elided.
-
+The region of a coroutine state storing parameters to the coroutine is copy-initialized with the parameter values.
+\enternote 
+This copy may be elided (\cxxref{class.copy}).
+\exitnote
 
 %NOTE: say something that we need to check
 %Will be moved to coroutine state and can elide the move.
@@ -168,6 +169,24 @@ an exception,
 any memory dynamically allocated 
 for the coroutine state is freed.
 %and the search for a handler starts in the scope of the calling function. 
+
+\pnum
+\enterexample
+\begin{codeblock}
+generator<char> hello_fn() {
+  for (auto ch: "Hello, world") coyield ch;
+}
+  
+int main() {
+  auto hello_lambda = []{ for (auto ch: "Hello, world") coyield ch; };
+  
+  for (auto ch : hello_lambda()) 
+     cout << ch;
+  for (auto ch : hello_fn()) 
+     cout << ch;
+}
+\end{codeblock}
+\exitexample
 
 %\pnum A coroutine shall not have an ellipsis parameter specification. 
 

@@ -55,7 +55,12 @@ The \tcode{coawait} operator is used to suspend evaluation of the enclosing coro
 \pnum
 A potentially-evaluated 
 \tcode{coawait} expression shall only appear within the \grammarterm{compound-statement} of a \grammarterm{function-body} outside of a \grammarterm{handler} (\cxxref{except.handle}).
+%
 In a \grammarterm{declaration-statement}, a potentially-evaluated \tcode{coawait} expression shall only appear in an \grammarterm{initializer} of that \grammarterm{declaration-statement}.
+%
+A potentially-evaluated \tcode{coawait} expression shall not appear in a
+local class defined in \grammarterm{declaration-statement}.
+%
 A potentially-evaluated \tcode{coawait} expression shall not appear in a default argument (\cxxref{dcl.fct.default}).
 
 \pnum
@@ -113,7 +118,7 @@ where \textit{suspend-resume-point}s are treated as  expressions of type \tcode{
 
 \pnum
 A \tcode{coawait} expression may only appear in a coroutine 
-with an eventual return type (\ref{stmt.return.coroutine}).
+with an eventual return type (\ref{stmt.coreturn}).
 
 \pnum
 \enternote

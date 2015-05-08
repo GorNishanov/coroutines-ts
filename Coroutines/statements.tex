@@ -174,7 +174,7 @@ A function returns to its caller by the \tcode{return} statement.
 %a call to __pr.set_result, where _p
 %\end{quote}
 
-\rSec2[stmt.return.coroutine]{The \tcode{coreturn} statement}%
+\rSec2[stmt.coreturn]{The \tcode{coreturn} statement}%
 
 Add this section to \ref{stmt.jump}.
 
@@ -189,7 +189,7 @@ A coroutine returns to its caller by the \tcode{coreturn} statement
 or when suspended at a suspend-resume point (\ref{dcl.fct.def.coroutine}). A \tcode{coreturn} statement shall not appear in a function other than a coroutine.
 
 \pnum
-  If the promise type (\ref{dcl.fct.def.coroutine}) of the coroutine defines the member function \tcode{return_void}, the coroutine is considered to have an \term{eventual return type} of \tcode{void}, otherwise, if the promise type (\ref{dcl.fct.def.coroutine}) of the coroutine defines the member function \tcode{return_value}, the coroutine is considered to have a non-\tcode{void} eventual return  type, otherwise, the coroutine is considered not to have an eventual return type. If the promise type defines both \tcode{return_value} and \tcode{return_void} member functions, the program is ill-formed.
+  If the promise type (\ref{dcl.fct.def.coroutine}) of the coroutine defines the member function \tcode{return_void}, the coroutine is considered to have an \term{eventual return type} of \tcode{void}, if the promise type (\ref{dcl.fct.def.coroutine}) of the coroutine defines the member function \tcode{return_value}, the coroutine is considered to have a non-\tcode{void} eventual return  type, otherwise, the coroutine is considered not to have an eventual return type. If the promise type defines both \tcode{return_value} and \tcode{return_void} member functions, the program is ill-formed.
 
 \pnum
 In this section, \textit{p} refers to the promise object  
@@ -205,7 +205,7 @@ is signaled to the promise of the coroutine by calling \tcode{\textit{p}.return_
 A \tcode{coreturn} statement with an expression of non-\tcode{void} type can be used only
 in coroutines producing an eventual value; the value of the expression is supplied to the promise of the coroutine by calling 
 \tcode{\textit{p}.return_value(\grammarterm{expression})} or
-\tcode{\textit{p}.return_value(\grammarterm{braced-init-list})}. Flowing off the end of a coroutine is equivalent to a \tcode{coreturn} with no value; this results in undefined
+\tcode{\textit{p}.\mbox{return_value}(\grammarterm{braced-init-list})}. Flowing off the end of a coroutine is equivalent to a \tcode{coreturn} with no value; this results in undefined
 behavior in a coroutine with non-\tcode{void} return type.
 
 %NOTE: hyphen ubbrea
