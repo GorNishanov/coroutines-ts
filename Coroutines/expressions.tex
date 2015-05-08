@@ -42,7 +42,7 @@ In this section, add a new paragraph after paragraph 3.
 If in a potentially-evaluated context the \textit{expression} would contain a potentially-evaluated \tcode{coawait} expression, the program is ill-formed.
 \end{quote}
 
-\setcounter{subsection}{8}
+\setcounter{subsection}{7}
 \rSec2[expr.await]{Coawait}
 
 Add this section to \ref{expr.unary}.
@@ -50,8 +50,7 @@ Add this section to \ref{expr.unary}.
 %NOTES: add quote
 \begin{quote}
 \pnum
-The \tcode{coawait} operator is used to suspend evaluation of the enclosing coroutine (\ref{dcl.fct.def.coroutine}) while awaiting
-for completion of the computation represented by the operand expression.
+The \tcode{coawait} operator is used to suspend evaluation of the enclosing coroutine (\ref{dcl.fct.def.coroutine}) while awaiting completion of the computation represented by the operand expression.
 
 \pnum
 A potentially-evaluated 
@@ -61,41 +60,42 @@ A potentially-evaluated \tcode{coawait} expression shall not appear in a default
 
 \pnum
 Let \textit{T} be the type of the \grammarterm{cast-expression},
-\textit{e} be an r-value reference to the value of that expression,  \textit{p} be the promise object (\ref{dcl.fct.def.coroutine})
-of the enclosing coroutine, \textit{P} be the type of the promise object, \textit{h} be an object of \tcode{std::experimental::coroutine_handle<\textit{P}>} refering to the enclosing coroutine, and \textit{await-ready-expr}, \textit{await-suspend-expr}, and \textit{await-resume-expr} are expressions defined as follows:
+%Fix
+\textit{e} be an rvalue reference to the value of that expression,  \textit{p} be the promise object (\ref{dcl.fct.def.coroutine})
+of the enclosing coroutine, \textit{P} be the type of the promise object, \textit{h} be an object of \tcode{std::experimental::coroutine_handle<\textit{P}>} refering to the enclosing coroutine, then \textit{await-ready-expr}, \textit{await-suspend-expr}, and \textit{await-resume-expr} are expressions defined as follows:
 \begin{itemize}
+  %CHECK oxfor comma
   \item if \textit{T}  is a class type, the \grammarterm{unqualified-id}{s}
-  \tcode{await_ready}, \tcode{await_suspend}, and \tcode{await_resume} are 
+  \tcode{await_ready}, \tcode{await_suspend}, 
+   \tcode{await_resume} are 
   looked up in the scope of that class
   as if by class member access lookup~(\cxxref{basic.lookup.classref}), and if it finds at least one declaration, 
-  \textit{await-ready}, \textit{await-suspend}, and \textit{await-resume} are
-  \tcode{\textit{e}.await_ready()}, \tcode{\textit{e}.await_suspend(\textit{h})} and \tcode{\textit{e}.await_resume()},
+  \textit{await-ready-expr}, \textit{await-suspend-expr}, and \textit{await-resume-expr} are
+  \tcode{\textit{e}.await_ready()}, \tcode{\textit{e}.await_suspend(\textit{h})}, and \tcode{\textit{e}.await_resume()},
   respectively;
   
-  \item otherwise, \textit{await-ready}, \textit{await-suspend} and \textit{await-resume} are 
+  \item otherwise, \textit{await-ready-expr}, \textit{await-suspend-expr}, and \textit{await-resume-expr} are 
   \tcode{await_ready(\textit{e})}, 
   \tcode{await_suspend(\textit{e}, \textit{h})}, and \tcode{await_resume(\textit{e})} 
   respectively, where 
-  \textit{await-ready}, \textit{await-suspend}, and \textit{await-resume} are 
+  \textit{await-ready-expr}, \textit{await-suspend-expr}, and \textit{await-resume-expr} are 
   looked up in the associated namespaces~(\cxxref{basic.lookup.argdep}).
   \enternote Ordinary unqualified lookup~(\cxxref{basic.lookup.unqual}) is not
   performed. \exitnote
 \end{itemize}
 
-If the type of \textit{await-suspend-expr} is \textit{cv-void}, then
+%style cv-void
+If the type of \textit{await-suspend-expr} is \cvvoid, then
 
 \begin{ncbnf}
   \terminal{coawait} cast-expression
 \end{ncbnf}
 is equivalent to:
+%refactor
 \begin{codeblock}
 (
-  (void)
-  ( 
-    (@\textit{await-ready-expr}@) ? 0
-    : (@\textit{await-suspend-expr}@, @\textit{suspend-resume-point}@ 0)
-  )
-  , @\textit{await-resume-expr}@
+    @\textit{await-ready-expr}@ ? @\textit{await-resume-expr}@
+    : (@\textit{await-suspend-expr}@, @\textit{suspend-resume-point}@, @\textit{await-resume-expr}@)
 )
 \end{codeblock}
 
@@ -103,16 +103,13 @@ otherwise, it is equivalent to:
 
 \begin{codeblock}
 (
-  (void)
-  ( 
-    (@\textit{await-ready-expr}@ && !@\textit{await-suspend-expr}@) ? 0
-    : (@\textit{suspend-resume-point}@ 0)
-  )
-  , @\textit{await-resume-expr}@
+    (@\textit{await-ready-expr}@ && !@\textit{await-suspend-expr}@) ? @\textit{await-resume-expr}@
+    : (@\textit{suspend-resume-point}@, @\textit{await-resume-expr}@)
 )
 \end{codeblock}
 
-where \textit{suspend-resume-point}s are suspend-resume-points as defined in (\ref{dcl.fct.def.coroutine}).
+where \textit{suspend-resume-point}s are treated as  expressions of type \tcode{void}. Suspend-resume-points are defined in (\ref{dcl.fct.def.coroutine}).
+%NOTE:
 
 \pnum
 A \tcode{coawait} expression may only appear in a coroutine 
@@ -120,7 +117,7 @@ with an eventual return type (\ref{stmt.return.coroutine}).
 
 \pnum
 \enternote
-A \tcode{coawait} expression may appear as an unevaluated operand (\cxxref{expr.typeid}, \cxxref{expr.sizeof}, \cxxref{expr.unary.noexcept}, \cxxref{dcl.type.simple}). The presence of such an \tcode{coawait} expression does not make the enclosing function a coroutine and can be used to examine the type of an \tcode{coawait} expression.
+A \tcode{coawait} expression may appear as an unevaluated operand (\cxxref{expr.typeid}, \cxxref{expr.sizeof}, \cxxref{expr.unary.noexcept}, \cxxref{dcl.type.simple}). The presence of such a \tcode{coawait} expression does not make the enclosing function a coroutine and can be used to examine the type of an \tcode{coawait} expression.
 
 \enterexample
 \begin{codeblock}	

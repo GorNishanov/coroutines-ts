@@ -8,10 +8,24 @@
 
 \rSec2[basic.start.main]{Main function}
 
-Add a new paragraph after paragraph 4.
+Add underlined text to paragraph 3.
+
+% NOTES: add to paragraph 3
 
 \begin{quote}
 	\setcounter{Paras}{4}
-	\pnum
-	The function \tcode{main} shall not be a coroutine.
+
+
+The function \tcode{main} shall not be used within
+a program.
+\indextext{\idxcode{main()}!implementation-defined linkage~of}%
+The linkage~(\cxxref{basic.link}) of \tcode{main} is
+\impldef{linkage of \tcode{main}}. A program that defines \tcode{main} as
+deleted or that declares \tcode{main} to be
+\tcode{inline,} \tcode{static}, or \tcode{constexpr} is ill-formed. 
+\added{The function \tcode{main} shall not be a coroutine.}
+The name \tcode{main} is
+not otherwise reserved. \enterexample member functions, classes, and
+enumerations can be called \tcode{main}, as can entities in other
+namespaces. \exitexample
 \end{quote}

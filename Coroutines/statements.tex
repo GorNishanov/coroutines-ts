@@ -54,7 +54,7 @@ is equivalent to
 	}
 \end{codeblock}
 
-where \tcode{__range}, \tcode{__begin}, 
+where \tcode{__range}, \tcode{__begin}, \tcode{__end}, 
 \textit{range-init}, \textit{begin-expr}, and \textit{end-expr} are defined as in the range-based \tcode{for} statement (\cxxref{stmt.ranged}).
 
 \end{quote}
@@ -86,11 +86,13 @@ In paragraph 1 add four productions to the grammar:
 \indextext{function~return|see{\tcode{return}}}%
 
 % A
-Modify paragraph 1 to read:
+Add underlined text to paragraph 1:
 
 \begin{quote}
 \pnum
-A function returns to its caller by the return statement. \added{Using a \tcode{return} statement in the coroutine makes the program ill-formed.}
+A function returns to its caller by the \tcode{return} statement.
+\added{A \tcode{return} statement shall not appear in a coroutine.}
+%\added{Using a \tcode{return} statement in a coroutine makes the program ill-formed.}
 \end{quote}
 
 %NOTE
@@ -206,6 +208,8 @@ in coroutines producing an eventual value; the value of the expression is suppli
 \tcode{\textit{p}.return_value(\grammarterm{braced-init-list})}. Flowing off the end of a coroutine is equivalent to a \tcode{coreturn} with no value; this results in undefined
 behavior in a coroutine with non-\tcode{void} return type.
 
+%NOTE: hyphen ubbrea
+
 %\enterexample
 %
 %\begin{codeblock}
@@ -225,7 +229,7 @@ the \tcode{\textit{p}.final_suspend()} predicate. If \tcode{\textit{p}.final_sus
 otherwise, the coroutine destroys the coroutine state (\ref{dcl.fct.def.coroutine}) and frees the memory dynamically allocated (if any) to store the state.
 
 \pnum
-A \tcode{coreturn} statement with an expression of type \textit{cv-void}
+A \tcode{coreturn} statement with an expression of type \cvvoid
 can be used only in functions without an eventual return type 
 or with an eventual return type of \tcode{void}; the expression is evaluated just before the call to \tcode{\textit{p}.final_suspend()} and \tcode{\textit{p}.return_void()} respectively.
 
@@ -250,7 +254,7 @@ Add this section to \ref{stmt.jump}.
 \begin{quote}
 
 Let \textit{yielded value} be the operand of the \tcode{coyield} statement and \textit{p} be the promise object of the enclosing coroutine.
-If the result type of \tcode{\textit{p}.yield_value(\textit{yielded-value})} is of type \textit{cv-void}, then the \tcode{coyield} statement is equivalent to:
+If the result type of \tcode{\textit{p}.yield_value(\textit{yielded-value})} is of type \cvvoid, then the \tcode{coyield} statement is equivalent to:
 
 \begin{codeblock}
   @\textit{p}@.yield_value(@\textit{yielded-value}@);

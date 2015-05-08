@@ -29,14 +29,13 @@ Add this section to \ref{dcl.fct.def}.
 \begin{quote}
 \pnum
 A function is a \defn{coroutine} if it contains
-one or more suspend-resume-points. 
-
-\pnum
-A \defn{suspend-resume-point} is introduced by a potenitally-evaluated \tcode{coawait} operator (\ref{expr.await}) expression and a \tcode{coyield} statement (\ref{stmt.yield}).
+one or more suspend-resume-points introduced by a potentially-evaluated \tcode{coawait} operator (\ref{expr.await}) expression and a \tcode{coyield} statement (\ref{stmt.yield}).
 % implicit NOTE: including implicit
 %, or a \tcode{cofor} statement (\ref{stmt.for.await}).
 Every coroutine
 also has an implicit initial and final suspend-resume point as described later in this section. 
+
+%NOTES: add wording for 
 
 \pnum
 \enternote
@@ -47,8 +46,8 @@ From the perspective of the caller, a coroutine is just a function with that par
 A coroutine needs a set of related types and functions
 to complete the definition of its semantics.
 These types and functions are provided as a set of member types or typedefs
-and member functions in the specializations of struct template
-\tcode{coroutine_traits} (\ref{coroutine.traits}). 
+and member functions in the specializations of class template
+\tcode{std::experimental::coroutine_traits} (\ref{coroutine.traits}). 
 
 \pnum
 For a coroutine \textit{f}, let \textit{R} be the return type and $P_1$, $P_2$, ..., $P_n$

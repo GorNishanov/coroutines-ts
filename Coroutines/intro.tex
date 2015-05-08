@@ -6,7 +6,7 @@
 \pnum
 This Technical Specification describes extensions to the C++ 
 Programming Language (\ref{intro.refs}) that
-enables definition of coroutines. These extensions include 
+enable definition of coroutines. These extensions include 
 new syntactic forms and modifications to existing language semantics.
 
 \pnum
@@ -37,7 +37,7 @@ of the referenced document (including any amendments) applies.
 
 ISO/IEC 14882:2014 is hereafter called the \defn{\Cpp Standard}.
 %
-Beginning with section 1.4 below, all clause and section numbers, titles,
+Beginning with section 1.9 below, all clause and section numbers, titles,
 and symbolic references in [brackets] refer to the corresponding elements of the \Cpp Standard. Sections 1.1 through 1.5 of this Technical
 Specification are introductory material and are unrelated to the similarly-numbered sections of the \Cpp Standard.
 
@@ -81,16 +81,16 @@ in terms of the behavior of programs.
 %%
 %% Feature-testing recommendations
 %%
-\rSec1[intro.features]{Feature-testing recommendations (Informative)}
+\rSec1[intro.features]{Feature testing}
 
 An implementation that provides support for this Technical Specification shall define the feature test macro in Table~\ref{tab:info.features}.
 
-\begin{floattable}{Feature-test macros}{tab:info.features}
+\begin{floattable}{Feature-test macro}{tab:info.features}
 {lll}
 \topline
 \lhdr{Name} & \chdr{Value} & \rhdr{Header} \\
 \capsep
-\tcode{__cpp_coroutine}  & \tcode{201511} & \textit{predeclared}      \\
+\tcode{__cpp_coroutines}  & \tcode{201510} & \textit{predeclared}      \\
 \end{floattable}
 
 %\rSec1[intro.ack]{Acknowledgments}
