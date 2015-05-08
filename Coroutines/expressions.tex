@@ -65,7 +65,9 @@ A potentially-evaluated \tcode{coawait} expression shall not appear in a default
 
 \pnum
 Let \textit{T} be the type of the \grammarterm{cast-expression},
-%Fix
+\ednote{HELP!!!!
+act as-if we create a temporary, and e is the name of that temporary (without extra copy). If "e" is a prvalue, we create a temporary called e, otherwise "e" is the lvalue denoting the value of the cast-expression, converting from xvalue to lvalue as necessary.}
+%
 \textit{e} be an rvalue reference to the value of that expression,  \textit{p} be the promise object (\ref{dcl.fct.def.coroutine})
 of the enclosing coroutine, \textit{P} be the type of the promise object, \textit{h} be an object of \tcode{std::experimental::coroutine_handle<\textit{P}>} refering to the enclosing coroutine, then \textit{await-ready-expr}, \textit{await-suspend-expr}, and \textit{await-resume-expr} are expressions defined as follows:
 \begin{itemize}

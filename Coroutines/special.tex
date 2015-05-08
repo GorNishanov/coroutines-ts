@@ -2,7 +2,7 @@
 \setcounter{chapter}{11}
 \rSec0[special]{Special member functions}
 
-In this section add paragraph 6.
+In this section add new paragraph after paragraph 5.
 
 \begin{quote}
 	\setcounter{Paras}{5}
@@ -10,4 +10,52 @@ In this section add paragraph 6.
 	A special member function shall not be a coroutine.
 \end{quote}
 
+\setcounter{section}{7}
+\rSec1[class.copy]{Copying and moving class objects}%
+
 % Jens: 8.4.4p10: remove "considered as xvalue", make "elided" a note with xref to 12.8, add elision condition to 12.8, expand special "return" case in 12.8 to try xvalue (= move) first, then lvalue. 
+
+Add underlined text to paragraph 31.
+
+\begin{quote}
+\setcounter{Paras}{30}
+\pnum
+\indextext{temporary!elimination~of}%
+\indextext{elision!copy constructor|see{constructor, copy, elision}}%
+\indextext{elision!move constructor|see{constructor, move, elision}}%
+\indextext{constructor!copy!elision}%
+\indextext{constructor!move!elision}%
+When certain criteria are met, an implementation is
+allowed to omit the copy/move construction of a class object,
+even if the constructor selected for the copy/move operation and/or the
+destructor for the object have
+\indextext{side effects}%
+side effects.  In such cases, the
+implementation treats the source and target of the
+omitted copy/move operation as simply two different ways of
+referring to the same object, and the destruction of
+that object occurs at the later of the times when the
+two objects would have been destroyed without the
+optimization.\footnote{Because only one object is destroyed instead of two,
+  and one copy/move constructor
+  is not executed, there is still one object destroyed for each one constructed.}
+This elision of copy/move operations, called
+\indexdefn{copy elision|see{constructor, copy, elision; constructor, move, elision}}%
+\indexdefn{elision!copy|see{constructor, copy, elision; constructor, move, elision}}%
+\indexdefn{constructor!copy!elision}\indexdefn{constructor!move!elision}\term{copy elision},
+is permitted in the
+following circumstances (which may be combined to
+eliminate multiple copies):
+
+\begin{itemize}
+  \item in a \tcode{return} statement in a function with a class return type,
+  when the expression is the name of a non-volatile
+  automatic object
+  (other than a function or catch-clause parameter)
+  with the same cv-unqualified type as
+  the function return type, the copy/move operation can be
+  omitted by constructing the automatic object directly
+  into the function's return value
+  \ednote{HELP!!!!! add elision condition to 12.8, expand special "return" case in 12.8 to try xvalue (= move) first, then lvalue. }
+\end{itemize}
+\end{quote}
