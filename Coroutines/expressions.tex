@@ -82,7 +82,7 @@ of the enclosing coroutine, \textit{P} be the type of the promise object, \texti
   performed. \exitnote
 \end{itemize}
 
-Then, if the type of \textit{await-suspend-expr} is \textit{cv-void}, then
+If the type of \textit{await-suspend-expr} is \textit{cv-void}, then
 
 \begin{ncbnf}
   \terminal{coawait} cast-expression
@@ -90,11 +90,12 @@ Then, if the type of \textit{await-suspend-expr} is \textit{cv-void}, then
 is equivalent to:
 \begin{codeblock}
 (
+  (void)
   ( 
     (@\textit{await-ready-expr}@) ? 0
-    : (@\textit{await-suspend-expr}@, @\textit{<suspend-resume point>}@, 0)
+    : (@\textit{await-suspend-expr}@, @\textit{suspend-resume-point}@ 0)
   )
-  , @\textit{await-resume-expr}@;
+  , @\textit{await-resume-expr}@
 )
 \end{codeblock}
 
@@ -102,13 +103,16 @@ otherwise, it is equivalent to:
 
 \begin{codeblock}
 (
+  (void)
   ( 
     (@\textit{await-ready-expr}@ && !@\textit{await-suspend-expr}@) ? 0
-    : @\textit{<suspend-resume point>}@, 0)
+    : (@\textit{suspend-resume-point}@ 0)
   )
-  , @\textit{await-resume-expr}@;
+  , @\textit{await-resume-expr}@
 )
 \end{codeblock}
+
+where \textit{suspend-resume-point}s are suspend-resume-points as defined in (\ref{dcl.fct.def.coroutine}).
 
 \pnum
 A \tcode{coawait} expression may only appear in a coroutine 
@@ -123,9 +127,9 @@ A \tcode{coawait} expression may appear as an unevaluated operand (\cxxref{expr.
   std::future<int> f();
   
   int main() {
-    using t = decltype(await f()); // t is int
-    static_assert(sizeof(await f()) == sizeof(int));
-    cout << typeid(await f()).name() << endl;
+    using t = decltype(coawait f()); // t is int
+    static_assert(sizeof(coawait f()) == sizeof(int));
+    cout << typeid(coawait f()).name() << endl;
   }
 \end{codeblock}
 \exitexample%

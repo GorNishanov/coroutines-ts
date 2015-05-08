@@ -342,44 +342,45 @@ coroutine promise types.
 	Expression          &   Note \\ \capsep
 	\tcode{P\{\}}     &   Construct an object of type \tcode{P}\\ \rowsep
 	\tcode{p.get_return_object()}        &
-\tcode{get_return_object} is invoked by the coroutine to construct the
+The \tcode{get_return_object} is invoked by the coroutine to construct the
 return object prior to reaching the first suspend-resume point,
 a \tcode{return} statement or flowing off the end of the function.
 	\\ \rowsep
 	\tcode{p.return_value(v)}     &  
-If present, an enclosing coroutine supports an
-eventual value of a type that \tcode{v} can be converted to. \tcode{return_value} is invoked by
-a coroutine when 
-a return statement
-with an \grammarterm{expression} 
-or a \grammarterm{braced-init-list}
-is encountered in a coroutine.
+%If present, an enclosing coroutine supports an
+%eventual value of a type that \tcode{v} can be converted to. 
 
-If a promise type does not satisfy this requirement, the presence of 
-a return statement
+Invoked by
+a coroutine when 
+a \tcode{coreturn} statement
 with an \grammarterm{expression} 
 or a \grammarterm{braced-init-list}
-statement in the body results in a compile time error.
+is encountered in a coroutine (\ref{stmt.return.coroutine}).
+%If a promise type does not satisfy this requirement, the presence of 
+%a \tcode{coreturn} statement
+%with an \grammarterm{expression} 
+%or a \grammarterm{braced-init-list}
+%statement in the body results in a compile time error.
 	\\ \rowsep
 	\tcode{p.return_void()}     &   
-If present, an enclosing coroutine supports an eventual value of type \tcode{void}. \tcode{return_void} is invoked by
-a coroutine when 
-a return statement
-without an \grammarterm{expression} 
-nor a \grammarterm{braced-init-list}
-is encountered in a coroutine or
-control flows to the end of the function.
+%If present, an enclosing coroutine supports an eventual value of type \tcode{void}. 
+If present, invoked when 
+a \tcode{coreturn} statement is encountered as described in (\ref{stmt.return.coroutine}).
 A promise type shall not define both \tcode{return_void} and \tcode{return_value} member functions.
 	\\ \rowsep
 	\tcode{p.set_exception(e)} & 
-\tcode{set_exception} is invoked by a coroutine when an
+The \tcode{set_exception} is invoked by a coroutine when an
 unhandled exception occurs within a \grammarterm{function-body} of the coroutine
 function.
 If promise does not provide \tcode{set_exception}, an unhandled exception
 will propagate from a coroutines normally.
 \\ \rowsep
-	\tcode{p.yield_value(v)}     &   
-Must be present for the enclosing coroutine to support \tcode{yield} statement.
+	\tcode{p.yield_value(v)}     &
+  The \tcode{yield_value} is invoked
+  when \tcode{coyield} statement is
+  encountered in the coroutine. If
+  promise does not define \tcode{yield_value}, \tcode{coyield}
+  statement may not appear in the coroutine body.
 	\\ \rowsep
 	\tcode{p.initial_suspend()}     &
 if \tcode{p.initial_suspend()} evaluates to \tcode{true}, the coroutine will suspend at \textit{initial suspend point} (\ref{dcl.fct.def.coroutine}).
@@ -421,8 +422,8 @@ of a promise type for a simple generator.
   };
   
   generator f() {
-    yield 1;
-    yield 2;
+    coyield 1;
+    coyield 2;
   } 
   
   int main() {

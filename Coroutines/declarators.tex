@@ -29,10 +29,10 @@ Add this section to \ref{dcl.fct.def}.
 \begin{quote}
 \pnum
 A function is a \defn{coroutine} if it contains
-one or more suspend-resume points. 
+one or more suspend-resume-points. 
 
 \pnum
-A \defn{suspend-resume point} is introduced by a potenitally-evaluated \tcode{coawait} operator (\ref{expr.await}) expression and a \tcode{coyield} statement (\ref{stmt.yield}).
+A \defn{suspend-resume-point} is introduced by a potenitally-evaluated \tcode{coawait} operator (\ref{expr.await}) expression and a \tcode{coyield} statement (\ref{stmt.yield}).
 % implicit NOTE: including implicit
 %, or a \tcode{cofor} statement (\ref{stmt.for.await}).
 Every coroutine
@@ -69,11 +69,11 @@ Then, the coroutine behaves as if its body were:
   {
      @\textit{P p}@;
      if (@\textit{p}@.initial_suspend()) {
-       @\textit{<suspend-resume point>}@ // initial suspend point
+       @\textit{suspend-resume-point}@ // initial suspend point
      }
      @\textit{F'}@
      if (@\textit{p}@.final_suspend()) {
-       @\textit{<suspend-resume point>}@ // final suspend point
+       @\textit{suspend-resume-point}@ // final suspend point
      }
   }
 \end{codeblock}
@@ -90,7 +90,7 @@ and
 otherwise. An object denoted as \textit{p} is the \defn{promise object} of
 the coroutine \textit{f} and its type is a \defn{promise type}
 of the coroutine.
-An execution of a coroutine is suspended when it reaches a suspend-resume point.
+An execution of a coroutine is suspended when it reaches a suspend-resume-point.
 
 \pnum 
 A \defn{suspension} of a coroutine returns control to the current
@@ -109,8 +109,8 @@ of the promise object.
 A suspended coroutine can be resumed
 to continue execution by invoking
 a resumption member functions (\ref{coroutine.handle.resumption}) of an object of \tcode{coroutine_handle<$P$>} type
-associated with this instance of a coroutine, where type $P$
-is a promise type of the coroutine. 
+associated with this instance of the coroutine, where type $P$
+is the promise type of the coroutine. 
 
 \pnum
 A coroutine may need to allocate
@@ -124,9 +124,9 @@ A \defn{coroutine state} consists of
 storage for objects with automatic storage duration
 that are live at the current point of execution or suspension of 
 a coroutine.
-The \term{coroutine state} is destroyed when
+The coroutine state is destroyed when
 the control flows off the end of the function or
-the \tcode{destroy} member function (\ref{coroutine.handle.resumption}) of an object of \tcode{std::experimental::coroutine_handle<\textit{P}}> associated with that coroutine.
+the \tcode{destroy} member function (\ref{coroutine.handle.resumption}) of an object of \tcode{std::experimental::coroutine_handle<\textit{P}}> associated with that coroutine is invoked.
 
 %introduce metavariable instead of talking about
 %coroutine_handle<>
@@ -151,7 +151,7 @@ the \tcode{destroy} member function (\ref{coroutine.handle.resumption}) of an ob
 
 %NOTE: massage
 \pnum
-The coroutine state is copy-initialized with the parameter values considered as xvalues. 
+The region of a coroutine state storing  parameters to the coroutine is copy-initialized with the parameter values considered as xvalues. 
 This copy may be elided.
 
 

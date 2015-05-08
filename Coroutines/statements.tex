@@ -254,14 +254,14 @@ If the result type of \tcode{\textit{p}.yield_value(\textit{yielded-value})} is 
 
 \begin{codeblock}
   @\textit{p}@.yield_value(@\textit{yielded-value}@);
-  @\textit{<suspend-resume point>}
+  @\textit{suspend-resume-point}
 \end{codeblock}
 
 otherwise, it is equivalent to:
 
 \begin{codeblock}
   if (@\textit{p}@.yield_value(@\textit{yielded-value}@)) {
-    @\textit{<suspend-resume point>}@
+    @\textit{suspend-resume-point}@
   }
   
 \end{codeblock}
