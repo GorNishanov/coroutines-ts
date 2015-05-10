@@ -56,20 +56,18 @@ The \tcode{coawait} operator is used to suspend evaluation of the enclosing coro
 A potentially-evaluated 
 \tcode{coawait} expression shall only appear within the \grammarterm{compound-statement} of a \grammarterm{function-body} outside of a \grammarterm{handler} (\cxxref{except.handle}).
 %
-In a \grammarterm{declaration-statement}, a potentially-evaluated \tcode{coawait} expression shall only appear in an \grammarterm{initializer} of that \grammarterm{declaration-statement}.
+In a \grammarterm{declaration-statement} or in the \grammarterm{simple-declaration} (if any) of a \grammarterm{for-init-statement}, a potentially-evaluated \tcode{coawait} expression shall only appear in an \grammarterm{initializer} of that \grammarterm{declaration-statement} or \grammarterm{simple-declaration}.
 %
-A potentially-evaluated \tcode{coawait} expression shall not appear in a
-local class defined in \grammarterm{declaration-statement}.
+%A potentially-evaluated \tcode{coawait} expression shall not appear in a
+%local class defined in \grammarterm{declaration-statement}.
 %
 A potentially-evaluated \tcode{coawait} expression shall not appear in a default argument (\cxxref{dcl.fct.default}).
 
 \pnum
-Let \textit{T} be the type of the \grammarterm{cast-expression},
-\ednote{HELP!!!!
-act as-if we create a temporary, and e is the name of that temporary (without extra copy). If "e" is a prvalue, we create a temporary called e, otherwise "e" is the lvalue denoting the value of the cast-expression, converting from xvalue to lvalue as necessary.}
-%
-\textit{e} be an rvalue reference to the value of that expression,  \textit{p} be the promise object (\ref{dcl.fct.def.coroutine})
-of the enclosing coroutine, \textit{P} be the type of the promise object, \textit{h} be an object of \tcode{std::experimental::coroutine_handle<\textit{P}>} refering to the enclosing coroutine, then \textit{await-ready-expr}, \textit{await-suspend-expr}, and \textit{await-resume-expr} are expressions defined as follows:
+Let \textit{T} be the type of the \grammarterm{cast-expression}.
+If the \grammarterm{cast-expression} is a prvalue, let $e$ be a temporary initialized as-if by \tcode{T e = \textit{cast-expression}}; otherwise let \textit{e} be an lvalue designating the value of the \grammarterm{cast-expression}.
+Let \textit{p} be the promise object (\ref{dcl.fct.def.coroutine})
+of the enclosing coroutine, \textit{P} be the type of the promise object, \textit{h} be an object of \tcode{std::experimental::coroutine_handle<\textit{P}>} referring to the enclosing coroutine, then \textit{await-ready-expr}, \textit{await-suspend-expr}, and \textit{await-resume-expr} are expressions defined as follows:
 \begin{itemize}
   %CHECK oxfor comma
   \item if \textit{T}  is a class type, the \grammarterm{unqualified-id}{s}

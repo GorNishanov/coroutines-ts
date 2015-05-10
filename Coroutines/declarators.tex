@@ -130,23 +130,32 @@ the \tcode{destroy} member function (\ref{coroutine.handle.resumption}) of an ob
 %introduce metavariable instead of talking about
 %coroutine_handle<>
 
-%\pnum
-%An invocation of a coroutine may incur a move operation for the parameters that may be accessed in the \grammarterm{function-body}
-%of coroutine after a resume. 
-%These copies are defined in the same scope as a \term{promise object}. 
-%References to those parameters in the \grammarterm{function-body}
-%of the coroutine are replaced with 
-%references to their copies.
+\ednote{New text. Gor thinks it is more accurately decribes what happens with the parameters than the next paragraph}
 
-%If a parameter copy/move is required, class object moves are performed according to the rules described in \cxxref{class.copy}.
-%%NOTE: whatever 
-%
-%struct S {
-%  int a;
-%  int b;
-%};
-%
-%new (p) S{move(a), move(b)};
+\pnum
+An invocation of a coroutine may incur an extra copy/move operation for the parameters.
+%These copies are defined in the same scope as a \term{promise object}. 
+References to those parameters in the \grammarterm{function-body}
+of the coroutine are replaced with 
+references to their copies.
+If a parameter copy/move is required, class object moves are performed according to the rules described in \cxxref{class.copy}/28 [class.copy].
+
+\enternote
+This transformation could look as follows:
+
+\begin{codeblock}
+  auto foo(A a, B& b, C&& c, D* d) {
+     A   a' = move(a);
+     B&  b' = b;
+     C&& c' = move(c);
+     D*  d' = d;
+     yield 5; // lifetime of parameters end as per 5.2.2/[expr.call]
+     ...// any parameter mentioned here will refer to its copy
+  } 
+\end{codeblock}
+\exitnote
+
+%\ednote{This is what we currently say about parameters}
 
 %NOTE: massage
 \pnum
