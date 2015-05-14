@@ -132,8 +132,10 @@ auto ticks() {
   }
 }
 
+future<void> g();
+
 // deduces to std::experimental::task<void>
-auto f() {  coawait g(); }
+auto f2() {  coawait g(); }
 
 \end{codeblock}
 \exitexample

@@ -56,6 +56,8 @@ eliminate multiple copies):
   the function return type, the copy/move operation can be
   omitted by constructing the automatic object directly
   into the function's return value
+  \item
+  When a parameter would be copied/moved to the coroutine state (\ref{dcl.fct.def.coroutine}) copy move can be omitted by continuing to refer to the function parameters instead of referring to their copies in the coroutine state.
   \ednote{HELP!!!!! add elision condition to 12.8, expand special "return" case in 12.8 to try xvalue (= move) first, then lvalue. }
 \end{itemize}
 \end{quote}

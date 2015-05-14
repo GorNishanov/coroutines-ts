@@ -52,6 +52,7 @@ and member functions in the specializations of class template
 \pnum
 For a coroutine \textit{f}, let \textit{R} be the return type and $P_1$, $P_2$, ..., $P_n$
 be the types of the parameters. If \textit{f} is a non-static member function, then $P_1$ denotes the type of the implicit object parameter. 
+%add.reference to [over.match.funcs]
 %Coroutine traits for function \tcode{f} is a specialization of
 %struct template \tcode{std::experimental::coroutine_traits<R,P1,...,PN>}.
 Let \textit{F} be the \grammarterm{function-body}
@@ -61,7 +62,7 @@ Let \textit{F} be the \grammarterm{function-body}
 %\grammarterm{compound-statement} or 
 %\grammarterm{function-try-block}.
 %}
-of \textit{f}, \textit{T} be a type \tcode{std::experimental::coroutine_traits<$R$,$P_1$,...,$P_N$>}, and \textit{P} be the type denoted by \textit{T::}\tcode{promise_type}. 
+of \textit{f}, \textit{T} be a type \tcode{std::experimental::coroutine_traits<$R$,$P_1$,...,$P_n$>}, and \textit{P} be the type denoted by \textit{T::}\tcode{promise_type}. 
 %If \textit{T}\tcode{::promise_type} does not refer to a type the program is ill-formed. Type \textit{P} is the \term{promise type} of the coroutine.
 Then, the coroutine behaves as if its body were:
 \begin{codeblock}
@@ -83,10 +84,12 @@ exposition only and
 if \textit{P} does not define a \tcode{set_exception} member function, 
 and 
 \begin{codeblock}
-  try {@\textit{F}@} catch(...) {@\textit{p}@.set_exception(std::current_exception());}
+  try {@\textit{ F }@} catch(...) { @\textit{p}@.set_exception(std::current_exception()); }
 \end{codeblock}
 
-otherwise. An object denoted as \textit{p} is the \defn{promise object} of
+otherwise. 
+No header needs to be included for this use of the function \tcode{std::current_exception}.
+An object denoted as \textit{p} is the \defn{promise object} of
 the coroutine \textit{f} and its type is a \defn{promise type}
 of the coroutine.
 An execution of a coroutine is suspended when it reaches a suspend-resume-point.
@@ -130,39 +133,41 @@ the \tcode{destroy} member function (\ref{coroutine.handle.resumption}) of an ob
 %introduce metavariable instead of talking about
 %coroutine_handle<>
 
-\ednote{New text. Gor thinks it is more accurately decribes what happens with the parameters than the next paragraph}
-
 \pnum
-An invocation of a coroutine may incur an extra copy/move operation for the parameters.
-%These copies are defined in the same scope as a \term{promise object}. 
-References to those parameters in the \grammarterm{function-body}
-of the coroutine are replaced with 
-references to their copies.
-If a parameter copy/move is required, class object moves are performed according to the rules described in \cxxref{class.copy}/28 [class.copy].
+When a coroutine is invoked, each of its parameters is copied/moved to the coroutine state, as specified in 12.8.  The copy/move operations are indeterminately sequenced with respect to each other.
+A reference to a parameter in the function-body of the coroutine is replaced by a reference to the copy of the parameter.
 
-\enternote
-This transformation could look as follows:
-
-\begin{codeblock}
-  auto foo(A a, B& b, C&& c, D* d) {
-     A   a' = move(a);
-     B&  b' = b;
-     C&& c' = move(c);
-     D*  d' = d;
-     yield 5; // lifetime of parameters end as per 5.2.2/[expr.call]
-     ...// any parameter mentioned here will refer to its copy
-  } 
-\end{codeblock}
-\exitnote
+%\pnum
+%An invocation of a coroutine may incur an extra copy/move operation for the parameters.
+%%These copies are defined in the same scope as a \term{promise object}. 
+%A references to a parameter in the \grammarterm{function-body}
+%of the coroutine is replaced by a 
+%reference to the copy of the parameter.
+%If a parameter copy/move is required, class object moves are performed according to the rules described in \cxxref{class.copy}/28 [class.copy].
+%
+%\enternote
+%This transformation could look as follows:
+%
+%\begin{codeblock}
+%  auto foo(A a, B& b, C&& c, D* d) {
+%     A   a' = move(a);
+%     B&  b' = b;
+%     C&& c' = move(c);
+%     D*  d' = d;
+%     yield 5; // lifetime of parameters end as per 5.2.2/[expr.call]
+%     ...// any parameter mentioned here will refer to its copy
+%  } 
+%\end{codeblock}
+%\exitnote
 
 %\ednote{This is what we currently say about parameters}
 
 %NOTE: massage
-\pnum
-The region of a coroutine state storing parameters to the coroutine is copy-initialized with the parameter values.
-\enternote 
-This copy may be elided (\cxxref{class.copy}).
-\exitnote
+%\pnum
+%The region of a coroutine state storing parameters to the coroutine is copy-initialized with the parameter values.
+%\enternote 
+%This copy may be elided (\cxxref{class.copy}).
+%\exitnote
 
 %NOTE: say something that we need to check
 %Will be moved to coroutine state and can elide the move.
@@ -182,7 +187,7 @@ for the coroutine state is freed.
 \pnum
 \enterexample
 \begin{codeblock}
-generator<char> hello_fn() {
+std::experimental::generator<char> hello_fn() {
   for (auto ch: "Hello, world") coyield ch;
 }
   

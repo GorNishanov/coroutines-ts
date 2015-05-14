@@ -127,9 +127,8 @@ $a_1$, $a_2$, ... $a_n$ denote parameters passed to a coroutine. If it is a memb
   \\ \rowsep
   \tcode{X::get_allocator($a_1$, $a_2$, ... $a_n$)}        &
   \textit{(optional)} Given a set of arguments passed to a coroutine,
-  returns an allocator (\cxxref{allocator.requirements}) that implementation can use
-  to dynamically allocate memory for objects with automatic
-  storage duration in a coroutine if required.
+  returns an allocator (\cxxref{allocator.requirements}) that implementation shall use
+  to dynamically allocate memory for coroutine state if dynamic allocation is required.
   If \tcode{get_allocator} is not present, 
   implementation shall use \tcode{std::allocator<char>}.
 \\ \rowsep
