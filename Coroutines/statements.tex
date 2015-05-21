@@ -19,45 +19,100 @@ Iteration statements specify looping.
 	\terminal{while (} condition \terminal{)} statement\br
 	\terminal{do} statement \terminal{while (} expression \terminal{) ;}\br
 	\terminal{for (} for-init-statement condition\opt \terminal{;} expression\opt \terminal{)} statement\br
-	\terminal{for (} for-range-declaration \terminal{:} for-range-initializer \terminal{)} statement\br
-	\added{\terminal{cofor (} for-range-declaration \terminal{:} for-range-initializer \terminal{)} statement}
+	\terminal{for} \added{\terminal{await_kw}\opt} \terminal{(} for-range-declaration \terminal{:} for-range-initializer \terminal{)} statement\br
+%	\added{\terminal{cofor (} for-range-declaration \terminal{:} for-range-initializer \terminal{)} statement}
 \end{bnf}
 \end{quote}
 
 % goes inside and need fixing goes after
 
-\setcounter{subsection}{4}
-\rSec2[stmt.for.await]{The \tcode{cofor} statement}%
+\setcounter{subsection}{3}
+\rSec2[stmt.ranged]{The range-based \tcode{for} statement}%
+\indextext{statement!range~based \idxcode{for}}
 
-Add this section to \ref{stmt.iter}.
-
+Add underlined text to paragraph 1.
 
 \begin{quote}
 \pnum
-A \tcode{cofor} statement of the form
+For a range-based \tcode{for} statement of the form
 
 \begin{ncbnf}
-	\terminal{cofor (} for-range-declaration : expression \terminal{)} statement
+  \terminal{for}  \added{\terminal{await_kw}\opt} \terminal{(} for-range-declaration : expression \terminal{)} statement
 \end{ncbnf}
+
+let \textit{range-init} be equivalent to the \grammarterm{expression} surrounded
+by parentheses\footnote{this ensures that a top-level comma operator cannot be
+  reinterpreted as a delimiter between \grammarterm{init-declarator}{s} in the
+  declaration of \tcode{__range}.}
+
+\begin{ncbnf}
+  \terminal{(} expression \terminal{)}
+\end{ncbnf}
+
+and for a range-based \tcode{for} statement of the form
+
+\begin{ncbnf}
+  \terminal{for} \added{\terminal{await_kw}\opt} \terminal{(} for-range-declaration \terminal{:} braced-init-list \terminal{)} statement
+\end{ncbnf}
+
+let \textit{range-init} be equivalent to the \grammarterm{braced-init-list}. In each case, a
+range-based \tcode{for} statement
 is equivalent to
 
 \begin{codeblock}
-	{
-		auto && __range = range-init;
-		for ( auto __begin = coawait begin-expr,
-		__end = end-expr;
-		__begin != __end;
-		coawait ++__begin ) {
-			@\textit{for-range-declaration}@ = *__begin;
-			@\textit{statement}@
-		}
-	}
+  {
+    auto && __range = range-init;
+    for ( auto __begin =  @\added{\tcode{await_kw}\opt}@ begin-expr,
+    __end = end-expr;
+    __begin != __end;
+     @\added{\tcode{await_kw}\opt}@ ++__begin ) {
+      @\textit{for-range-declaration}@ = *__begin;
+      @\textit{statement}@
+    }
+  }
 \end{codeblock}
 
-where \tcode{__range}, \tcode{__begin}, \tcode{__end}, 
-\textit{range-init}, \textit{begin-expr}, and \textit{end-expr} are defined as in the range-based \tcode{for} statement (\cxxref{stmt.ranged}).
+where 
+\added{\tcode{await_kw} appears if and only if it appears immediately after the \tcode{for} keyword, and}\linebreak
+\tcode{__range}, \tcode{__begin}, and \tcode{__end} are variables defined for
+exposition only, and \tcode{_RangeT} is the type of the
+\grammarterm{}{expression}, and \textit{begin-expr} and \textit{end-expr} are
+determined as follows:
 
-\end{quote}
+\ednote{The remainder of paragraph 1 remains unchanged and is not included here.}
+
+%\setcounter{subsection}{4}
+%\rSec2[stmt.for.await]{The \tcode{cofor} statement}%
+%
+%Add this section to \ref{stmt.iter}.
+%
+%
+%\begin{quote}
+%\pnum
+%A \tcode{cofor} statement of the form
+%
+%\begin{ncbnf}
+%	\terminal{cofor (} for-range-declaration : expression \terminal{)} statement
+%\end{ncbnf}
+%is equivalent to
+%
+%\begin{codeblock}
+%	{
+%		auto && __range = range-init;
+%		for ( auto __begin = coawait begin-expr,
+%		__end = end-expr;
+%		__begin != __end;
+%		coawait ++__begin ) {
+%			@\textit{for-range-declaration}@ = *__begin;
+%			@\textit{statement}@
+%		}
+%	}
+%\end{codeblock}
+%
+%where \tcode{__range}, \tcode{__begin}, \tcode{__end}, 
+%\textit{range-init}, \textit{begin-expr}, and \textit{end-expr} are defined as in the range-based \tcode{for} statement (\cxxref{stmt.ranged}).
+%
+%\end{quote}
 
 \setcounter{section}{5}
 \rSec1[stmt.jump]{Jump statements}%
