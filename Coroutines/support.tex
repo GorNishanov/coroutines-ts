@@ -80,14 +80,20 @@ namespace experimental {
   // \ref{coroutine.handle} coroutine handle
   template <typename Promise = void>
     class coroutine_handle;		
-	
-  bool operator == (coroutine_handle<> x, coroutine_handle<> y) noexcept;
-  bool operator < (coroutine_handle<> x, coroutine_handle<> y) noexcept;			
-  bool operator != (coroutine_handle<> x, coroutine_handle<> y) noexcept;
-  bool operator <= (coroutine_handle<> x, coroutine_handle<> y) noexcept;			
-  bool operator >= (coroutine_handle<> x, coroutine_handle<> y) noexcept;
-  bool operator > (coroutine_handle<> x, coroutine_handle<> y) noexcept;			
+
+  // \ref{coroutine.handle.compare} comparison operators:	
+  bool operator==(coroutine_handle<> x, coroutine_handle<> y) noexcept;
+  bool operator<(coroutine_handle<> x, coroutine_handle<> y) noexcept;			
+  bool operator!=(coroutine_handle<> x, coroutine_handle<> y) noexcept;
+  bool operator<=(coroutine_handle<> x, coroutine_handle<> y) noexcept;			
+  bool operator>=(coroutine_handle<> x, coroutine_handle<> y) noexcept;
+  bool operator>(coroutine_handle<> x, coroutine_handle<> y) noexcept;	  
 }
+}
+namespace std {
+  // \ref{coroutine.handle.hash} hash support:
+  template <class T> struct hash;
+  template <class P> struct hash<experimental::coroutine_handle<P>>;
 }
 \end{codeblock}
 
@@ -226,14 +232,14 @@ A default constructed \tcode{coroutine_handle} object has no target.
   \precondition \tcode{p} points to a promise object of a coroutine.
   
 	\pnum
-  \postconditions \tcode{!*this} and \tcode{addressof(this->promise()) == p}.
+  \postconditions \tcode{!*this} and \tcode{std::addressof(this->promise()) == p}.
 \end{itemdescr}
 
 \begin{itemdecl}
   coroutine_handle& operator=(nullptr_t) noexcept;
 \end{itemdecl}
 \begin{itemdescr}
-	\pnum\postconditions \tcode{this->operator bool() == false}.
+	\pnum\postconditions \tcode{!*this}.
   
   \pnum\returns \tcode{*this}.
 \end{itemdescr}
@@ -246,7 +252,7 @@ A default constructed \tcode{coroutine_handle} object has no target.
 
 \begin{itemdescr}
   \pnum
-  \postconditions \tcode{coroutine_traits<>::from_address(this->to_address()) == *this}.
+  \postconditions \tcode{coroutine_handle<>::from_address(this->to_address()) == *this}.
 \end{itemdescr}
 
 \rSec3[coroutine.handle.capacity]{\tcode{coroutine_handle} capacity}
@@ -281,10 +287,6 @@ A default constructed \tcode{coroutine_handle} object has no target.
   \precondition *this refers to a suspended coroutine
   
   \pnum
-  \effects objects with automatic storage duration that are in scope
-  at the suspend point are destroyed in the reverse order of the construction. If coroutine required dynamic allocation
-  for the objects with automatic storage duration, the memory
-  is freed.
 \end{itemdescr}
 
 \rSec3[coroutine.handle.completion]{\tcode{coroutine_handle} completion check}
@@ -296,7 +298,7 @@ A default constructed \tcode{coroutine_handle} object has no target.
   \precondition *this refers to a suspended coroutine
   
   \pnum
-  \returns \tcode{true} if target function is suspended
+  \returns \tcode{true} if the target function is suspended
   at final suspend point, otherwise \tcode{false}.
 \end{itemdescr}
 
@@ -312,6 +314,73 @@ A default constructed \tcode{coroutine_handle} object has no target.
   
   \pnum
   \returns a reference to a promise of the target function.
+\end{itemdescr}
+
+\rSec3[coroutine.handle.compare]{Comparison operators}
+
+\begin{itemdecl}
+  bool operator==(coroutine_handle<> x, coroutine_handle<> y) noexcept;
+\end{itemdecl}
+
+\begin{itemdescr}
+  \pnum
+  \returns \tcode{x.to_address() == y.to_address()}.
+\end{itemdescr}
+
+\begin{itemdecl}
+  bool operator<(coroutine_handle<> x, coroutine_handle<> y) noexcept;
+\end{itemdecl}
+
+\begin{itemdescr}
+  \pnum
+  \returns \tcode{x.to_address() < y.to_address()}.
+\end{itemdescr}
+
+\begin{itemdecl}
+  bool operator!=(coroutine_handle<> x, coroutine_handle<> y) noexcept;
+\end{itemdecl}
+
+\begin{itemdescr}
+  \pnum
+  \returns \tcode{!(x == y)}.
+\end{itemdescr}
+
+\begin{itemdecl}
+  bool operator>(coroutine_handle<> x, coroutine_handle<> y) noexcept;
+\end{itemdecl}
+
+\begin{itemdescr}
+  \pnum
+  \returns \tcode{(y < x)}.
+\end{itemdescr}
+
+\begin{itemdecl}
+  bool operator<=(coroutine_handle<> x, coroutine_handle<> y) noexcept;
+\end{itemdecl}
+
+\begin{itemdescr}
+  \pnum
+  \returns \tcode{!(x > y)}.
+\end{itemdescr}
+
+\begin{itemdecl}
+  bool operator>=(coroutine_handle<> x, coroutine_handle<> y) noexcept;
+\end{itemdecl}
+
+\begin{itemdescr}
+  \pnum
+  \returns \tcode{!(x < y)}.
+\end{itemdescr}
+
+\rSec3[coroutine.handle.hash]{Hash support}
+
+\begin{itemdecl}
+  template <class P> struct hash<experimental::coroutine_handle<P>>;
+\end{itemdecl}
+
+\begin{itemdescr}
+  \pnum
+The template specializations shall meet the requirements of class template hash (\cxxref{unord.hash}).
 \end{itemdescr}
 
 

@@ -125,10 +125,9 @@ that are live at the current point of execution or suspension of
 a coroutine.
 The coroutine state is destroyed when
 the control flows off the end of the function or
-the \tcode{destroy} member function (\ref{coroutine.handle.resumption}) of an object of \tcode{std::experimental::coroutine_handle<\textit{P}}> associated with that coroutine is invoked.
-
-\pnum
-
+the \tcode{destroy} member function (\ref{coroutine.handle.resumption}) of an object of \tcode{std::experimental::coroutine_handle<\textit{P}}> associated with that coroutine is invoked. In the latter case objects with automatic storage duration that are in scope
+at the suspend point are destroyed in the reverse order of the construction. If the coroutine state required dynamic allocation, the memory
+is freed. If \tcode{destroy} is called for a coroutine that is not suspended, the program has undefined behavior.
 
 %introduce metavariable instead of talking about
 %coroutine_handle<>
@@ -185,13 +184,29 @@ for the coroutine state is freed.
 %and the search for a handler starts in the scope of the calling function. 
 
 \pnum
+If type T defines static member function \tcode{get_return_object_on_allocation_failure} (\ref{coroutine.traits}) and
+the coroutine state is allocated dynamically,
+the result of an allocation call needs to be compared with
+zero, and if true, coroutine must return control 
+to the current caller of the coroutine and the return value
+is obtained by a call to \tcode{T::get_return_object_on_allocation_failure()}.
+\enternote
+This provision allows coroutines to be used in environments
+where exception use is not possible to report 
+allocation failure.
+\exitnote
+
+\pnum
 \enterexample
 \begin{codeblock}
+  
+// coroutine hello world
 std::experimental::generator<char> hello_fn() {
   for (auto ch: "Hello, world") yield-keyword ch;
 }
   
 int main() {
+  // coroutine as a lambda
   auto hello_lambda = []{ for (auto ch: "Hello, world") yield-keyword ch; };
   
   for (auto ch : hello_lambda()) 
