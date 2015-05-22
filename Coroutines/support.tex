@@ -401,9 +401,9 @@ will propagate from a coroutines normally.
 \\ \rowsep
 	\tcode{p.yield_value(v)}     &
   The \tcode{yield_value} is invoked
-  when \tcode{yield_kw} statement is
+  when \tcode{yield-keyword} statement is
   encountered in the coroutine. If
-  promise does not define \tcode{yield_value}, \tcode{yield_kw}
+  promise does not define \tcode{yield_value}, \tcode{yield-keyword}
   statement may not appear in the coroutine body.
 	\\ \rowsep
 	\tcode{p.initial_suspend()}     &
@@ -446,8 +446,8 @@ of a promise type for a simple generator.
   };
   
   generator f() {
-    yield_kw 1;
-    yield_kw 2;
+    yield-keyword 1;
+    yield-keyword 2;
   } 
   
   int main() {

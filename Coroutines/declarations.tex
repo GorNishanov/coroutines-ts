@@ -72,7 +72,7 @@ in any context where such a declarator is valid. If the function declarator
 includes a \grammarterm{trailing-return-type}~(\cxxref{dcl.fct}), that specifies
 the declared return type of the function. If the declared return type of the
 function contains a placeholder type, the return type of the function is
-deduced from \tcode{return},\added{ \tcode{coreturn-keyword}, and \tcode{yield_kw}} statements in the body of the function, if any.
+deduced from \tcode{return},\added{ \tcode{coreturn-keyword}, and \tcode{yield-keyword}} statements in the body of the function, if any.
 \end{quote}
 
 Add the underlined text to paragraph 9.
@@ -81,9 +81,9 @@ Add the underlined text to paragraph 9.
 \setcounter{Paras}{8}
 \pnum
 If a function with a declared return type that contains a placeholder type has
-multiple \tcode{return}\added{, \tcode{coreturn-keyword}, and \tcode{yield_kw}} statements, the return type is deduced for each
+multiple \tcode{return}\added{, \tcode{coreturn-keyword}, and \tcode{yield-keyword}} statements, the return type is deduced for each
 \tcode{return}\added{, \linebreak
-\tcode{coreturn-keyword}, and \tcode{yield_kw}} statement. If the type deduced is not the same in each
+\tcode{coreturn-keyword}, and \tcode{yield-keyword}} statement. If the type deduced is not the same in each
 deduction, the program is ill-formed.
 \end{quote}
 
@@ -96,16 +96,16 @@ Add paragraphs 16 through 18.
 %\ednote{Incomplete edit. See if the next paragraph can be integrated with paragraph 9.}
 %
 %\pnum
-%If a coroutine has a declared return type that contains a placeholder type has multiple \tcode{yield_kw}/\tcode{coreturn} statements, the return type is deduced for each
-%\tcode{yield_kw}/\tcode{coreturn} statement. If the type deduced is not the same in each
+%If a coroutine has a declared return type that contains a placeholder type has multiple \tcode{yield-keyword}/\tcode{coreturn} statements, the return type is deduced for each
+%\tcode{yield-keyword}/\tcode{coreturn} statement. If the type deduced is not the same in each
 %deduction, the program is ill-formed.
 
 \pnum
 If a coroutine has a declared return type that contains a placeholder type, then the return type of the coroutine is deduced as follows:
 
 \begin{itemize}
-\item If a \tcode{yield_kw} statement and an \grammarterm{await-expression} are present, then
-the return type is \tcode{std::experimental::async_stream<T>}, where \tcode{T} is deduced from the \tcode{yield_kw} statements as if a \tcode{yield_kw} statement were a \tcode{return} statement in a function with declared type \tcode{auto} without a \grammarterm{trailing-return-type}.
+\item If a \tcode{yield-keyword} statement and an \grammarterm{await-expression} are present, then
+the return type is \tcode{std::experimental::async_stream<T>}, where \tcode{T} is deduced from the \tcode{yield-keyword} statements as if a \tcode{yield-keyword} statement were a \tcode{return} statement in a function with declared type \tcode{auto} without a \grammarterm{trailing-return-type}.
 
 %NOTE Jens text
 
@@ -115,20 +115,20 @@ the return type is\linebreak \tcode{std::experimental::task<T>} where type \tcod
 
 %NOTE: as if 
 
-\item Otherwise, if a \tcode{yield_kw} statement is present in a function, then the return type is \linebreak
+\item Otherwise, if a \tcode{yield-keyword} statement is present in a function, then the return type is \linebreak
 \tcode{std::experimental::generator<T>},
-where \tcode{T} is deduced from the \tcode{yield_kw} statements  as if a \tcode{yield_kw} statement were a \tcode{return} statement in a function with declared type \tcode{auto} without a \grammarterm{trailing-return-type}.
+where \tcode{T} is deduced from the \tcode{yield-keyword} statements  as if a \tcode{yield-keyword} statement were a \tcode{return} statement in a function with declared type \tcode{auto} without a \grammarterm{trailing-return-type}.
 
 \end{itemize}
 \enterexample
 \begin{codeblock}
 // deduces to std::experimental::generator<char>
-auto f() { for(auto ch: "Hello") yield_kw ch; }
+auto f() { for(auto ch: "Hello") yield-keyword ch; }
 
 // deduces to std::experimental::async_stream<int>
 auto ticks() {
   for(int tick = 0;; ++tick) {
-    yield_kw tick;
+    yield-keyword tick;
     await-keyword sleep_for(1ms);
   }
 }

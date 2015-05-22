@@ -29,7 +29,7 @@ Add this section to \ref{dcl.fct.def}.
 \begin{quote}
 \pnum
 A function is a \defn{coroutine} if it contains
-one or more suspend-resume-points introduced by a potentially-evaluated \grammarterm{await-expression} (\ref{expr.await}) and a \tcode{yield_kw} statement (\ref{stmt.yield}).
+one or more suspend-resume-points introduced by a potentially-evaluated \grammarterm{await-expression} (\ref{expr.await}) and a \tcode{yield-keyword} statement (\ref{stmt.yield}).
 % implicit NOTE: including implicit
 %, or a \tcode{cofor} statement (\ref{stmt.for.await}).
 Every coroutine
@@ -188,11 +188,11 @@ for the coroutine state is freed.
 \enterexample
 \begin{codeblock}
 std::experimental::generator<char> hello_fn() {
-  for (auto ch: "Hello, world") yield_kw ch;
+  for (auto ch: "Hello, world") yield-keyword ch;
 }
   
 int main() {
-  auto hello_lambda = []{ for (auto ch: "Hello, world") yield_kw ch; };
+  auto hello_lambda = []{ for (auto ch: "Hello, world") yield-keyword ch; };
   
   for (auto ch : hello_lambda()) 
      cout << ch;
