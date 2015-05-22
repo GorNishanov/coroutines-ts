@@ -50,12 +50,9 @@ and member functions in the specializations of class template
 \tcode{std::experimental::coroutine_traits} (\ref{coroutine.traits}). 
 
 \pnum
-For a coroutine \textit{f}, let \textit{R} be the return type and $P_1$, $P_2$, ..., $P_n$
-be the types of the parameters. If \textit{f} is a non-static member function, then $P_1$ denotes the type of the implicit object parameter. 
-%add.reference to [over.match.funcs]
-%Coroutine traits for function \tcode{f} is a specialization of
-%struct template \tcode{std::experimental::coroutine_traits<R,P1,...,PN>}.
-Let \textit{F} be the \grammarterm{function-body}
+For a coroutine \textit{f}, if 
+\textit{f} is a non-static member function, let $P_1$ denote the type of the implicit object parameter (\cxxref{over.match.funcs}) and $P_2$ ... $P_n$ be the types of the function parameters; otherwise let $P_1$ ... $P_n$ be the types of the function parameters.
+Let \textit{R} be the return type and \textit{F} be the \grammarterm{function-body}
 %\footnote{
 %Due to requirement of having suspend-resume points,
 %\grammarterm{function-body} is either a
