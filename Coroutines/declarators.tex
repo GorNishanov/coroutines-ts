@@ -187,13 +187,13 @@ for the coroutine state is freed.
 If type T defines static member function \tcode{get_return_object_on_allocation_failure} (\ref{coroutine.traits}) and
 the coroutine state is allocated dynamically,
 the result of an allocation call needs to be compared with
-zero, and if true, coroutine must return control 
+\tcode{nullptr}, and if it is \tcode{nullptr}, coroutine must return control 
 to the current caller of the coroutine and the return value
 is obtained by a call to \tcode{T::get_return_object_on_allocation_failure()}.
 \enternote
 This provision allows coroutines to be used in environments
 where exception use is not possible to report 
-allocation failure.
+allocation failures.
 \exitnote
 
 \pnum
