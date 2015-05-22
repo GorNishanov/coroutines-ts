@@ -129,14 +129,14 @@ auto f() { for(auto ch: "Hello") yield_kw ch; }
 auto ticks() {
   for(int tick = 0;; ++tick) {
     yield_kw tick;
-    await_kw sleep_for(1ms);
+    await-keyword sleep_for(1ms);
   }
 }
 
 future<void> g();
 
 // deduces to std::experimental::task<void>
-auto f2() {  await_kw g(); }
+auto f2() {  await-keyword g(); }
 
 \end{codeblock}
 \exitexample

@@ -19,7 +19,7 @@ Iteration statements specify looping.
 	\terminal{while (} condition \terminal{)} statement\br
 	\terminal{do} statement \terminal{while (} expression \terminal{) ;}\br
 	\terminal{for (} for-init-statement condition\opt \terminal{;} expression\opt \terminal{)} statement\br
-	\terminal{for} \added{\terminal{await_kw}\opt} \terminal{(} for-range-declaration \terminal{:} for-range-initializer \terminal{)} statement\br
+	\terminal{for} \added{\terminal{await-keyword}\opt} \terminal{(} for-range-declaration \terminal{:} for-range-initializer \terminal{)} statement\br
 %	\added{\terminal{cofor (} for-range-declaration \terminal{:} for-range-initializer \terminal{)} statement}
 \end{bnf}
 \end{quote}
@@ -37,7 +37,7 @@ Add underlined text to paragraph 1.
 For a range-based \tcode{for} statement of the form
 
 \begin{ncbnf}
-  \terminal{for}  \added{\terminal{await_kw}\opt} \terminal{(} for-range-declaration : expression \terminal{)} statement
+  \terminal{for}  \added{\terminal{await-keyword}\opt} \terminal{(} for-range-declaration : expression \terminal{)} statement
 \end{ncbnf}
 
 let \textit{range-init} be equivalent to the \grammarterm{expression} surrounded
@@ -52,7 +52,7 @@ by parentheses\footnote{this ensures that a top-level comma operator cannot be
 and for a range-based \tcode{for} statement of the form
 
 \begin{ncbnf}
-  \terminal{for} \added{\terminal{await_kw}\opt} \terminal{(} for-range-declaration \terminal{:} braced-init-list \terminal{)} statement
+  \terminal{for} \added{\terminal{await-keyword}\opt} \terminal{(} for-range-declaration \terminal{:} braced-init-list \terminal{)} statement
 \end{ncbnf}
 
 let \textit{range-init} be equivalent to the \grammarterm{braced-init-list}. In each case, a
@@ -62,10 +62,10 @@ is equivalent to
 \begin{codeblock}
   {
     auto && __range = range-init;
-    for ( auto __begin =  @\added{\tcode{await_kw}\opt}@ begin-expr,
+    for ( auto __begin =  @\added{\tcode{await-keyword}\opt}@ begin-expr,
     __end = end-expr;
     __begin != __end;
-     @\added{\tcode{await_kw}\opt}@ ++__begin ) {
+     @\added{\tcode{await-keyword}\opt}@ ++__begin ) {
       @\textit{for-range-declaration}@ = *__begin;
       @\textit{statement}@
     }
@@ -73,7 +73,7 @@ is equivalent to
 \end{codeblock}
 
 where 
-\added{\tcode{await_kw} appears if and only if it appears immediately after the \tcode{for} keyword, and}\linebreak
+\added{\tcode{await-keyword} appears if and only if it appears immediately after the \tcode{for} keyword, and}\linebreak
 \tcode{__range}, \tcode{__begin}, and \tcode{__end} are variables defined for
 exposition only, and \tcode{_RangeT} is the type of the
 \grammarterm{}{expression}, and \textit{begin-expr} and \textit{end-expr} are
@@ -101,10 +101,10 @@ determined as follows:
 %\begin{codeblock}
 %	{
 %		auto && __range = range-init;
-%		for ( auto __begin = await_kw begin-expr,
+%		for ( auto __begin = await-keyword begin-expr,
 %		__end = end-expr;
 %		__begin != __end;
-%		await_kw ++__begin ) {
+%		await-keyword ++__begin ) {
 %			@\textit{for-range-declaration}@ = *__begin;
 %			@\textit{statement}@
 %		}
@@ -271,7 +271,7 @@ behavior in a coroutine with non-\tcode{void} return type.
 %
 %\begin{codeblock}
 %  std::future<std::pair<std::string,int>> f(const char* p, int x) {
-%    await_kw g();
+%    await-keyword g();
 %    coreturn {p,x};
 %  }
 %\end{codeblock}

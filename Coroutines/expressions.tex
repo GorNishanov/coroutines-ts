@@ -6,7 +6,7 @@
 \setcounter{section}{2}
 \rSec1[expr.unary]{Unary expressions}
 
-%In this section add the \tcode{await_kw} \grammarterm{cast-expression} 
+%In this section add the \tcode{await-keyword} \grammarterm{cast-expression} 
 %to the rule for \grammarterm{unary-expression}.
 
 In this section change the grammar for \grammarterm{unary-expression} as follows:
@@ -16,7 +16,7 @@ In this section change the grammar for \grammarterm{unary-expression} as follows
 	postfix-expression\br
 	\terminal{++} cast-expression\br
 	\terminal{-{-}} cast-expression\br
-%	\added{\terminal{await_kw} cast-expression}\br
+%	\added{\terminal{await-keyword} cast-expression}\br
 	\added{await-expression}\br
 	unary-operator cast-expression\br
 	\terminal{sizeof} unary-expression\br
@@ -51,11 +51,11 @@ Add this section to \ref{expr.unary}.
 %NOTES: add quote
 \begin{quote}
 \pnum
-The \tcode{await_kw} operator is used to suspend evaluation of the enclosing coroutine (\ref{dcl.fct.def.coroutine}) while awaiting completion of the computation represented by the operand expression.
+The \tcode{await-keyword} operator is used to suspend evaluation of the enclosing coroutine (\ref{dcl.fct.def.coroutine}) while awaiting completion of the computation represented by the operand expression.
 
 \begin{bnf}
   \nontermdef{await-expression}\br
-  \terminal{await_kw} cast-expression
+  \terminal{await-keyword} cast-expression
 \end{bnf}
 
 \pnum
@@ -64,7 +64,7 @@ A potentially-evaluated
 %
 In a \grammarterm{declaration-statement} or in the \grammarterm{simple-declaration} (if any) of a \grammarterm{for-init-statement}, a potentially-evaluated \grammarterm{await-expression} shall only appear in an \grammarterm{initializer} of that \grammarterm{declaration-statement} or \grammarterm{simple-declaration}.
 %
-%A potentially-evaluated \tcode{await_kw} expression shall not appear in a
+%A potentially-evaluated \tcode{await-keyword} expression shall not appear in a
 %local class defined in \grammarterm{declaration-statement}.
 %
 A potentially-evaluated \grammarterm{await-expression} shall not appear in a default argument (\cxxref{dcl.fct.default}).
@@ -99,7 +99,7 @@ of the enclosing coroutine, \textit{P} be the type of the promise object, \texti
 If the type of \textit{await-suspend-expr} is \cvvoid, then
 
 \begin{ncbnf}
-  \terminal{await_kw} cast-expression
+  \terminal{await-keyword} cast-expression
 \end{ncbnf}
 is equivalent to:
 %refactor
@@ -135,9 +135,9 @@ An \grammarterm{await-expression} may appear as an unevaluated operand (\cxxref{
   std::future<int> f();
   
   int main() {
-    using t = decltype(await_kw f()); // t is int
-    static_assert(sizeof(await_kw f()) == sizeof(int));
-    cout << typeid(await_kw f()).name() << endl;
+    using t = decltype(await-keyword f()); // t is int
+    static_assert(sizeof(await-keyword f()) == sizeof(int));
+    cout << typeid(await-keyword f()).name() << endl;
   }
 \end{codeblock}
 \exitexample%
@@ -153,7 +153,7 @@ An \grammarterm{await-expression} may appear as an unevaluated operand (\cxxref{
 %A \tcode{await} expression of the form
 %
 %\begin{ncbnf}
-%	\terminal{await_kw} cast-expression
+%	\terminal{await-keyword} cast-expression
 %\end{ncbnf}
 %is equivalent to \footnote{if it were possible to write
 %an expression in terms of a block, where return from the 
