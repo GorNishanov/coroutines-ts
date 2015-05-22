@@ -101,10 +101,10 @@ determined as follows:
 %\begin{codeblock}
 %	{
 %		auto && __range = range-init;
-%		for ( auto __begin = coawait begin-expr,
+%		for ( auto __begin = await_kw begin-expr,
 %		__end = end-expr;
 %		__begin != __end;
-%		coawait ++__begin ) {
+%		await_kw ++__begin ) {
 %			@\textit{for-range-declaration}@ = *__begin;
 %			@\textit{statement}@
 %		}
@@ -129,10 +129,10 @@ In paragraph 1 add four productions to the grammar:
 	\terminal{continue ;}\br
 	\terminal{return} expression\opt \terminal{;}\br
 	\terminal{return} braced-init-list \terminal{;}\br
-	\added{\terminal{coreturn} expression\opt \terminal{;}}\br
-  \added{\terminal{coreturn} braced-init-list \terminal{;}}\br
-  \added{\terminal{coyield} expression \terminal{;}}\br
-	\added{\terminal{coyield} braced-init-list \terminal{;}}\br
+	\added{\terminal{coreturn_kw} expression\opt \terminal{;}}\br
+  \added{\terminal{coreturn_kw} braced-init-list \terminal{;}}\br
+  \added{\terminal{yield_kw} expression \terminal{;}}\br
+	\added{\terminal{yield_kw} braced-init-list \terminal{;}}\br
 	\terminal{goto} identifier \terminal{;}
 \end{bnf}
 \end{quote}
@@ -231,7 +231,7 @@ A function returns to its caller by the \tcode{return} statement.
 %a call to __pr.set_result, where _p
 %\end{quote}
 
-\rSec2[stmt.coreturn]{The \tcode{coreturn} statement}%
+\rSec2[stmt.coreturn]{The \tcode{coreturn_kw} statement}%
 
 Add this section to \ref{stmt.jump}.
 
@@ -242,8 +242,8 @@ Add this section to \ref{stmt.jump}.
 %\exitnote
 
 \pnum
-A coroutine returns to its caller by the \tcode{coreturn} statement
-or when suspended at a suspend-resume point (\ref{dcl.fct.def.coroutine}). A \tcode{coreturn} statement shall not appear in a function other than a coroutine.
+A coroutine returns to its caller by the \tcode{coreturn_kw} statement
+or when suspended at a suspend-resume point (\ref{dcl.fct.def.coroutine}). A \tcode{coreturn_kw} statement shall not appear in a function other than a coroutine.
 
 \pnum
   If the promise type (\ref{dcl.fct.def.coroutine}) of the coroutine defines the member function \tcode{return_void}, the coroutine is considered to have an \term{eventual return type} of \tcode{void}, if the promise type (\ref{dcl.fct.def.coroutine}) of the coroutine defines the member function \tcode{return_value}, the coroutine is considered to have a non-\tcode{void} eventual return  type, otherwise, the coroutine is considered not to have an eventual return type. If the promise type defines both \tcode{return_value} and \tcode{return_void} member functions, the program is ill-formed.
@@ -254,12 +254,12 @@ In this section, \textit{p} refers to the promise object
 of the enclosing coroutine.
 
 \pnum
-A \tcode{coreturn} statement
+A \tcode{coreturn_kw} statement
 with neither an \grammarterm{expression} nor a \grammarterm{braced-init-list}
 can be used only in coroutines
 that do not have an eventual return type or have an eventual return type of \tcode{void}. In the latter case, completion of the coroutine
 is signaled to the promise of the coroutine by calling \tcode{\textit{p}.return_void()}.
-A \tcode{coreturn} statement with an expression of non-\tcode{void} type can be used only
+A \tcode{coreturn_kw} statement with an expression of non-\tcode{void} type can be used only
 in coroutines producing an eventual value; the value of the expression is supplied to the promise of the coroutine by calling 
 \tcode{\textit{p}.return_value(\grammarterm{expression})} or
 \tcode{\textit{p}.\mbox{return_value}(\grammarterm{braced-init-list})}. Flowing off the end of a coroutine is equivalent to a \tcode{coreturn} with no value; this results in undefined
@@ -271,7 +271,7 @@ behavior in a coroutine with non-\tcode{void} return type.
 %
 %\begin{codeblock}
 %  std::future<std::pair<std::string,int>> f(const char* p, int x) {
-%    coawait g();
+%    await_kw g();
 %    coreturn {p,x};
 %  }
 %\end{codeblock}
@@ -286,8 +286,7 @@ the \tcode{\textit{p}.final_suspend()} predicate. If \tcode{\textit{p}.final_sus
 otherwise, the coroutine destroys the coroutine state (\ref{dcl.fct.def.coroutine}) and frees the memory dynamically allocated (if any) to store the state.
 
 \pnum
-A \tcode{coreturn} statement with an expression of type \cvvoid
-can be used only in functions without an eventual return type 
+A \tcode{coreturn_kw} statement with an expression of type \cvvoid{ }can be used only in functions without an eventual return type 
 or with an eventual return type of \tcode{void}; the expression is evaluated just before the call to \tcode{\textit{p}.final_suspend()} and \tcode{\textit{p}.return_void()} respectively.
 
 % this is fishy ^^^^ 
@@ -304,14 +303,14 @@ or with an eventual return type of \tcode{void}; the expression is evaluated jus
 
 \end{quote}
 
-\rSec2[stmt.yield]{The \tcode{coyield} statement}%
+\rSec2[stmt.yield]{The \tcode{yield} statement}%
 
 Add this section to \ref{stmt.jump}.
 
 \begin{quote}
 
-Let \textit{yielded value} be the operand of the \tcode{coyield} statement and \textit{p} be the promise object of the enclosing coroutine.
-If the result type of \tcode{\textit{p}.yield_value(\textit{yielded-value})} is of type \cvvoid, then the \tcode{coyield} statement is equivalent to:
+Let \textit{yielded value} be the operand of the \tcode{yield_kw} statement and \textit{p} be the promise object of the enclosing coroutine.
+If the result type of \tcode{\textit{p}.yield_value(\textit{yielded-value})} is of type \cvvoid, then the \tcode{yield_kw} statement is equivalent to:
 
 \begin{codeblock}
   @\textit{p}@.yield_value(@\textit{yielded-value}@);
@@ -328,7 +327,7 @@ otherwise, it is equivalent to:
 \end{codeblock}
 
 %\pnum
-%A \tcode{coyield} statement may only appear if a \tcode{yield_value} member
+%A \tcode{yield_kw} statement may only appear if a \tcode{yield_value} member
 %function is defined in the promise type of the enclosing coroutine.
 
 %NOTE: not pretty, can we remove the duplication
@@ -343,11 +342,11 @@ otherwise, it is equivalent to:
 %  recursive_generator<int> flatten(node* n)
 %  {
 %    if (n == nullptr)
-%      coreturn;
+%      coreturn_kw;
 %    
-%    coyield flatten(n->left);
-%    coyield n->value;
-%    coyield flatten(n->right);
+%    yield_kw flatten(n->left);
+%    yield_kw n->value;
+%    yield_kw flatten(n->right);
 %  }
 %\end{codeblock}
 %

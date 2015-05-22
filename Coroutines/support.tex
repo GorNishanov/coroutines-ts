@@ -376,7 +376,7 @@ a \tcode{return} statement or flowing off the end of the function.
 
 Invoked by
 a coroutine when 
-a \tcode{coreturn} statement
+a \tcode{coreturn_kw} statement
 with an \grammarterm{expression} 
 or a \grammarterm{braced-init-list}
 is encountered in a coroutine (\ref{stmt.coreturn}).
@@ -389,7 +389,7 @@ is encountered in a coroutine (\ref{stmt.coreturn}).
 	\tcode{p.return_void()}     &   
 %If present, an enclosing coroutine supports an eventual value of type \tcode{void}. 
 If present, invoked when 
-a \tcode{coreturn} statement is encountered as described in (\ref{stmt.coreturn}).
+a \tcode{coreturn_kw} statement is encountered as described in (\ref{stmt.coreturn}).
 A promise type shall not define both \mbox{\tcode{return_void}} and \tcode{return_value} member functions.
 	\\ \rowsep
 	\tcode{p.set_exception(e)} & 
@@ -401,9 +401,9 @@ will propagate from a coroutines normally.
 \\ \rowsep
 	\tcode{p.yield_value(v)}     &
   The \tcode{yield_value} is invoked
-  when \tcode{coyield} statement is
+  when \tcode{yield_kw} statement is
   encountered in the coroutine. If
-  promise does not define \tcode{yield_value}, \tcode{coyield}
+  promise does not define \tcode{yield_value}, \tcode{yield_kw}
   statement may not appear in the coroutine body.
 	\\ \rowsep
 	\tcode{p.initial_suspend()}     &
@@ -446,8 +446,8 @@ of a promise type for a simple generator.
   };
   
   generator f() {
-    coyield 1;
-    coyield 2;
+    yield_kw 1;
+    yield_kw 2;
   } 
   
   int main() {

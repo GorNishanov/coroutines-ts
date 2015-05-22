@@ -6,7 +6,7 @@
 \setcounter{section}{2}
 \rSec1[expr.unary]{Unary expressions}
 
-%In this section add the \tcode{coawait} \grammarterm{cast-expression} 
+%In this section add the \tcode{await_kw} \grammarterm{cast-expression} 
 %to the rule for \grammarterm{unary-expression}.
 
 In this section change the grammar for \grammarterm{unary-expression} as follows:
@@ -16,7 +16,8 @@ In this section change the grammar for \grammarterm{unary-expression} as follows
 	postfix-expression\br
 	\terminal{++} cast-expression\br
 	\terminal{-{-}} cast-expression\br
-	\added{\terminal{coawait} cast-expression}\br
+%	\added{\terminal{await_kw} cast-expression}\br
+	\added{await-expression}\br
 	unary-operator cast-expression\br
 	\terminal{sizeof} unary-expression\br
 	\terminal{sizeof (} type-id \terminal{)}\br
@@ -39,29 +40,34 @@ In this section, add a new paragraph after paragraph 3.
 \begin{quote}
 \setcounter{Paras}{3}
 \pnum
-If in a potentially-evaluated context the \textit{expression} would contain a potentially-evaluated \tcode{coawait} expression, the program is ill-formed.
+If in a potentially-evaluated context the \textit{expression} would contain a potentially-evaluated \grammarterm{await-expression}, the program is ill-formed.
 \end{quote}
 
 \setcounter{subsection}{7}
-\rSec2[expr.await]{Coawait}
+\rSec2[expr.await]{Await}
 
 Add this section to \ref{expr.unary}.
 
 %NOTES: add quote
 \begin{quote}
 \pnum
-The \tcode{coawait} operator is used to suspend evaluation of the enclosing coroutine (\ref{dcl.fct.def.coroutine}) while awaiting completion of the computation represented by the operand expression.
+The \tcode{await_kw} operator is used to suspend evaluation of the enclosing coroutine (\ref{dcl.fct.def.coroutine}) while awaiting completion of the computation represented by the operand expression.
+
+\begin{bnf}
+  \nontermdef{await-expression}\br
+  \terminal{await_kw} cast-expression
+\end{bnf}
 
 \pnum
 A potentially-evaluated 
-\tcode{coawait} expression shall only appear within the \grammarterm{compound-statement} of a \grammarterm{function-body} outside of a \grammarterm{handler} (\cxxref{except.handle}).
+\grammarterm{await-expression} shall only appear within the \grammarterm{compound-statement} of a \grammarterm{function-body} outside of a \grammarterm{handler} (\cxxref{except.handle}).
 %
-In a \grammarterm{declaration-statement} or in the \grammarterm{simple-declaration} (if any) of a \grammarterm{for-init-statement}, a potentially-evaluated \tcode{coawait} expression shall only appear in an \grammarterm{initializer} of that \grammarterm{declaration-statement} or \grammarterm{simple-declaration}.
+In a \grammarterm{declaration-statement} or in the \grammarterm{simple-declaration} (if any) of a \grammarterm{for-init-statement}, a potentially-evaluated \grammarterm{await-expression} shall only appear in an \grammarterm{initializer} of that \grammarterm{declaration-statement} or \grammarterm{simple-declaration}.
 %
-%A potentially-evaluated \tcode{coawait} expression shall not appear in a
+%A potentially-evaluated \tcode{await_kw} expression shall not appear in a
 %local class defined in \grammarterm{declaration-statement}.
 %
-A potentially-evaluated \tcode{coawait} expression shall not appear in a default argument (\cxxref{dcl.fct.default}).
+A potentially-evaluated \grammarterm{await-expression} shall not appear in a default argument (\cxxref{dcl.fct.default}).
 
 \pnum
 Let \textit{T} be the type of the \grammarterm{cast-expression}.
@@ -93,7 +99,7 @@ of the enclosing coroutine, \textit{P} be the type of the promise object, \texti
 If the type of \textit{await-suspend-expr} is \cvvoid, then
 
 \begin{ncbnf}
-  \terminal{coawait} cast-expression
+  \terminal{await_kw} cast-expression
 \end{ncbnf}
 is equivalent to:
 %refactor
@@ -117,21 +123,21 @@ where \textit{suspend-resume-point}s are treated as  expressions of type \tcode{
 %NOTE:
 
 \pnum
-A \tcode{coawait} expression may only appear in a coroutine 
+An \grammarterm{await-expression} may only appear in a coroutine 
 with an eventual return type (\ref{stmt.coreturn}).
 
 \pnum
 \enternote
-A \tcode{coawait} expression may appear as an unevaluated operand (\cxxref{expr.typeid}, \cxxref{expr.sizeof}, \cxxref{expr.unary.noexcept}, \cxxref{dcl.type.simple}). The presence of such a \tcode{coawait} expression does not make the enclosing function a coroutine and can be used to examine the type of an \tcode{coawait} expression.
+An \grammarterm{await-expression} may appear as an unevaluated operand (\cxxref{expr.typeid}, \cxxref{expr.sizeof}, \cxxref{expr.unary.noexcept}, \cxxref{dcl.type.simple}). The presence of such an \grammarterm{await-expression} does not make the enclosing function a coroutine and can be used to examine the type of an \grammarterm{await-expression}.
 
 \enterexample
 \begin{codeblock}	
   std::future<int> f();
   
   int main() {
-    using t = decltype(coawait f()); // t is int
-    static_assert(sizeof(coawait f()) == sizeof(int));
-    cout << typeid(coawait f()).name() << endl;
+    using t = decltype(await_kw f()); // t is int
+    static_assert(sizeof(await_kw f()) == sizeof(int));
+    cout << typeid(await_kw f()).name() << endl;
   }
 \end{codeblock}
 \exitexample%
@@ -144,10 +150,10 @@ A \tcode{coawait} expression may appear as an unevaluated operand (\cxxref{expr.
 %\rSec2[expr.await.old]{Old version of Coawait for wording comparison}
 %
 %\pnum
-%A \tcode{coawait} expression of the form
+%A \tcode{await} expression of the form
 %
 %\begin{ncbnf}
-%	\terminal{coawait} cast-expression
+%	\terminal{await_kw} cast-expression
 %\end{ncbnf}
 %is equivalent to \footnote{if it were possible to write
 %an expression in terms of a block, where return from the 

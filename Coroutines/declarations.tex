@@ -72,7 +72,7 @@ in any context where such a declarator is valid. If the function declarator
 includes a \grammarterm{trailing-return-type}~(\cxxref{dcl.fct}), that specifies
 the declared return type of the function. If the declared return type of the
 function contains a placeholder type, the return type of the function is
-deduced from \tcode{return},\added{ \tcode{coreturn}, and \tcode{coyield}} statements in the body of the function, if any.
+deduced from \tcode{return},\added{ \tcode{coreturn_kw}, and \tcode{yield_kw}} statements in the body of the function, if any.
 \end{quote}
 
 Add the underlined text to paragraph 9.
@@ -81,12 +81,13 @@ Add the underlined text to paragraph 9.
 \setcounter{Paras}{8}
 \pnum
 If a function with a declared return type that contains a placeholder type has
-multiple \tcode{return}\added{, \tcode{coreturn}, and \tcode{coyield}} statements, the return type is deduced for each
-\tcode{return}\added{, \tcode{coreturn}, and \tcode{coyield}} statement. If the type deduced is not the same in each
+multiple \tcode{return}\added{, \tcode{coreturn_kw}, and \tcode{yield_kw}} statements, the return type is deduced for each
+\tcode{return}\added{, \linebreak
+\tcode{coreturn_kw}, and \tcode{yield_kw}} statement. If the type deduced is not the same in each
 deduction, the program is ill-formed.
 \end{quote}
 
-add paragraphs 16 through 18.
+Add paragraphs 16 through 18.
 
 \begin{quote}
 \setcounter{Paras}{15}
@@ -95,47 +96,47 @@ add paragraphs 16 through 18.
 %\ednote{Incomplete edit. See if the next paragraph can be integrated with paragraph 9.}
 %
 %\pnum
-%If a coroutine has a declared return type that contains a placeholder type has multiple \tcode{coyield}/\tcode{coreturn} statements, the return type is deduced for each
-%\tcode{coyield}/\tcode{coreturn} statement. If the type deduced is not the same in each
+%If a coroutine has a declared return type that contains a placeholder type has multiple \tcode{yield_kw}/\tcode{coreturn} statements, the return type is deduced for each
+%\tcode{yield_kw}/\tcode{coreturn} statement. If the type deduced is not the same in each
 %deduction, the program is ill-formed.
 
 \pnum
 If a coroutine has a declared return type that contains a placeholder type, then the return type of the coroutine is deduced as follows:
 
 \begin{itemize}
-\item If a \tcode{coyield} statement and either an \tcode{coawait} expression or a \tcode{cofor} statement are present, then
-the return type is \tcode{std::experimental::async_stream<T>}, where \tcode{T} is deduced from the \tcode{coyield} statements as if \tcode{coyield} were a \tcode{return} statement in a function with declared type \tcode{auto} without a \grammarterm{trailing-return-type}.
+\item If a \tcode{yield_kw} statement and an \grammarterm{await-expression} are present, then
+the return type is \tcode{std::experimental::async_stream<T>}, where \tcode{T} is deduced from the \tcode{yield_kw} statements as if a \tcode{yield_kw} statement were a \tcode{return} statement in a function with declared type \tcode{auto} without a \grammarterm{trailing-return-type}.
 
 %NOTE Jens text
 
-\item Otherwise, if an \tcode{coawait} expression or a \tcode{cofor} statement are present in a function, then
-the return type is \tcode{std::experimental::task<T>} where type \tcode{T} is deduced from 
-\tcode{coreturn} statements as if \tcode{coreturn} were a \tcode{return} statement in a function with declared type \tcode{auto} without a \grammarterm{trailing-return-type}.
+\item Otherwise, if an \grammarterm{await-expression} is present in a function, then
+the return type is\linebreak \tcode{std::experimental::task<T>} where type \tcode{T} is deduced from 
+\tcode{coreturn_kw} statements as if a \tcode{coreturn_kw} statement were a \tcode{return} statement in a function with declared type \tcode{auto} without a \grammarterm{trailing-return-type}.
 
 %NOTE: as if 
 
-\item Otherwise, if a \tcode{coyield} statement is present in a function, then the return type is \linebreak
+\item Otherwise, if a \tcode{yield_kw} statement is present in a function, then the return type is \linebreak
 \tcode{std::experimental::generator<T>},
-where \tcode{T} is deduced from the \tcode{coyield} statements  as if \tcode{coyield} were a \tcode{return} statement in a function with declared type \tcode{auto} without a \grammarterm{trailing-return-type}.
+where \tcode{T} is deduced from the \tcode{yield_kw} statements  as if a \tcode{yield_kw} statement were a \tcode{return} statement in a function with declared type \tcode{auto} without a \grammarterm{trailing-return-type}.
 
 \end{itemize}
 \enterexample
 \begin{codeblock}
 // deduces to std::experimental::generator<char>
-auto f() { for(auto ch: "Hello") coyield ch; }
+auto f() { for(auto ch: "Hello") yield_kw ch; }
 
 // deduces to std::experimental::async_stream<int>
 auto ticks() {
   for(int tick = 0;; ++tick) {
-    coyield tick;
-    coawait sleep_for(1ms);
+    yield_kw tick;
+    await_kw sleep_for(1ms);
   }
 }
 
 future<void> g();
 
 // deduces to std::experimental::task<void>
-auto f2() {  coawait g(); }
+auto f2() {  await_kw g(); }
 
 \end{codeblock}
 \exitexample
