@@ -129,8 +129,8 @@ In paragraph 1 add four productions to the grammar:
 	\terminal{continue ;}\br
 	\terminal{return} expression\opt \terminal{;}\br
 	\terminal{return} braced-init-list \terminal{;}\br
-	\added{\terminal{coreturn-keyword} expression\opt \terminal{;}}\br
-  \added{\terminal{coreturn-keyword} braced-init-list \terminal{;}}\br
+	\added{\terminal{coroutine-return-keyword} expression\opt \terminal{;}}\br
+  \added{\terminal{coroutine-return-keyword} braced-init-list \terminal{;}}\br
   \added{\terminal{yield-keyword} expression \terminal{;}}\br
 	\added{\terminal{yield-keyword} braced-init-list \terminal{;}}\br
 	\terminal{goto} identifier \terminal{;}
@@ -231,7 +231,7 @@ A function returns to its caller by the \tcode{return} statement.
 %a call to __pr.set_result, where _p
 %\end{quote}
 
-\rSec2[stmt.coreturn]{The \tcode{coreturn-keyword} statement}%
+\rSec2[stmt.coreturn]{The \tcode{coroutine-return-keyword} statement}%
 
 Add this section to \ref{stmt.jump}.
 
@@ -242,8 +242,8 @@ Add this section to \ref{stmt.jump}.
 %\exitnote
 
 \pnum
-A coroutine returns to its caller by the \tcode{coreturn-keyword} statement
-or when suspended at a suspend-resume point (\ref{dcl.fct.def.coroutine}). A \tcode{coreturn-keyword} statement shall not appear in a function other than a coroutine.
+A coroutine returns to its caller by the \tcode{coroutine-return-keyword} statement
+or when suspended at a suspend-resume point (\ref{dcl.fct.def.coroutine}). A \tcode{coroutine-return-keyword} statement shall not appear in a function other than a coroutine.
 
 \pnum
   If the promise type (\ref{dcl.fct.def.coroutine}) of the coroutine defines the member function \tcode{return_void}, the coroutine is considered to have an \term{eventual return type} of \tcode{void}, if the promise type (\ref{dcl.fct.def.coroutine}) of the coroutine defines the member function \tcode{return_value}, the coroutine is considered to have a non-\tcode{void} eventual return  type, otherwise, the coroutine is considered not to have an eventual return type. If the promise type defines both \tcode{return_value} and \tcode{return_void} member functions, the program is ill-formed.
@@ -254,12 +254,12 @@ In this section, \textit{p} refers to the promise object
 of the enclosing coroutine.
 
 \pnum
-A \tcode{coreturn-keyword} statement
+A \tcode{coroutine-return-keyword} statement
 with neither an \grammarterm{expression} nor a \grammarterm{braced-init-list}
 can be used only in coroutines
 that do not have an eventual return type or have an eventual return type of \tcode{void}. In the latter case, completion of the coroutine
 is signaled to the promise of the coroutine by calling \tcode{\textit{p}.return_void()}.
-A \tcode{coreturn-keyword} statement with an expression of non-\tcode{void} type can be used only
+A \tcode{coroutine-return-keyword} statement with an expression of non-\tcode{void} type can be used only
 in coroutines producing an eventual value; the value of the expression is supplied to the promise of the coroutine by calling 
 \tcode{\textit{p}.return_value(\grammarterm{expression})} or
 \tcode{\textit{p}.\mbox{return_value}(\grammarterm{braced-init-list})}. Flowing off the end of a coroutine is equivalent to a \tcode{coreturn} with no value; this results in undefined
@@ -286,7 +286,7 @@ the \tcode{\textit{p}.final_suspend()} predicate. If \tcode{\textit{p}.final_sus
 otherwise, the coroutine destroys the coroutine state (\ref{dcl.fct.def.coroutine}) and frees the memory dynamically allocated (if any) to store the state.
 
 \pnum
-A \tcode{coreturn-keyword} statement with an expression of type \cvvoid{ }can be used only in functions without an eventual return type 
+A \tcode{coroutine-return-keyword} statement with an expression of type \cvvoid{ }can be used only in functions without an eventual return type 
 or with an eventual return type of \tcode{void}; the expression is evaluated just before the call to \tcode{\textit{p}.final_suspend()} and \tcode{\textit{p}.return_void()} respectively.
 
 % this is fishy ^^^^ 
@@ -342,7 +342,7 @@ otherwise, it is equivalent to:
 %  recursive_generator<int> flatten(node* n)
 %  {
 %    if (n == nullptr)
-%      coreturn-keyword;
+%      coroutine-return-keyword;
 %    
 %    yield-keyword flatten(n->left);
 %    yield-keyword n->value;

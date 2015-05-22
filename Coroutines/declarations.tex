@@ -72,7 +72,7 @@ in any context where such a declarator is valid. If the function declarator
 includes a \grammarterm{trailing-return-type}~(\cxxref{dcl.fct}), that specifies
 the declared return type of the function. If the declared return type of the
 function contains a placeholder type, the return type of the function is
-deduced from \tcode{return},\added{ \tcode{coreturn-keyword}, and \tcode{yield-keyword}} statements in the body of the function, if any.
+deduced from \tcode{return},\added{ \tcode{coroutine-return-keyword}, and \tcode{yield-keyword}} statements in the body of the function, if any.
 \end{quote}
 
 Add the underlined text to paragraph 9.
@@ -81,9 +81,9 @@ Add the underlined text to paragraph 9.
 \setcounter{Paras}{8}
 \pnum
 If a function with a declared return type that contains a placeholder type has
-multiple \tcode{return}\added{, \tcode{coreturn-keyword}, and \tcode{yield-keyword}} statements, the return type is deduced for each
+multiple \tcode{return}\added{, \tcode{coroutine-return-keyword}, and \tcode{yield-keyword}} statements, the return type is deduced for each
 \tcode{return}\added{, \linebreak
-\tcode{coreturn-keyword}, and \tcode{yield-keyword}} statement. If the type deduced is not the same in each
+\tcode{coroutine-return-keyword}, and \tcode{yield-keyword}} statement. If the type deduced is not the same in each
 deduction, the program is ill-formed.
 \end{quote}
 
@@ -111,7 +111,7 @@ the return type is \tcode{std::experimental::async_stream<T>}, where \tcode{T} i
 
 \item Otherwise, if an \grammarterm{await-expression} is present in a function, then
 the return type is\linebreak \tcode{std::experimental::task<T>} where type \tcode{T} is deduced from 
-\tcode{coreturn-keyword} statements as if a \tcode{coreturn-keyword} statement were a \tcode{return} statement in a function with declared type \tcode{auto} without a \grammarterm{trailing-return-type}.
+\tcode{coroutine-return-keyword} statements as if a \tcode{coroutine-return-keyword} statement were a \tcode{return} statement in a function with declared type \tcode{auto} without a \grammarterm{trailing-return-type}.
 
 %NOTE: as if 
 

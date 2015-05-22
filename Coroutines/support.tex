@@ -376,7 +376,7 @@ a \tcode{return} statement or flowing off the end of the function.
 
 Invoked by
 a coroutine when 
-a \tcode{coreturn-keyword} statement
+a \tcode{coroutine-return-keyword} statement
 with an \grammarterm{expression} 
 or a \grammarterm{braced-init-list}
 is encountered in a coroutine (\ref{stmt.coreturn}).
@@ -389,7 +389,7 @@ is encountered in a coroutine (\ref{stmt.coreturn}).
 	\tcode{p.return_void()}     &   
 %If present, an enclosing coroutine supports an eventual value of type \tcode{void}. 
 If present, invoked when 
-a \tcode{coreturn-keyword} statement is encountered as described in (\ref{stmt.coreturn}).
+a \tcode{coroutine-return-keyword} statement is encountered as described in (\ref{stmt.coreturn}).
 A promise type shall not define both \mbox{\tcode{return_void}} and \tcode{return_value} member functions.
 	\\ \rowsep
 	\tcode{p.set_exception(e)} & 
