@@ -4,7 +4,7 @@
 
 \rSec1[support.general]{General}
 
-Add a row to Table~\ref{tab:lang.sup.lib.summary} for \tcode{<experimental/coroutine>}
+Add a row to Table~\ref{tab:lang.sup.lib.summary} for coroutine support header \tcode{<experimental/coroutine>}.
 
 
 \begin{libsumtab}{Language support library summary}{tab:lang.sup.lib.summary}
@@ -48,7 +48,7 @@ behavior if replacing the \tcode{setjmp} and \tcode{longjmp}
 by \tcode{catch} and \tcode{throw} would invoke any non-trivial destructors for any automatic
 objects.
 %
-\added{A \tcode{setjmp}/\tcode{longjmp} call pair has undefined
+\added{A call to \tcode{setjmp} or \tcode{longjmp} has undefined
 behavior if invoked in a coroutine.}
 
 \xref ISO C~7.10.4, 7.8, 7.6, 7.12.
@@ -72,37 +72,38 @@ defines several types providing compile and run-time support for coroutines in a
 \indexlibrary{\idxhdr{experimental/coroutine}}%
 \begin{codeblock}
 namespace std {
-namespace experimental {
-  // \ref{coroutine.traits} coroutine traits
-  template <typename R, typename... ArgTypes>
-    class coroutine_traits;
-	
-  // \ref{coroutine.handle} coroutine handle
-  template <typename Promise = void>
-    class coroutine_handle;		
+  namespace experimental {
+  inline namespace coroutines_v1 {
+    // \ref{coroutine.traits} coroutine traits
+    template <typename R, typename... ArgTypes>
+      class coroutine_traits;
+  	
+    // \ref{coroutine.handle} coroutine handle
+    template <typename Promise = void>
+      class coroutine_handle;		
+  
+    // \ref{coroutine.handle.compare} comparison operators:	
+    bool operator==(coroutine_handle<> x, coroutine_handle<> y) noexcept;
+    bool operator<(coroutine_handle<> x, coroutine_handle<> y) noexcept;			
+    bool operator!=(coroutine_handle<> x, coroutine_handle<> y) noexcept;
+    bool operator<=(coroutine_handle<> x, coroutine_handle<> y) noexcept;			
+    bool operator>=(coroutine_handle<> x, coroutine_handle<> y) noexcept;
+    bool operator>(coroutine_handle<> x, coroutine_handle<> y) noexcept;
+  } // namespace coroutines_v1
+  } // namespace experimental
 
-  // \ref{coroutine.handle.compare} comparison operators:	
-  bool operator==(coroutine_handle<> x, coroutine_handle<> y) noexcept;
-  bool operator<(coroutine_handle<> x, coroutine_handle<> y) noexcept;			
-  bool operator!=(coroutine_handle<> x, coroutine_handle<> y) noexcept;
-  bool operator<=(coroutine_handle<> x, coroutine_handle<> y) noexcept;			
-  bool operator>=(coroutine_handle<> x, coroutine_handle<> y) noexcept;
-  bool operator>(coroutine_handle<> x, coroutine_handle<> y) noexcept;	  
-}
-}
-namespace std {
   // \ref{coroutine.handle.hash} hash support:
   template <class T> struct hash;
   template <class P> struct hash<experimental::coroutine_handle<P>>;
-}
+} // namespace std
 \end{codeblock}
 
 \rSec2[coroutine.traits]{coroutine traits}
 \pnum
 This subclause defines requirements on classes representing
 \term{coroutine traits},
-and defines a primary struct template
-\tcode{coroutine_traits<R,Args...>}
+and defines the class template
+\tcode{coroutine_traits}
 that satisfies those requirements.
 
 %\pnum
@@ -115,15 +116,15 @@ that satisfies those requirements.
 
 \pnum
 The \tcode{coroutine_traits} may be specialized by the user 
-to customize semantics of coroutines.
+to customize the semantics of coroutines.
 
 \rSec3[coroutine.traits.requirements]{Coroutine traits requirements}
 \pnum
 In Table~\ref{tab:coroutine.traits.requirements}, X denotes 
 a trait class instantiated as described in \ref{dcl.fct.def.coroutine};
-$a_1$, $a_2$, ... $a_n$ denote parameters passed to a coroutine. If it is a member function, than $a_1$ denotes implicit \tcode{this} parameter.
+If a coroutine is a member function, then $a_1$ denotes the implicit \tcode{this} parameter, $a_2$, ... $a_n$ refer to explicit parameters of the coroutine, otherwise, $a_1$, $a_2$, ... $a_n$ denote the parameters of the coroutine. 
 
-\begin{concepttable}{\tcode{coroutine_traits} requirements}{tab:coroutine.traits.requirements}
+\begin{concepttable}{Coroutine traits requirements}{tab:coroutine.traits.requirements}
   {p{1.6in}p{4.15in}}
   \topline
   Expression          &   Behavior \\ \capsep
@@ -133,31 +134,33 @@ $a_1$, $a_2$, ... $a_n$ denote parameters passed to a coroutine. If it is a memb
   \\ \rowsep
   \tcode{X::get_allocator($a_1$, $a_2$, ... $a_n$)}        &
   \textit{(optional)} Given a set of arguments passed to a coroutine,
-  returns an allocator (\cxxref{allocator.requirements}) that implementation shall use
+  returns an allocator (\cxxref{allocator.requirements}) that the implementation shall use
   to dynamically allocate memory for coroutine state if dynamic allocation is required.
   If \tcode{get_allocator} is not present, 
-  implementation shall use \tcode{std::allocator<char>}.
+  the implementation shall use \tcode{allocator<char>}.
 \\ \rowsep
   \tcode{X::get_return_object_on_allocation_failure()}     &
 \textit{(optional)} If present, it is assumed that an
-allocator's \tcode{allocate} function will violate the standard requirements and return \tcode{nullptr} in case of an
-allocation failure. If a coroutine requires dynamic allocation, it must check if an \tcode{allocate} returns nullptr, and if so it shall use the expression \tcode{X::get_return_object_on_allocation_failure()} to construct the return value and return back to the caller.
+allocator's \tcode{allocate} function will return \tcode{nullptr} in case of an
+allocation failure. If a coroutine requires dynamic allocation, it must check if an \tcode{allocate} returns \tcode{nullptr}, and if so it shall use the expression \tcode{X::get_return_object_on_allocation_failure()} to construct the return value and return back to the caller.
   \\ 
 \end{concepttable}
 
 \rSec3[coroutine.traits.primary]{Struct template \tcode{coroutine_traits}}
-\pnum The header \tcode{<coroutine>} shall define
-primary struct template \tcode{coroutine_traits} as follows:
+\pnum The header \tcode{<experimental/coroutine>} shall define
+the class template \tcode{coroutine_traits} as follows:
 
 %\pnum The requirements for the members are given in clause \ref{coroutine.traits.requirements}.
 \indexlibrary{\idxcode{coroutine_traits}}%
 \begin{codeblock}
 namespace std {
 namespace experimental {
+inline namespace coroutines_v1 {
   template <typename R, typename... Args>
   struct coroutine_traits {
     using promise_type = typename R::promise_type;
   };
+} // namespace coroutines_v1
 } // namespace experimental
 } // namespace std
 \end{codeblock}
@@ -168,12 +171,13 @@ namespace experimental {
 \begin{codeblock}
 namespace std {
   namespace experimental {
+  inline namespace coroutines_v1 {
     template <>
     struct coroutine_handle<void>
     {
       // \ref{coroutine.handle.con} construct/reset
-      coroutine_handle() noexcept;		
-      coroutine_handle(std::nullptr_t) noexcept;
+      constexpr coroutine_handle() noexcept;		
+      constexpr coroutine_handle(nullptr_t) noexcept;
       coroutine_handle& operator=(nullptr_t) noexcept;
       
       // \ref{coroutine.handle.export} export/import
@@ -204,21 +208,22 @@ namespace std {
       Promise& promise() noexcept;		
       Promise const& promise() const noexcept;
     };
-  }
-}
+  } // namespace coroutines_v1
+  } // namespace experimental
+} // namespace std
 \end{codeblock}
 
 \pnum
 Let \textit{P} be a promise type of the coroutine (\ref{dcl.fct.def.coroutine}). An object of the type \tcode{coroutine_handle<\textit{P}>} is called a \term{coroutine handle}
 and can be used to refer to a suspended or executing coroutine.
-Such function is called a \textit{target} of a coroutine handle.
+Such a function is called a \textit{target} of a coroutine handle.
 A default constructed \tcode{coroutine_handle} object has no target.
 
 
 \rSec3[coroutine.handle.con]{\tcode{coroutine_handle} construct/reset}
 \begin{itemdecl}
-  coroutine_handle() noexcept;		
-  coroutine_handle(std::nullptr_t) noexcept;
+  constexpr coroutine_handle() noexcept;		
+  constexpr coroutine_handle(nullptr_t) noexcept;
 \end{itemdecl}
 \begin{itemdescr}
   \pnum\postconditions \tcode{!*this}.
@@ -232,7 +237,7 @@ A default constructed \tcode{coroutine_handle} object has no target.
   \precondition \tcode{p} points to a promise object of a coroutine.
   
 	\pnum
-  \postconditions \tcode{!*this} and \tcode{std::addressof(this->promise()) == p}.
+  \postconditions \tcode{!*this} and \tcode{addressof(this->promise()) == p}.
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -272,11 +277,11 @@ A default constructed \tcode{coroutine_handle} object has no target.
 \end{itemdecl}
 \begin{itemdescr}
   \pnum
-  \precondition *this refers to a suspended coroutine
+  \precondition \tcode{*this} refers to a suspended coroutine.
   
   \pnum
   \effects resumes the execution of a target function. If the function was suspended
-  at the final suspend point, std::terminate is called (\cxxref{except.terminate}).
+  at the final suspend point, \tcode{terminate} is called (\cxxref{except.terminate}).
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -284,7 +289,7 @@ A default constructed \tcode{coroutine_handle} object has no target.
 \end{itemdecl}
 \begin{itemdescr}
   \pnum
-  \precondition *this refers to a suspended coroutine
+  \precondition \tcode{*this} refers to a suspended coroutine.
   
   \pnum
   \effects destroys the target coroutine (\ref{dcl.fct.def.coroutine}).
@@ -296,7 +301,7 @@ A default constructed \tcode{coroutine_handle} object has no target.
 \end{itemdecl}
 \begin{itemdescr}
   \pnum
-  \precondition *this refers to a suspended coroutine
+  \precondition \tcode{*this} refers to a suspended coroutine.
   
   \pnum
   \returns \tcode{true} if the target function is suspended
@@ -311,7 +316,7 @@ A default constructed \tcode{coroutine_handle} object has no target.
 
 \begin{itemdescr}
   \pnum
-  \precondition *this refers to a coroutine
+  \precondition \tcode{*this} refers to a coroutine.
   
   \pnum
   \returns a reference to a promise of the target function.
@@ -424,8 +429,8 @@ coroutine promise types.
 	\endhead
 	\tcode{P}    &   a coroutine promise type       \\ \rowsep
 	\tcode{p}       &   a value of type \tcode{P} \\ \rowsep
-	\tcode{e}       &   a value of \tcode{std::exception_ptr} type   \\ \rowsep
-	\tcode{h}       &   a value of \tcode{std::experimental::coroutine_handle<P>} type    \\ \rowsep
+	\tcode{e}       &   a value of \tcode{exception_ptr} type   \\ \rowsep
+	\tcode{h}       &   a value of \tcode{experimental::coroutine_handle<P>} type    \\ \rowsep
 	\tcode{v}      &   an \grammarterm{expression} or \grammarterm{braced-init-list}   \\ \rowsep
 \end{libreqtab2}
 
@@ -438,7 +443,7 @@ coroutine promise types.
 	\tcode{p.get_return_object()}        &
 The \tcode{get_return_object} is invoked by the coroutine to construct the
 return object prior to reaching the first suspend-resume point,
-a \tcode{return} statement or flowing off the end of the function.
+a \tcode{return} statement, or flowing off the end of the function.
 	\\ \rowsep
 	\tcode{p.return_value(v)}     &  
 %If present, an enclosing coroutine supports an
@@ -464,10 +469,9 @@ A promise type shall not define both \mbox{\tcode{return_void}} and \tcode{retur
 	\\ \rowsep
 	\tcode{p.set_exception(e)} & 
 The \tcode{set_exception} is invoked by a coroutine when an
-unhandled exception occurs within a \grammarterm{function-body} of the coroutine
-function.
-If promise does not provide \tcode{set_exception}, an unhandled exception
-will propagate from a coroutines normally.
+unhandled exception occurs within a \grammarterm{function-body} of the coroutine.
+If the promise does not provide \tcode{set_exception}, an unhandled exception
+will propagate from the coroutine normally.
 \\ \rowsep
 	\tcode{p.yield_value(v)}     &
   The \tcode{yield_value} is invoked
@@ -484,6 +488,8 @@ if \tcode{p.final_suspend()} evaluates to \tcode{true}, the coroutine will suspe
 \\ 
 \end{concepttable}
 
+\pagebreak
+\pnum
 \enterexample
 This example illustrates full implementation
 of a promise type for a simple generator.
