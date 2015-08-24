@@ -43,6 +43,24 @@ From the perspective of the caller, a coroutine is just a function with that par
 \exitnote
 
 \pnum
+\enterexample
+\begin{codeblock}
+  // coroutine hello world
+  std::experimental::generator<char> hello_fn() {
+    for (auto ch: "Hello, world") yield-keyword ch;
+  }
+  
+  int main() {
+    // coroutine as a lambda
+    auto hello_lambda = []{ for (auto ch: "Hello, world") yield-keyword ch; };
+    
+    for (auto ch : hello_lambda()) cout << ch;
+    for (auto ch : hello_fn()) cout << ch;
+  }
+\end{codeblock}
+\exitexample
+
+\pnum
 A coroutine needs a set of related types and functions
 to complete the definition of its semantics.
 These types and functions are provided as a set of member types or typedefs
@@ -114,9 +132,45 @@ is the promise type of the coroutine.
 \pnum
 A coroutine may need to allocate
 memory to store objects with automatic storage duration
-local to the coroutine. If so, it must
-use the allocator object obtained as described in 
-Table~\ref{tab:coroutine.traits.requirements} in clause \ref{coroutine.traits}.
+local to the coroutine. If so, it shall obtain the storage by calling an
+\term{allocation function}~(\cxxref{basic.stc.dynamic.allocation}).
+The allocation function's name is looked up in the scope of the promise type of the coroutine. If this lookup fails to find the name, the allocation function's name is looked up in the global scope. If the allocation function takes two or more parameters, then all parameters passed to the coroutine are passed to the allocation function after the size parameter.
+
+\pnum
+\enterexample
+\begin{codeblock}
+  class Arena;
+  struct my_coroutine {
+    struct promise_type {
+      ...
+      template <typename... TheRest>
+      void* operator new(std::size_t size, Arena* pool, TheRest const&...) {
+        return pool.allocate(size);
+      }
+    };
+  };
+
+  my_coroutine (Arena* a) {
+    // will call my_coroutine::promise_type::new(<required-size>, a)
+    // to obtain storage for the coroutine state
+    yield 1;
+  }
+  
+  int main() {
+    Pool memPool;
+    for (int i = 0; i < 1'000'000; ++i)
+      my_coroutine(memPool);
+  };
+\end{codeblock}
+\exitexample
+
+%\pnum
+%A coroutine may need to allocate
+%memory to store objects with automatic storage duration
+%local to the coroutine. If so, it must
+%use 
+%the allocator object obtained as described in 
+%Table~\ref{tab:coroutine.traits.requirements} in clause \ref{coroutine.traits}.
 
 \pnum
 A \defn{coroutine state} consists of 
@@ -126,8 +180,11 @@ a coroutine.
 The coroutine state is destroyed when
 the control flows off the end of the function or
 the \tcode{destroy} member function (\ref{coroutine.handle.resumption}) of an object of \tcode{std::experimental::coroutine_handle<\textit{P}}> associated with that coroutine is invoked. In the latter case objects with automatic storage duration that are in scope
-at the suspend point are destroyed in the reverse order of the construction. If the coroutine state required dynamic allocation, the memory
-is freed. If \tcode{destroy} is called for a coroutine that is not suspended, the program has undefined behavior.
+at the suspend point are destroyed in the reverse order of the construction. If the coroutine state required dynamic allocation, the storage is released by calling a deallocation
+function~(\cxxref{basic.stc.dynamic.deallocation}). If \tcode{destroy} is called for a coroutine that is not suspended, the program has undefined behavior.
+
+\pnum
+The deallocation function's name is looked up in the scope of the coroutine promise type. If this lookup fails to find the name, the deallocation function's name is looked up in the global scope.
 
 %introduce metavariable instead of talking about
 %coroutine_handle<>
@@ -184,38 +241,15 @@ for the coroutine state is freed.
 %and the search for a handler starts in the scope of the calling function. 
 
 \pnum
-If type T defines static member function \tcode{get_return_object_on_allocation_failure} (\ref{coroutine.traits}) and
-the coroutine state is allocated dynamically,
-the result of an allocation call needs to be compared with
-\tcode{nullptr}, and if it is \tcode{nullptr}, coroutine must return control 
+If type \textit{P} defines static member function \tcode{get_return_object_on_allocation_failure} (\ref{coroutine.traits}), then \tcode{std::nothrow_t} forms of allocation and deallocation functions will be used and the result of the allocation function call needs to be compared with \tcode{nullptr}, and if it is \tcode{nullptr}, coroutine must return control 
 to the current caller of the coroutine and the return value
-is obtained by a call to \tcode{T::get_return_object_on_allocation_failure()}.
-\enternote
-This provision allows coroutines to be used in environments
-where exception use is not possible to report 
-allocation failures.
-\exitnote
-
-\pnum
-\enterexample
-\begin{codeblock}
-  
-// coroutine hello world
-std::experimental::generator<char> hello_fn() {
-  for (auto ch: "Hello, world") yield-keyword ch;
-}
-  
-int main() {
-  // coroutine as a lambda
-  auto hello_lambda = []{ for (auto ch: "Hello, world") yield-keyword ch; };
-  
-  for (auto ch : hello_lambda()) 
-     cout << ch;
-  for (auto ch : hello_fn()) 
-     cout << ch;
-}
-\end{codeblock}
-\exitexample
+is obtained by a call to \tcode{P::get_return_object_on_allocation_failure()}.
+%\tcode{new(std::size_t,} \tcode{const} \tcode{std::nothrow_t\&)}.
+%\enternote
+%This provision allows coroutines to be used in environments
+%where exception use is not possible to report 
+%allocation failures.
+%\exitnote
 
 %\pnum A coroutine shall not have an ellipsis parameter specification. 
 
