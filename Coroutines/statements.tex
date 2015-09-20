@@ -131,8 +131,6 @@ In paragraph 1 add four productions to the grammar:
 	\terminal{return} braced-init-list \terminal{;}\br
 	\added{\terminal{coroutine-return-keyword} expression\opt \terminal{;}}\br
   \added{\terminal{coroutine-return-keyword} braced-init-list \terminal{;}}\br
-  \added{\terminal{yield-keyword} expression \terminal{;}}\br
-	\added{\terminal{yield-keyword} braced-init-list \terminal{;}}\br
 	\terminal{goto} identifier \terminal{;}
 \end{bnf}
 \end{quote}
@@ -303,28 +301,28 @@ or with an eventual return type of \tcode{void}; the expression is evaluated jus
 
 \end{quote}
 
-\rSec2[stmt.yield]{The \tcode{yield} statement}%
-
-Add this section to \ref{stmt.jump}.
-
-\begin{quote}
-
-Let \textit{yielded value} be the operand of the \tcode{yield-keyword} statement and \textit{p} be the promise object of the enclosing coroutine.
-If the result type of \tcode{\textit{p}.yield_value(\textit{yielded-value})} is of type \cvvoid, then the \tcode{yield-keyword} statement is equivalent to:
-
-\begin{codeblock}
-  @\textit{p}@.yield_value(@\textit{yielded-value}@);
-  @\textit{suspend-resume-point}
-\end{codeblock}
-
-otherwise, it is equivalent to:
-
-\begin{codeblock}
-  if (@\textit{p}@.yield_value(@\textit{yielded-value}@)) {
-    @\textit{suspend-resume-point}@
-  }
-  
-\end{codeblock}
+%\rSec2[stmt.yield]{The \tcode{yield} statement}%
+%
+%Add this section to \ref{stmt.jump}.
+%
+%\begin{quote}
+%
+%Let \textit{yielded value} be the operand of the \tcode{yield-keyword} statement and \textit{p} be the promise object of the enclosing coroutine.
+%If the result type of \tcode{\textit{p}.yield_value(\textit{yielded-value})} is of type \cvvoid, then the \tcode{yield-keyword} statement is equivalent to:
+%
+%\begin{codeblock}
+%  @\textit{p}@.yield_value(@\textit{yielded-value}@);
+%  @\textit{suspend-resume-point}
+%\end{codeblock}
+%
+%otherwise, it is equivalent to:
+%
+%\begin{codeblock}
+%  if (@\textit{p}@.yield_value(@\textit{yielded-value}@)) {
+%    @\textit{suspend-resume-point}@
+%  }
+%  
+%\end{codeblock}
 
 %\pnum
 %A \tcode{yield-keyword} statement may only appear if a \tcode{yield_value} member
@@ -355,4 +353,4 @@ otherwise, it is equivalent to:
 %\exitexample
 %\exitnote
 
-\end{quote}
+%\end{quote}

@@ -124,7 +124,7 @@ where \textit{suspend-resume-point}s are treated as  expressions of type \tcode{
 
 \pnum
 An \grammarterm{await-expression} may only appear in a coroutine 
-with an eventual return type (\ref{stmt.coreturn}).
+with an eventual return type (\ref{stmt.coreturn}). This constraint does not apply to implicit \grammarterm{await-expression} introduced as a result of evaluation of a \grammarterm{yield-expression} (\ref{expr.yield}), initial, and final suspend points (\ref{dcl.fct.def.coroutine}).
 
 \pnum
 \enternote
@@ -237,3 +237,62 @@ An \grammarterm{await-expression} may appear as an unevaluated operand (\cxxref{
 %%	int result = await async([]{return 5;});
 %%\end{codeblock}
 %%\exitexample%
+
+\setcounter{section}{17}
+\rSec1[expr.ass]{Assignment and compound assignment operators}%
+
+In paragraph 1 add \grammarterm{yield-expression} to \grammarterm{assignment-expression} rule.
+
+\begin{quote}
+\begin{bnf}
+  \nontermdef{assignment-expression}\br
+  conditional-expression\br
+  logical-or-expression assignment-operator initializer-clause\br
+  throw-expression \br
+  \added{yield-expression}
+\end{bnf}
+\end{quote}
+
+\setcounter{section}{20}
+\rSec1[expr.yield]{Yield expressions}%
+
+Add this section to Clause \ref{expr}.
+
+\begin{quote}
+\begin{bnf}
+  \nontermdef{yield-expression}\br
+  \terminal{yield-keyword} assignment-expression\br
+  \terminal{yield-keyword} braced-init-list
+\end{bnf}
+
+\pnum
+  Let \textit{yielded value} be the operand of the \tcode{yield-keyword} expression and \textit{p} be the promise object of the enclosing coroutine, then \tcode{yield} expression is evaluated as an \tcode{await} expression with operand \textit{p}\tcode{.yield_value}(\textit{yielded value}). If coroutine promise does not define a function \tcode{yield_value}, the program is ill-formed.
+
+\pnum
+All restrictions on where an \textit{await-expression} can appear apply to \textit{yield-expression}{}s.
+
+\pnum
+\enterexample
+\begin{codeblock}
+using namespace std;
+using namespace std::experimental;
+  
+generator<pair<int,int>> g1() {
+  for (int i = i; i < 10; ++i)
+    yield-keyword {i,i};
+}
+
+auto g2() { // deduces to generator<pair<int,int>{}>
+  for (int i = i; i < 10; ++i)
+    yield-keyword make_pair(i,i);
+}
+
+int main() {
+  auto r1 = g1();
+  auto r2 = g2();
+  assert(equal(r1.begin(), r1.end(), r2.begin(), r2.end()));
+}
+\end{codeblock}
+\exitexample
+\end{quote}
+
