@@ -30,27 +30,27 @@ enumerations can be called \tcode{main}, as can entities in other
 namespaces. \exitexample
 \end{quote}
 
-\setcounter{section}{6}
-\rSec1[basic.stc]{Storage duration}
-\setcounter{subsection}{4}
-%\rSec2[basic.stc.dynamic]{Dynamic storage duration}%
-\rSec3[basic.stc.dynamic.allocation]{Allocation functions}
-Add underlined text to paragraph 1.
-
-\begin{quote}
-\pnum
-\indextext{function!allocation}%
-An allocation function shall be a class member function or a global
-function; a program is ill-formed if an allocation function is declared
-in a namespace scope other than global scope or declared static in
-global scope. The return type shall be \tcode{void*}. The first
-parameter shall have type \tcode{std::size_t}~(\cxxref{support.types}). The
-first parameter shall not have an associated default
-argument~(\cxxref{dcl.fct.default}). The value of the first parameter shall
-be interpreted as the requested size of the allocation. An allocation
-function can be a function template. Such a template shall declare its
-return type and first parameter as specified above (that is, template
-parameter types shall not be used in the return type and first parameter
-type). Template allocation functions shall have two or more parameters.
-\added{An allocation function with exactly one argument or with all the arguments beyond the first having associated default values is a usual allocation function.}
-\end{quote}
+%\setcounter{section}{6}
+%\rSec1[basic.stc]{Storage duration}
+%\setcounter{subsection}{4}
+%%\rSec2[basic.stc.dynamic]{Dynamic storage duration}%
+%\rSec3[basic.stc.dynamic.allocation]{Allocation functions}
+%Add underlined text to paragraph 1.
+%
+%\begin{quote}
+%\pnum
+%\indextext{function!allocation}%
+%An allocation function shall be a class member function or a global
+%function; a program is ill-formed if an allocation function is declared
+%in a namespace scope other than global scope or declared static in
+%global scope. The return type shall be \tcode{void*}. The first
+%parameter shall have type \tcode{std::size_t}~(\cxxref{support.types}). The
+%first parameter shall not have an associated default
+%argument~(\cxxref{dcl.fct.default}). The value of the first parameter shall
+%be interpreted as the requested size of the allocation. An allocation
+%function can be a function template. Such a template shall declare its
+%return type and first parameter as specified above (that is, template
+%parameter types shall not be used in the return type and first parameter
+%type). Template allocation functions shall have two or more parameters.
+%\added{An allocation function with exactly one argument is a usual allocation function.}
+%\end{quote}

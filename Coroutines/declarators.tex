@@ -134,7 +134,9 @@ A coroutine may need to allocate
 memory to store objects with automatic storage duration
 local to the coroutine. If so, it shall obtain the storage by calling an
 \term{allocation function}~(\cxxref{basic.stc.dynamic.allocation}).
-The allocation function's name is looked up in the scope of the promise type of the coroutine. If this lookup fails to find the name, the allocation function's name is looked up in the global scope. If the allocation function takes two or more parameters, then all parameters passed to the coroutine are passed to the allocation function after the size parameter.
+The allocation function's name is looked up in the scope of the promise type of the coroutine. If this lookup fails to find the name, the allocation function's name is looked up in the global scope. If the lookup finds an allocation function that takes exactly one parameter, it will be used, otherwise, all parameters passed to the coroutine are passed to the allocation function after the size parameter.
+\enternote The second form allows coroutines to support stateful allocators.
+\exitnote
 
 \pnum
 \enterexample
@@ -184,7 +186,7 @@ at the suspend point are destroyed in the reverse order of the construction. If 
 function~(\cxxref{basic.stc.dynamic.deallocation}). If \tcode{destroy} is called for a coroutine that is not suspended, the program has undefined behavior.
 
 \pnum
-The deallocation function's name is looked up in the scope of the coroutine promise type. If this lookup fails to find the name, the deallocation function's name is looked up in the global scope.
+The deallocation function's name is looked up in the scope of the coroutine promise type. If this lookup fails to find the name, the deallocation function's name is looked up in the global scope. If deallocation function lookup finds both a usual deallocation function with only a pointer parameter and a usual deallocation function with both a pointer parameter and a size parameter, then the selected deallocation function shall be the one with two parameters. Otherwise, the selected deallocation function shall be the function with one parameter. 
 
 %introduce metavariable instead of talking about
 %coroutine_handle<>
@@ -241,9 +243,7 @@ for the coroutine state is freed.
 %and the search for a handler starts in the scope of the calling function. 
 
 \pnum
-If type \textit{P} defines static member function \tcode{get_return_object_on_allocation_failure} (\ref{coroutine.traits}), then \tcode{std::nothrow_t} forms of allocation and deallocation functions will be used and the result of the allocation function call needs to be compared with \tcode{nullptr}, and if it is \tcode{nullptr}, coroutine must return control 
-to the current caller of the coroutine and the return value
-is obtained by a call to \tcode{P::get_return_object_on_allocation_failure()}.
+If type \textit{P} defines static member function \tcode{get_return_object_on_allocation_failure} (\ref{coroutine.traits}), then \tcode{std::nothrow_t} forms of allocation and deallocation functions will be used. If an allocation function returns \tcode{nullptr}, coroutine must return control to the caller of the coroutine and the return value shall be obtained by a call to \tcode{P::get_return_object_on_allocation_failure()}.
 %\tcode{new(std::size_t,} \tcode{const} \tcode{std::nothrow_t\&)}.
 %\enternote
 %This provision allows coroutines to be used in environments
