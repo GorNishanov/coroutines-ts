@@ -83,13 +83,9 @@ Then, the coroutine behaves as if its body were:
 \begin{codeblock}
   {
      @\textit{P p}@;
-     if (@\textit{p}@.initial_suspend()) {
-       @\textit{suspend-resume-point}@ // initial suspend point
-     }
+     await-keyword @\textit{p}@.initial_suspend(); // initial suspend point
      @\textit{F'}@
-     if (@\textit{p}@.final_suspend()) {
-       @\textit{suspend-resume-point}@ // final suspend point
-     }
+     await-keyword @\textit{p}@.final_suspend(); // final suspend point
   }
 \end{codeblock}
 where local variable \textit{p} is 
@@ -107,7 +103,7 @@ No header needs to be included for this use of the function \tcode{std::current_
 An object denoted as \textit{p} is the \defn{promise object} of
 the coroutine \textit{f} and its type is a \defn{promise type}
 of the coroutine.
-An execution of a coroutine is suspended when it reaches a suspend-resume-point.
+An execution of a coroutine is suspended when it reaches a suspend-resume-point. Implicit \grammarterm{await-expression}{}s introducing initial and final suspend points are not considered \grammarterm{await-expression}{}s for the purpose of type deduction (\ref{dcl.spec.auto}). 
 
 \pnum 
 A \defn{suspension} of a coroutine returns control to the current

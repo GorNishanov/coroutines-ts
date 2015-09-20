@@ -267,9 +267,7 @@ Add this section to Clause \ref{expr}.
 
 \pnum
   Let \textit{yielded value} be the operand of the \tcode{yield-keyword} expression and \textit{p} be the promise object of the enclosing coroutine, then \tcode{yield} expression is evaluated as an \tcode{await} expression with operand \textit{p}\tcode{.yield_value}(\textit{yielded value}). If coroutine promise does not define a function \tcode{yield_value}, the program is ill-formed.
-
-\pnum
-All restrictions on where an \textit{await-expression} can appear apply to \textit{yield-expression}{}s.
+ An implicit \grammarterm{await-expression} introduced by this evaluation is not considered an \grammarterm{await-expression} for the purpose of type deduction (\ref{dcl.spec.auto}). 
 
 \pnum
 \enterexample
@@ -294,5 +292,17 @@ int main() {
 }
 \end{codeblock}
 \exitexample
+
+\pnum
+All restrictions on where an \textit{await-expression} can appear apply to \textit{yield-expression}{}s.
+
+\enterexample
+\begin{codeblock}
+  auto f(int x = yield 5); // ill-formed
+  int a[] = { yield 1 }; // ill-formed
+\end{codeblock}
+\exitexample
+
+
 \end{quote}
 
