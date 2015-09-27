@@ -123,7 +123,7 @@ A suspended coroutine can be resumed
 to continue execution by invoking
 a resumption member functions (\ref{coroutine.handle.resumption}) of an object of \tcode{coroutine_handle<$P$>} type
 associated with this instance of the coroutine, where type $P$
-is the promise type of the coroutine. 
+is the promise type of the coroutine. Invoking resumption member functions in a coroutine that is not suspended results in undefined behavior. 
 
 \pnum
 A coroutine may need to allocate
@@ -240,6 +240,38 @@ for the coroutine state is freed.
 
 \pnum
 If type \textit{P} defines static member function \tcode{get_return_object_on_allocation_failure} (\ref{coroutine.traits}), then \tcode{std::nothrow_t} forms of allocation and deallocation functions will be used. If an allocation function returns \tcode{nullptr}, coroutine must return control to the caller of the coroutine and the return value shall be obtained by a call to \tcode{P::get_return_object_on_allocation_failure()}.
+
+\enterexample
+\begin{codeblock}
+struct generator {
+  struct promise_type {
+    int current_value;
+    static auto get_return_object_on_allocation_failure() { return generator{nullptr}; }
+    auto get_return_object() { return generator{this}; }
+    auto initial_suspend() { return std::experimental::suspend_always{}; }
+    auto final_suspend() { return std::experimental::suspend_always{}; }
+    auto yield_value(int value) { 
+      current_value = value; 
+      return std::experimental::suspend_always{};
+    }
+  };
+  bool move_next() { return coro ? (coro.resume(), !coro.done()) : false; }
+  int current_value() { return coro.promise().current_value; }
+  ~generator() { if(coro) coro.destroy(); }
+private:
+  generator(promise_type* myPromise) : coro(myPromise) {}
+  std::experimental::coroutine_handle<promise_type> coro;
+};
+generator f() { yield-keyword 1;  yield-keyword 2; }
+ 
+int main() {
+  auto g = f();
+  while (g.move_next()) std::cout << g.current_value() << std::endl;
+}
+
+\end{codeblock}
+\exitexample
+
 %\tcode{new(std::size_t,} \tcode{const} \tcode{std::nothrow_t\&)}.
 %\enternote
 %This provision allows coroutines to be used in environments

@@ -75,20 +75,27 @@ Let $e$ be a temporary initialized as-if by \tcode{auto\&\& e = \textit{f(cast-e
 of the enclosing coroutine, \textit{P} be the type of the promise object, \textit{h} be an object of \tcode{std::experimental::coroutine_handle<\textit{P}>} referring to the enclosing coroutine, and let \textit{await-ready-expr}, \textit{await-suspend-expr}, and \textit{await-resume-expr} be
 \tcode{\textit{e}.await_ready()}, \tcode{\textit{e}.await_suspend(\textit{h})}, and \tcode{\textit{e}.await_resume()}, respectively;
 
-If the type of \textit{e.await_suspend(h)} is \tcode{bool}, then
+%If the type of \textit{e.await_suspend(h)} is \tcode{bool}, then
+%
+%\begin{ncbnf}
+%  \terminal{await-keyword} cast-expression
+%\end{ncbnf}
+%is equivalent to:
+%
+%\begin{codeblock}
+%  (
+%  (@\textit{await-ready-expr}@ && !@\textit{await-suspend-expr}@) ? @\textit{await-resume-expr}@
+%  : (@\textit{suspend-resume-point}@, @\textit{await-resume-expr}@)
+%  )
+%\end{codeblock}
+%otherwise, it is equivalent to:
+
+then
 
 \begin{ncbnf}
   \terminal{await-keyword} cast-expression
 \end{ncbnf}
 is equivalent to:
-
-\begin{codeblock}
-  (
-  (@\textit{await-ready-expr}@ && !@\textit{await-suspend-expr}@) ? @\textit{await-resume-expr}@
-  : (@\textit{suspend-resume-point}@, @\textit{await-resume-expr}@)
-  )
-\end{codeblock}
-otherwise, it is equivalent to:
 
 \begin{codeblock}
   (
@@ -156,7 +163,10 @@ where \textit{suspend-resume-point}s are treated as  expressions of type \tcode{
 
 \pnum
 An \grammarterm{await-expression} may only appear in a coroutine 
-with an eventual return type (\ref{stmt.coreturn}). This constraint does not apply to implicit \grammarterm{await-expression} introduced as a result of evaluation of a \grammarterm{yield-expression} (\ref{expr.yield}), initial, and final suspend points (\ref{dcl.fct.def.coroutine}).
+with an eventual return type (\ref{stmt.return.coroutine}). This constraint does not apply to implicit \grammarterm{await-expression} introduced as a result of evaluation of a \grammarterm{yield-expression} (\ref{expr.yield}), initial, and final suspend points (\ref{dcl.fct.def.coroutine}).
+
+\pnum
+A coroutine is considered suspended just prior to the call to \textit{await-suspend-expr}. If a return type of \textit{await-suspend-expr} is \tcode{bool} and invocation of \textit{await-suspend-expr} returns \tcode{false}, then execution continues as if coroutine was resumed. An exception thrown from within \textit{await-suspend-expr} is propagated as if coroutine was resumed and an exception was thrown just prior to an invocation of \textit{await-resume-expr}.
 
 \pnum
 \enternote
