@@ -230,13 +230,11 @@ A reference to a parameter in the function-body of the coroutine is replaced by 
 %NOTE: eventual-return type not defined anywhere
 
 \pnum
-If the coroutine state initialization, a call to \tcode{get_return_object}, or a promise object construction throws
-an exception, 
-%objects with automatic storage duration (\cxxref{basic.stc.auto}) that have been
-%constructed are destroyed in the reverse order of their construction, 
+If during the coroutine state initialization, a call to \tcode{get_return_object}, or a promise object construction throws
+an exception, objects with automatic storage duration (\cxxref{basic.stc.auto}) that have been
+constructed are destroyed in the reverse order of their construction, 
 any memory dynamically allocated 
-for the coroutine state is freed.
-%and the search for a handler starts in the scope of the calling function. 
+for the coroutine state is freed and the search for a handler starts in the scope of the calling function. 
 
 \pnum
 If type \textit{P} defines static member function \tcode{get_return_object_on_allocation_failure} (\ref{coroutine.traits}), then \tcode{std::nothrow_t} forms of allocation and deallocation functions will be used. If an allocation function returns \tcode{nullptr}, coroutine must return control to the caller of the coroutine and the return value shall be obtained by a call to \tcode{P::get_return_object_on_allocation_failure()}.

@@ -524,9 +524,12 @@ of a promise type for a simple generator.
     struct promise_type {
       int current_value;
       auto get_return_object() { return generator{this}; }
-      auto initial_suspend() { return true; }
-      auto final_suspend() { return true; }
-      void yield_value(int value) { current_value = value; }
+      auto initial_suspend() { return std::experimental::suspend_always{}; }
+      auto final_suspend() { return std::experimental::suspend_always{}; }
+      auto yield_value(int value) { 
+        current_value = value; 
+        return std::experimental::suspend_always{};
+      }
     };
     
     bool move_next() {
