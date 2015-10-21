@@ -119,22 +119,6 @@ determined as follows:
 \setcounter{section}{5}
 \rSec1[stmt.jump]{Jump statements}%
 
-% Fix some
-In paragraph 1 add four productions to the grammar:
-
-\begin{quote}
-\begin{bnf}
-	\nontermdef{jump-statement}\br
-	\terminal{break ;}\br
-	\terminal{continue ;}\br
-	\terminal{return} expression\opt \terminal{;}\br
-	\terminal{return} braced-init-list \terminal{;}\br
-	\added{\terminal{return} expression\opt \terminal{;}}\br
-  \added{\terminal{return} braced-init-list \terminal{;}}\br
-	\terminal{goto} identifier \terminal{;}
-\end{bnf}
-\end{quote}
-
 \setcounter{subsection}{2}
 \rSec2[stmt.return]{The \tcode{return} statement}%
 \indextext{\idxcode{return}}%
@@ -265,7 +249,11 @@ or with an eventual return type of \tcode{void}; in the former case, the operand
 \pnum
 A \tcode{return} statement with any other operand shall be used only
 in coroutines producing an eventual value; the completion of the coroutine is signalled to the promise by calling \linebreak 
-\tcode{\textit{p}.return_value(\textit{operand})}. Flowing off the end of a coroutine is equivalent to a \tcode{return} with no value; this results in undefined behavior in a coroutine with non-\tcode{void} return type.
+\tcode{\textit{p}.return_value(\textit{operand})}.
+Flowing off the end of a coroutine is equivalent to a \tcode{return} with no value; this results in undefined behavior in a coroutine with non-\tcode{void} return type.
+\enternote
+The expression passed to \tcode{return_value} is an xvalue.
+\exitnote
 
 
 
