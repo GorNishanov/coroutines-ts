@@ -60,101 +60,95 @@ constraints:
 \setcounter{subsubsection}{3}
 \rSec3[dcl.spec.auto]{\tcode{auto} specifier}
 
-Add the underlined text to paragraph 2.
+%\begin{quote}
+Add the following paragraph.
 
 \begin{quote}
-\setcounter{Paras}{1}
+\setcounter{Paras}{14}
 \pnum
-The placeholder type can appear with a function declarator in the
-\grammarterm{decl-specifier-seq}, \grammarterm{type-specifier-seq},
-\grammarterm{conversion-function-id}, or \grammarterm{trailing-return-type},
-in any context where such a declarator is valid. If the function declarator
-includes a \grammarterm{trailing-return-type}~(\cxxref{dcl.fct}), that specifies
-the declared return type of the function. If the declared return type of the
-function contains a placeholder type, the return type of the function is
-deduced from \tcode{return} statements \added{ and \grammarterm{yield-expression}{}s} in the body of the function, if any.
+A function declared with a return type that uses a placeholder type shall not be a coroutine (\ref{dcl.fct.def.coroutine}).
 \end{quote}
-
-Add the underlined text to paragraph 9.
-
-\begin{quote}
-\setcounter{Paras}{8}
-\pnum
-If a function with a declared return type that contains a placeholder type has
-multiple \tcode{return} statements\added{, and \grammarterm{yield-expression}{}s}, the return type is deduced for each
-\tcode{return} statement\added{ and \grammarterm{yield-expression}}. If the type deduced is not the same in each
-deduction, the program is ill-formed.
-\end{quote}
-
-Add paragraphs 16 through 18.
-
-\begin{quote}
-\setcounter{Paras}{15}
-
-%integrate with paragraph 9
-%\ednote{Incomplete edit. See if the next paragraph can be integrated with paragraph 9.}
+%Add the underlined text to paragraph 2.
+%
+%\begin{quote}
+%\setcounter{Paras}{1}
+%\pnum
+%The placeholder type can appear with a function declarator in the
+%\grammarterm{decl-specifier-seq}, \grammarterm{type-specifier-seq},
+%\grammarterm{conversion-function-id}, or \grammarterm{trailing-return-type},
+%in any context where such a declarator is valid. If the function declarator
+%includes a \grammarterm{trailing-return-type}~(\cxxref{dcl.fct}), that specifies
+%the declared return type of the function. If the declared return type of the
+%function contains a placeholder type, the return type of the function is
+%deduced from \tcode{return} statements \added{ and \grammarterm{yield-expression}{}s} in the body of the function, if any.
+%\end{quote}
+%
+%Add the underlined text to paragraph 9.
+%
+%\begin{quote}
+%\setcounter{Paras}{8}
+%\pnum
+%If a function with a declared return type that contains a placeholder type has
+%multiple \tcode{return} statements\added{, and \grammarterm{yield-expression}{}s}, the return type is deduced for each
+%\tcode{return} statement\added{ and \grammarterm{yield-expression}}. If the type deduced is not the same in each
+%deduction, the program is ill-formed.
+%\end{quote}
+%
+%Add paragraphs 16 through 18.
+%
+%\begin{quote}
+%\setcounter{Paras}{15}
 %
 %\pnum
-%If a coroutine has a declared return type that contains a placeholder type has multiple \tcode{yield-keyword}/\tcode{coreturn} statements, the return type is deduced for each
-%\tcode{yield-keyword}/\tcode{coreturn} statement. If the type deduced is not the same in each
-%deduction, the program is ill-formed.
-
-\pnum
-If a coroutine has a declared return type that contains a placeholder type, then the return type of the coroutine is deduced as follows:
-
-\begin{itemize}
-\item If both a \grammarterm{yield-expression} and an \grammarterm{await-expression} are present, then
-the return type is \tcode{std::experimental::async_stream<T>}, where \tcode{T} is deduced from the \grammarterm{yield-expression}{}s as if a \grammarterm{yield-expression} were a \tcode{return} statement in a function with declared type \tcode{auto} without a \grammarterm{trailing-return-type}.
-
-%NOTE Jens text
-
-\item Otherwise, if an \grammarterm{await-expression} is present in a function, then
-the return type is\linebreak \tcode{std::experimental::task<T>} where type \tcode{T} is deduced from 
-\tcode{return} statements as if the \tcode{return} statements were in a function with declared type \tcode{auto} without a \grammarterm{trailing-return-type}.
-
-%NOTE: as if 
-
-\item Otherwise, if a \grammarterm{yield-expression} is present in a function, then the return type is \linebreak
-\tcode{std::experimental::generator<T>},
-where \tcode{T} is deduced from the \grammarterm{yield-expression}{}s  as if a \grammarterm{yield-expression} were a \tcode{return} statement in a function with declared type \tcode{auto} without a \grammarterm{trailing-return-type}.
-
-\end{itemize}
-\enterexample
-\begin{codeblock}
-// deduces to std::experimental::generator<char>
-auto f() { for(auto ch: "Hello") yield-keyword ch; }
-
-// deduces to std::experimental::async_stream<int>
-auto ticks() {
-  for(int tick = 0;; ++tick) {
-    yield-keyword tick;
-    await-keyword sleep_for(1ms);
-  }
-}
-
-future<void> g();
-
-// deduces to std::experimental::task<void>
-auto f2() {  await-keyword g(); }
-
-
-// deduces to std::experimental::task<int>
-auto f3() {  
-  await-keyword g();
-  return 42;
-}
-
-\end{codeblock}
-\exitexample
-
-\pnum
-The templates  \tcode{std::experimental::generator}, 
-\tcode{std::experimental::task}, and \linebreak
-\tcode{std::experimental::async_stream} are not predefined;
-if the appropriate headers are not included prior to a use --- even an implicit use in which the type is not
-named~(\ref{dcl.spec.auto}) --- the program is ill-formed.
-\end{quote}
-%\ednote{Class templates \tcode{std::experimental::generator}, 
+%If a coroutine has a declared return type that contains a placeholder type, then the return type of the coroutine is deduced as follows:
+%
+%\begin{itemize}
+%\item If both a \grammarterm{yield-expression} and an \grammarterm{await-expression} are present, then
+%the return type is \tcode{std::experimental::async_stream<T>}, where \tcode{T} is deduced from the \grammarterm{yield-expression}{}s as if a \grammarterm{yield-expression} were a \tcode{return} statement in a function with declared type \tcode{auto} without a \grammarterm{trailing-return-type}.
+%
+%%NOTE Jens text
+%
+%\item Otherwise, if an \grammarterm{await-expression} is present in a function, then
+%the return type is\linebreak \tcode{std::experimental::task<T>} where type \tcode{T} is deduced from 
+%\tcode{return} statements as if the \tcode{return} statements were in a function with declared type \tcode{auto} without a \grammarterm{trailing-return-type}.
+%
+%\item Otherwise, if a \grammarterm{yield-expression} is present in a function, then the return type is \linebreak
+%\tcode{std::experimental::generator<T>},
+%where \tcode{T} is deduced from the \grammarterm{yield-expression}{}s  as if a \grammarterm{yield-expression} were a \tcode{return} statement in a function with declared type \tcode{auto} without a \grammarterm{trailing-return-type}.
+%
+%\end{itemize}
+%\enterexample
+%\begin{codeblock}
+%// deduces to std::experimental::generator<char>
+%auto f() { for(auto ch: "Hello") yield-keyword ch; }
+%
+%// deduces to std::experimental::async_stream<int>
+%auto ticks() {
+%  for(int tick = 0;; ++tick) {
+%    yield-keyword tick;
+%    await-keyword sleep_for(1ms);
+%  }
+%}
+%
+%future<void> g();
+%
+%// deduces to std::experimental::task<void>
+%auto f2() {  await-keyword g(); }
+%
+%
+%// deduces to std::experimental::task<int>
+%auto f3() {  
+%  await-keyword g();
+%  return 42;
+%}
+%
+%\end{codeblock}
+%\exitexample
+%
+%\pnum
+%The templates  \tcode{std::experimental::generator}, 
 %\tcode{std::experimental::task}, and \linebreak
-%\tcode{std::experimental::async_stream} are not specified in this proposal
-%and will be developed as more experience with coroutines is accumulated.}
+%\tcode{std::experimental::async_stream} are not predefined;
+%if the appropriate headers are not included prior to a use --- even an implicit use in which the type is not
+%named~(\ref{dcl.spec.auto}) --- the program is ill-formed.
+%\end{quote}
