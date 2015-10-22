@@ -70,9 +70,9 @@ In a \grammarterm{declaration-statement} or in the \grammarterm{simple-declarati
 A potentially-evaluated \grammarterm{await-expression} shall not appear in a default argument (\cxxref{dcl.fct.default}).
 
 \pnum
-Let \textit{f} be an \tcode{operator await} function found according to the rules of operator function lookup for unary operators and \tcode{operator await}(\ref{over.await}) for \textit{cast-expression}. If such function cannot be found, the program is ill-formed. 
+Let \textit{f} be an \tcode{operator await} function found according to the rules of operator function lookup for unary operators and \tcode{operator await}(\ref{over.await}) for \textit{cast-expression}. If such a function cannot be found, the program is ill-formed. 
 Let $e$ be a temporary initialized as-if by \tcode{auto\&\& e = \textit{f(cast-expression)}}; let \textit{p} be the promise object (\ref{dcl.fct.def.coroutine})
-of the enclosing coroutine, \textit{P} be the type of the promise object, \textit{h} be an object of \tcode{std::coroutine_handle<\textit{P}>} referring to the enclosing coroutine, and let \textit{await-ready-expr}, \textit{await-suspend-expr}, and \textit{await-resume-expr} be
+of the enclosing coroutine, \textit{P} be the type of the promise object, \textit{h} be an object of type  \tcode{std::coroutine_handle<\textit{P}>} referring to the enclosing coroutine, and let \textit{await-ready-expr}, \textit{await-suspend-expr}, and \textit{await-resume-expr} be
 \tcode{\textit{e}.await_ready()}, \tcode{\textit{e}.await_suspend(\textit{h})}, and \tcode{\textit{e}.await_resume()}, respectively;
 
 %If the type of \textit{e.await_suspend(h)} is \tcode{bool}, then
@@ -166,7 +166,7 @@ An \grammarterm{await-expression} may only appear in a coroutine
 with an eventual return type (\ref{stmt.return.coroutine}). This constraint does not apply to implicit \grammarterm{await-expression} introduced as a result of evaluation of a \grammarterm{yield-expression} (\ref{expr.yield}), initial, and final suspend points (\ref{dcl.fct.def.coroutine}).
 
 \pnum
-A coroutine is considered suspended just prior to the call to \textit{await-suspend-expr}. If a return type of \textit{await-suspend-expr} is \tcode{bool} and invocation of \textit{await-suspend-expr} returns \tcode{false}, then execution continues as if coroutine was resumed. An exception thrown from within \textit{await-suspend-expr} is propagated as if coroutine was resumed and an exception was thrown just prior to an invocation of \textit{await-resume-expr}.
+A coroutine is considered suspended immediately prior to  \textit{await-suspend-expr}. If the return type of \textit{await-suspend-expr} is \tcode{bool} and invocation of \textit{await-suspend-expr} returns \tcode{false}, then execution continues as if coroutine was resumed. An exception thrown from within \textit{await-suspend-expr} is propagated as if coroutine was resumed and an exception was thrown just prior to an invocation of \textit{await-resume-expr}.
 
 \pnum
 \enternote
@@ -283,7 +283,7 @@ An \grammarterm{await-expression} may appear as an unevaluated operand (\cxxref{
 \setcounter{section}{17}
 \rSec1[expr.ass]{Assignment and compound assignment operators}%
 
-In paragraph 1 add \grammarterm{yield-expression} to \grammarterm{assignment-expression} rule.
+In paragraph 1, add \grammarterm{yield-expression} to the grammar production \grammarterm{assignment-expression}.
 
 \begin{quote}
 \begin{bnf}
@@ -298,7 +298,7 @@ In paragraph 1 add \grammarterm{yield-expression} to \grammarterm{assignment-exp
 \setcounter{section}{20}
 \rSec1[expr.yield]{Yield expressions}%
 
-Add this section to Clause \ref{expr}.
+Add a new section to Clause \ref{expr}.
 
 \begin{quote}
 \begin{bnf}
@@ -308,40 +308,41 @@ Add this section to Clause \ref{expr}.
 \end{bnf}
 
 \pnum
-  Let \textit{yielded value} be the operand of the \tcode{yield-keyword} expression and \textit{p} be the promise object of the enclosing coroutine, then \tcode{yield} expression is evaluated as an \tcode{await} expression with operand \textit{p}\tcode{.yield_value}(\textit{yielded value}). If coroutine promise does not define a function \tcode{yield_value}, the program is ill-formed.
- An implicit \grammarterm{await-expression} introduced by this evaluation is not considered an \grammarterm{await-expression} for the purpose of type deduction (\ref{dcl.spec.auto}). 
+  Let \textit{e} be the operand of the \grammarterm{yield-expression} and \textit{p} be the promise object of the enclosing coroutine, then the \grammarterm{yield-expression} is equivalent to the expression \tcode{await-keyword} \textit{p}\tcode{.yield_value}(\textit{e}).
+  % If coroutine promise does not define a function \tcode{yield_value}, the program is ill-formed.
+% An implicit \grammarterm{await-expression} introduced by this evaluation is not considered an \grammarterm{await-expression} for the purpose of type deduction (\ref{dcl.spec.auto}). 
 
-\pnum
-\enterexample
-\begin{codeblock}
-using namespace std;
-  
-generator<pair<int,int>> g1() {
-  for (int i = i; i < 10; ++i)
-    yield-keyword {i,i};
-}
-
-int main() {
-  auto r1 = g1();
-  auto r2 = g2();
-  assert(equal(r1.begin(), r1.end(), r2.begin(), r2.end()));
-}
-\end{codeblock}
+%\pnum
+%\enterexample
+%\begin{codeblock}
+%using namespace std;
+%  
+%generator<pair<int,int>> g1() {
+%  for (int i = i; i < 10; ++i)
+%    yield-keyword {i,i};
+%}
+%
+%int main() {
+%  auto r1 = g1();
+%  auto r2 = g2();
+%  assert(equal(r1.begin(), r1.end(), r2.begin(), r2.end()));
+%}
+%\end{codeblock}
 %auto g2() { // deduces to generator<pair<int,int>{}>
 %  for (int i = i; i < 10; ++i)
 %  yield-keyword make_pair(i,i);
 %}
-\exitexample
-
-\pnum
-All restrictions on where an \textit{await-expression} can appear apply to \textit{yield-expression}{}s.
-
-\enterexample
-\begin{codeblock}
-  auto f(int x = yield 5); // ill-formed
-  int a[] = { yield 1 }; // ill-formed
-\end{codeblock}
-\exitexample
+%\exitexample
+%
+%\pnum
+%All restrictions on where an \textit{await-expression} can appear apply to \textit{yield-expression}{}s.
+%
+%\enterexample
+%\begin{codeblock}
+%  auto f(int x = yield 5); // ill-formed
+%  int a[] = { yield 1 }; // ill-formed
+%\end{codeblock}
+%\exitexample
 
 
 \end{quote}

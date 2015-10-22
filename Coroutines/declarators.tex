@@ -37,10 +37,10 @@ also has an implicit initial and final suspend-resume point as described later i
 
 %NOTES: add wording for 
 
-\pnum
-\enternote
-From the perspective of the caller, a coroutine is just a function with that particular signature. The fact that a function is implemented as a coroutine is unobservable by the caller. 
-\exitnote
+%\pnum
+%\enternote
+%From the perspective of the caller, a coroutine is just a function with that particular signature. The fact that a function is implemented as a coroutine is unobservable by the caller. 
+%\exitnote
 
 \pnum
 \enterexample
@@ -55,8 +55,8 @@ From the perspective of the caller, a coroutine is just a function with that par
     auto hello_lambda = []()->generator<char> { 
       for (auto ch: "Hello, world") yield-keyword ch; };
     
-    for (auto ch : hello_lambda()) cout << ch;
-    for (auto ch : hello_fn()) cout << ch;
+    for (auto ch : hello_lambda()) std::cout << ch;
+    for (auto ch : hello_fn()) std::cout << ch;
   }
 \end{codeblock}
 \exitexample
@@ -69,8 +69,7 @@ and member functions in the specializations of class template
 \tcode{std::coroutine_traits} (\ref{coroutine.traits}). 
 
 \pnum
-For a coroutine \textit{f}, if 
-\textit{f} is a non-static member function, let $P_1$ denote the type of the implicit object parameter (\cxxref{over.match.funcs}) and $P_2$ ... $P_n$ be the types of the function parameters; otherwise let $P_1$ ... $P_n$ be the types of the function parameters.
+For a coroutine \textit{f} that is a non-static member function, let $P_1$ denote the type of the implicit object parameter (\cxxref{over.match.funcs}) and $P_2$ ... $P_n$ be the types of the function parameters; otherwise let $P_1$ ... $P_n$ be the types of the function parameters.
 Let \textit{R} be the return type and \textit{F} be the \grammarterm{function-body}
 %\footnote{
 %Due to requirement of having suspend-resume points,
@@ -78,7 +77,7 @@ Let \textit{R} be the return type and \textit{F} be the \grammarterm{function-bo
 %\grammarterm{compound-statement} or 
 %\grammarterm{function-try-block}.
 %}
-of \textit{f}, \textit{T} be a type \tcode{std::coroutine_traits<$R$,$P_1$,...,$P_n$>}, and \textit{P} be the type denoted by \textit{T::}\tcode{promise_type}. 
+of \textit{f}, \textit{T} be the type \tcode{std::coroutine_traits<$R$,$P_1$,...,$P_n$>}, and \textit{P} be the type denoted by \textit{T::}\tcode{promise_type}. 
 %If \textit{T}\tcode{::promise_type} does not refer to a type the program is ill-formed. Type \textit{P} is the \term{promise type} of the coroutine.
 Then, the coroutine behaves as if its body were:
 \begin{codeblock}
@@ -89,11 +88,11 @@ Then, the coroutine behaves as if its body were:
      await-keyword @\textit{p}@.final_suspend(); // final suspend point
   }
 \end{codeblock}
-where local variable \textit{p} is 
+where the local variable \textit{p} is 
 defined for
 exposition only and
 \textit{F'} is \textit{F}
-if \textit{P} does not define a \tcode{set_exception} member function, 
+if \textit{P} does not declare a \tcode{set_exception} member function, 
 and 
 \begin{codeblock}
   try {@\textit{ F }@} catch(...) { @\textit{p}@.set_exception(std::current_exception()); }
@@ -143,16 +142,16 @@ The allocation function's name is looked up in the scope of the promise type of 
     struct promise_type {
       ...
       template <typename... TheRest>
-      void* operator new(std::size_t size, Arena* pool, TheRest const&...) {
+      void* operator new(std::size_t size, Arena& pool, TheRest const&...) {
         return pool.allocate(size);
       }
     };
   };
 
-  my_coroutine (Arena* a) {
+  my_coroutine (Arena& a) {
     // will call my_coroutine::promise_type::new(<required-size>, a)
     // to obtain storage for the coroutine state
-    yield 1;
+    yield-keyword 1;
   }
   
   int main() {
