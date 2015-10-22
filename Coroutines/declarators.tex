@@ -6,16 +6,16 @@
 
 \setcounter{section}{3}
 \setcounter{subsection}{4}
-\rSec2[dcl.fct]{Functions}%
+%\rSec2[dcl.fct]{Functions}%
 
 %NOTES: Fix
-Add paragraph 16.
-
-\begin{quote}
-\setcounter{Paras}{15}
-\pnum
-If the \grammarterm{parameter-declaration-clause} terminates with an ellipsis that is not part of \grammarterm{abstract-declarator}, a function shall not be coroutine (\ref{dcl.fct.def.coroutine}).
-\end{quote}
+%Add paragraph 16.
+%
+%\begin{quote}
+%\setcounter{Paras}{15}
+%\pnum
+%If the \grammarterm{parameter-declaration-clause} terminates with an ellipsis that is not part of \grammarterm{abstract-declarator}, a function shall not be coroutine (\ref{dcl.fct.def.coroutine}).
+%\end{quote}
 
 \setcounter{section}{3}
 \rSec1[dcl.fct.def]{Function definitions}
@@ -30,10 +30,10 @@ Add this section to \ref{dcl.fct.def}.
 \pnum
 A function is a \defn{coroutine} if it contains
 one or more suspend-resume-points introduced by a potentially-evaluated \grammarterm{await-expression} (\ref{expr.await}).
-% implicit NOTE: including implicit
-%, or a \tcode{cofor} statement (\ref{stmt.for.await}).
-Every coroutine
-also has an implicit initial and final suspend-resume point as described later in this section. 
+The \grammarterm{parameter-declaration-clause} of the coroutine shall not terminates with an ellipsis that is not part of an \grammarterm{abstract-declarator}. 
+
+%Every coroutine
+%also has an implicit initial and final suspend-resume point as described later in this section. 
 
 %NOTES: add wording for 
 
@@ -45,28 +45,51 @@ also has an implicit initial and final suspend-resume point as described later i
 \pnum
 \enterexample
 \begin{codeblock}
-  // coroutine hello world
-  generator<char> hello_fn() {
-    for (auto ch: "Hello, world") yield-keyword ch;
-  }
+  task<int> f();
   
-  int main() {
-    // coroutine as a lambda
-    auto hello_lambda = []()->generator<char> { 
-      for (auto ch: "Hello, world") yield-keyword ch; };
-    
-    for (auto ch : hello_lambda()) std::cout << ch;
-    for (auto ch : hello_fn()) std::cout << ch;
+  task<void> g1() {
+    int i = co_await f();
+    std::cout << "f() => " << i << std::endl;
   }
+
+  template <typename... Args>
+  task<void> g2(Args&&...) { // OK: ellipsis is a pack expansion
+    int i = co_await f();
+    std::cout << "f() => " << i << std::endl;
+  }
+
+  task<void> g3(int a, ...) { // error: variable parameter list not allowed
+    int i = co_await f();
+    std::cout << "f() => " << i << std::endl;
+  }
+
 \end{codeblock}
 \exitexample
+%
+%\enterexample
+%\begin{codeblock}
+%  // coroutine hello world
+%  generator<char> hello_fn() {
+%    for (auto ch: "Hello, world") yield-keyword ch;
+%  }
+%  
+%  int main() {
+%    // coroutine as a lambda
+%    auto hello_lambda = []()->generator<char> { 
+%      for (auto ch: "Hello, world") yield-keyword ch; };
+%    
+%    for (auto ch : hello_lambda()) std::cout << ch;
+%    for (auto ch : hello_fn()) std::cout << ch;
+%  }
+%\end{codeblock}
+%\exitexample
 
-\pnum
-A coroutine needs a set of related types and functions
-to complete the definition of its semantics.
-These types and functions are provided as a set of member types or typedefs
-and member functions in the specializations of class template
-\tcode{std::coroutine_traits} (\ref{coroutine.traits}). 
+%\pnum
+%A coroutine needs a set of related types and functions
+%to complete the definition of its semantics.
+%These types and functions are provided as a set of member types or typedefs
+%and member functions in the specializations of class template
+%\tcode{std::coroutine_traits} (\ref{coroutine.traits}). 
 
 \pnum
 For a coroutine \textit{f} that is a non-static member function, let $P_1$ denote the type of the implicit object parameter (\cxxref{over.match.funcs}) and $P_2$ ... $P_n$ be the types of the function parameters; otherwise let $P_1$ ... $P_n$ be the types of the function parameters.
@@ -77,7 +100,7 @@ Let \textit{R} be the return type and \textit{F} be the \grammarterm{function-bo
 %\grammarterm{compound-statement} or 
 %\grammarterm{function-try-block}.
 %}
-of \textit{f}, \textit{T} be the type \tcode{std::coroutine_traits<$R$,$P_1$,...,$P_n$>}, and \textit{P} be the type denoted by \textit{T::}\tcode{promise_type}. 
+of \textit{f}, \textit{T} be the type \tcode{std::coroutine_traits<$R$,$P_1$,...,$P_n$>}, and \textit{P} be the class type denoted by \textit{T::}\tcode{promise_type}. 
 %If \textit{T}\tcode{::promise_type} does not refer to a type the program is ill-formed. Type \textit{P} is the \term{promise type} of the coroutine.
 Then, the coroutine behaves as if its body were:
 \begin{codeblock}
@@ -85,31 +108,30 @@ Then, the coroutine behaves as if its body were:
      @\textit{P p}@;
      await-keyword @\textit{p}@.initial_suspend(); // initial suspend point
      @\textit{F'}@
+  @\textit{final_suspend}@:
      await-keyword @\textit{p}@.final_suspend(); // final suspend point
   }
 \end{codeblock}
-where the local variable \textit{p} is 
-defined for
-exposition only and
-\textit{F'} is \textit{F}
-if \textit{P} does not declare a \tcode{set_exception} member function, 
-and 
+where 
+%the local variable \textit{p} is defined for exposition only and
+\textit{F'} is \textit{F} unless the unqualified-id \tcode{set_exception} is looked up in the scope of class \textit{P}
+as if by class member access lookup (\cxxref{basic.lookup.classref}), and if a declaration was found, then \textit{F'} is
+
 \begin{codeblock}
   try {@\textit{ F }@} catch(...) { @\textit{p}@.set_exception(std::current_exception()); }
 \end{codeblock}
 
-otherwise. 
-No header needs to be included for this use of the function \tcode{std::current_exception}.
+No header needs to be included for this use of the  \tcode{std::current_exception}.
 An object denoted as \textit{p} is the \defn{promise object} of
 the coroutine \textit{f} and its type is a \defn{promise type}
 of the coroutine.
-An execution of a coroutine is suspended when it reaches a suspend-resume-point. Implicit \grammarterm{await-expression}{}s introducing initial and final suspend points are not considered \grammarterm{await-expression}{}s for the purpose of type deduction (\ref{dcl.spec.auto}). 
+An execution of a coroutine is suspended when it reaches a suspend-resume-point. 
+%Implicit \grammarterm{await-expression}{}s introducing initial and final suspend points are not considered \grammarterm{await-expression}{}s for the purpose of type deduction (\ref{dcl.spec.auto}). 
 
 \pnum 
 A \defn{suspension} of a coroutine returns control to the current
-caller of the coroutine. For the first return of control from the coroutine, the return value is obtained by invoking the member function 
-\tcode{get_return_object} (\ref{coroutine.promise})
-of the promise object.
+caller of the coroutine. For the first return of control from the coroutine, the return value is obtained via
+expression \tcode{$p$.get_return_object()}.
 
 %\enternote
 %For subsequent suspends, if any, the coroutine
@@ -121,46 +143,17 @@ of the promise object.
 \pnum
 A suspended coroutine can be resumed
 to continue execution by invoking
-a resumption member functions (\ref{coroutine.handle.resumption}) of an object of \tcode{coroutine_handle<$P$>} type
+a resumption member function (\ref{coroutine.handle.resumption}) of an object of \tcode{coroutine_handle<$P$>} type
 associated with this instance of the coroutine, where type $P$
 is the promise type of the coroutine. Invoking resumption member functions in a coroutine that is not suspended results in undefined behavior. 
 
 \pnum
+A \defn{coroutine state} consists of 
+storage for objects with automatic storage duration of a coroutine.
 A coroutine may need to allocate
-memory to store objects with automatic storage duration
-local to the coroutine. If so, it shall obtain the storage by calling an
+memory for coroutine state. If so, it shall obtain the storage by calling an
 \term{allocation function}~(\cxxref{basic.stc.dynamic.allocation}).
 The allocation function's name is looked up in the scope of the promise type of the coroutine. If this lookup fails to find the name, the allocation function's name is looked up in the global scope. If the lookup finds an allocation function that takes exactly one parameter, it will be used, otherwise, all parameters passed to the coroutine are passed to the allocation function after the size parameter.
-\enternote The second form allows coroutines to support stateful allocators.
-\exitnote
-
-\pnum
-\enterexample
-\begin{codeblock}
-  class Arena;
-  struct my_coroutine {
-    struct promise_type {
-      ...
-      template <typename... TheRest>
-      void* operator new(std::size_t size, Arena& pool, TheRest const&...) {
-        return pool.allocate(size);
-      }
-    };
-  };
-
-  my_coroutine (Arena& a) {
-    // will call my_coroutine::promise_type::new(<required-size>, a)
-    // to obtain storage for the coroutine state
-    yield-keyword 1;
-  }
-  
-  int main() {
-    Pool memPool;
-    for (int i = 0; i < 1'000'000; ++i)
-      my_coroutine(memPool);
-  };
-\end{codeblock}
-\exitexample
 
 %\pnum
 %A coroutine may need to allocate
@@ -171,12 +164,8 @@ The allocation function's name is looked up in the scope of the promise type of 
 %Table~\ref{tab:coroutine.traits.requirements} in clause \ref{coroutine.traits}.
 
 \pnum
-A \defn{coroutine state} consists of 
-storage for objects with automatic storage duration
-that are live at the current point of execution or suspension of 
-a coroutine.
 The coroutine state is destroyed when
-the control flows off the end of the function or
+the control flows off the end of the coroutine or
 the \tcode{destroy} member function (\ref{coroutine.handle.resumption}) of an object of \tcode{std::coroutine_handle<\textit{P}}> associated with that coroutine is invoked. In the latter case objects with automatic storage duration that are in scope
 at the suspend point are destroyed in the reverse order of the construction. If the coroutine state required dynamic allocation, the storage is released by calling a deallocation
 function~(\cxxref{basic.stc.dynamic.deallocation}). If \tcode{destroy} is called for a coroutine that is not suspended, the program has undefined behavior.
@@ -229,18 +218,19 @@ A reference to a parameter in the function-body of the coroutine is replaced by 
 
 %NOTE: eventual-return type not defined anywhere
 
-\pnum
-If during the coroutine state initialization, a call to \tcode{get_return_object}, or a promise object construction throws
-an exception, objects with automatic storage duration (\cxxref{basic.stc.auto}) that have been
-constructed are destroyed in the reverse order of their construction, 
-any memory dynamically allocated 
-for the coroutine state is freed and the search for a handler starts in the scope of the calling function. 
+%\pnum
+%If during the coroutine state initialization, a call to \tcode{get_return_object}, or a promise object construction throws
+%an exception, objects with automatic storage duration (\cxxref{basic.stc.auto}) that have been
+%constructed are destroyed in the reverse order of their construction, 
+%any memory dynamically allocated 
+%for the coroutine state is freed and the search for a handler starts in the scope of the calling function. 
 
 \pnum
 If type \textit{P} defines static member function \tcode{get_return_object_on_allocation_failure} (\ref{coroutine.traits}), then \tcode{std::nothrow_t} forms of allocation and deallocation functions will be used. If an allocation function returns \tcode{nullptr}, coroutine must return control to the caller of the coroutine and the return value shall be obtained by a call to \tcode{P::get_return_object_on_allocation_failure()}.
 
 \enterexample
 \begin{codeblock}
+// using nothrow operator new
 struct generator {
   using handle = std::coroutine_handle<promise_type>;
   struct promise_type {
@@ -306,5 +296,35 @@ int main() {
 %<
 %}
 %\end{codeblock}
+
+\pnum
+\enterexample
+\begin{codeblock}
+  // using a stateful allocator
+  class Arena;
+  struct my_coroutine {
+    struct promise_type {
+      ...
+      template <typename... TheRest>
+      void* operator new(std::size_t size, Arena& pool, TheRest const&...) {
+        return pool.allocate(size);
+      }
+    };
+  };
+  
+  my_coroutine (Arena& a) {
+    // will call my_coroutine::promise_type::new(<required-size>, a)
+    // to obtain storage for the coroutine state
+    yield-keyword 1;
+  }
+  
+  int main() {
+    Pool memPool;
+    for (int i = 0; i < 1'000'000; ++i)
+    my_coroutine(memPool);
+  };
+\end{codeblock}
+\exitexample
+
 
 \end{quote}
