@@ -8,11 +8,11 @@
 \setcounter{section}{4}
 \rSec1[over.oper]{Overloaded operators}
 
-Add \tcode{await-keyword} to the list of operators in paragraph 1 before operators \tcode{()} and \tcode{[]}.
+Add \tcode{co_await} to the list of operators in paragraph 1 before operators \tcode{()} and \tcode{[]}.
 
-\setcounter{subsection}{8}
-\rSec2[over.await]{Await operator}%
-
-\pnum
-If there is no user-declared \tcode{operator await} for type \tcode{X}, but there is a declared member with a name \tcode{await_suspend}, \tcode{await_ready}, or \tcode{await_resume}, then the implementation shall provide the implicit definition of \tcode{operator await} in such a way that the result of the evaluation of an implicit \tcode{operator await(\textit{v})} is \textit{v} itself.
+%\setcounter{subsection}{8}
+%\rSec2[over.await]{Await operator}%
+%
+%\pnum
+%If there is no user-declared \tcode{operator await} for type \tcode{X}, but there is a declared member with a name \tcode{await_suspend}, \tcode{await_ready}, or \tcode{await_resume}, then the implementation shall provide the implicit definition of \tcode{operator await} in such a way that the result of the evaluation of an implicit \tcode{operator await(\textit{v})} is \textit{v} itself.
 

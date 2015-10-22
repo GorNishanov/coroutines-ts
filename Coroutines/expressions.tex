@@ -9,7 +9,7 @@
 %In this section add the \tcode{await-keyword} \grammarterm{cast-expression} 
 %to the rule for \grammarterm{unary-expression}.
 
-In this section change the grammar for \grammarterm{unary-expression} as follows:
+Change the grammar for \grammarterm{unary-expression} as follows:
 
 \begin{bnf}
 	\nontermdef{unary-expression}\br
@@ -51,11 +51,11 @@ Add this section to \ref{expr.unary}.
 %NOTES: add quote
 \begin{quote}
 \pnum
-The \tcode{await-keyword} operator is used to suspend evaluation of the enclosing coroutine (\ref{dcl.fct.def.coroutine}) while awaiting completion of the computation represented by the operand expression.
+The \tcode{co_await} operator is used to suspend evaluation of the enclosing coroutine (\ref{dcl.fct.def.coroutine}) while awaiting completion of the computation represented by the operand expression.
 
 \begin{bnf}
   \nontermdef{await-expression}\br
-  \terminal{await-keyword} cast-expression
+  \terminal{co_await} cast-expression
 \end{bnf}
 
 \pnum
@@ -68,12 +68,25 @@ In a \grammarterm{declaration-statement} or in the \grammarterm{simple-declarati
 %local class defined in \grammarterm{declaration-statement}.
 %
 A potentially-evaluated \grammarterm{await-expression} shall not appear in a default argument (\cxxref{dcl.fct.default}).
+An \grammarterm{await-expression} shall not appear in a coroutine without an eventual return type (\ref{stmt.return.coroutine}). 
+%This constraint does not apply to implicit \grammarterm{await-expression} introduced as a result of evaluation of a \grammarterm{yield-expression} (\ref{expr.yield}), initial, and final suspend points (\ref{dcl.fct.def.coroutine}).
 
 \pnum
-Let \textit{f} be an \tcode{operator await} function found according to the rules of operator function lookup for unary operators and \tcode{operator await}(\ref{over.await}) for \textit{cast-expression}. If such a function cannot be found, the program is ill-formed. 
-Let $e$ be a temporary initialized as-if by \tcode{auto\&\& e = \textit{f(cast-expression)}}; let \textit{p} be the promise object (\ref{dcl.fct.def.coroutine})
-of the enclosing coroutine, \textit{P} be the type of the promise object, \textit{h} be an object of type  \tcode{std::coroutine_handle<\textit{P}>} referring to the enclosing coroutine, and let \textit{await-ready-expr}, \textit{await-suspend-expr}, and \textit{await-resume-expr} be
-\tcode{\textit{e}.await_ready()}, \tcode{\textit{e}.await_suspend(\textit{h})}, and \tcode{\textit{e}.await_resume()}, respectively;
+Let \textit{f} be the \tcode{operator co_await} function selected by overload resolution for \grammarterm{cast-expression} as the argument. 
+If there is no viable function, let $e$ be the \textit{cast-expression}, otherwise $e$ is a temporary initialized as-if by \tcode{auto\&\& e = \textit{f(cast-expression)}}.
+Let \textit{p} be the promise object (\ref{dcl.fct.def.coroutine})
+of the enclosing coroutine, \textit{P} be the type of the promise object, \textit{h} be an object of type  \tcode{std::coroutine_handle<\textit{P}>} referring to the enclosing coroutine, then
+
+%Let $e$ be a temporary initialized as-if by \tcode{auto\&\& e = \textit{f(cast-expression)}}, if there is no viable function, then $e$ is a \textit{cast-expression}. 
+%and the cast expression has class type X, the unqualified-ids \tcode{await_ready}, \tcode{await_suspend}, and \tcode{await_resume} are looked up in the scope of class X
+%as if by class member access lookup (\ref{basic.lookup.classref}), and if any of these three lookups finds at least one declaration then e is cast-expression.
+
+%\pnum
+%Let \textit{f} be an \tcode{operator co_await} function found according to the rules of operator function lookup for unary operators and \tcode{operator co_await}(\ref{over.await}) for \textit{cast-expression}. If such a function cannot be found, the program is ill-formed. 
+%Let $e$ be a temporary initialized as-if by \tcode{auto\&\& e = \textit{f(cast-expression)}}; <snip move up> 
+%Let \textit{p} be the promise object (\ref{dcl.fct.def.coroutine})
+%of the enclosing coroutine, \textit{P} be the type of the promise object, \textit{h} be an object of type  \tcode{std::coroutine_handle<\textit{P}>} referring to the enclosing coroutine, and let \textit{await-ready-expr}, \textit{await-suspend-expr}, and \textit{await-resume-expr} be
+%\tcode{\textit{e}.await_ready()}, \tcode{\textit{e}.await_suspend(\textit{h})}, and \tcode{\textit{e}.await_resume()}, respectively;
 
 %If the type of \textit{e.await_suspend(h)} is \tcode{bool}, then
 %
@@ -90,20 +103,15 @@ of the enclosing coroutine, \textit{P} be the type of the promise object, \texti
 %\end{codeblock}
 %otherwise, it is equivalent to:
 
-then
-
 \begin{ncbnf}
   \terminal{await-keyword} cast-expression
 \end{ncbnf}
 is equivalent to:
 
 \begin{codeblock}
-  (
-  @\textit{await-ready-expr}@ ? @\textit{await-resume-expr}@
-  : (@\textit{await-suspend-expr}@, @\textit{suspend-resume-point}@, @\textit{await-resume-expr}@)
-  )
+  @$e$@.await_ready() ? @$e$@.await_resume() : (@$e$@.await_suspend(@$h$@), @\textit{S}@, @$e$@.await_resume())
 \end{codeblock}
-
+where $S$ is a coroutine-suspend-point (\ref{dcl.fct.def.coroutine}) treated as an expression of type void.
 
 %\pnum
 %Let \textit{T} be the type of the \grammarterm{cast-expression}.
@@ -158,20 +166,17 @@ is equivalent to:
 %)
 %\end{codeblock}
 
-where \textit{suspend-resume-point}s are treated as  expressions of type \tcode{void}. Suspend-resume-points are defined in (\ref{dcl.fct.def.coroutine}).
-%NOTE:
+%where \textit{suspend-resume-point}s are treated as  expressions of type \tcode{void}. Suspend-resume-points are defined in (\ref{dcl.fct.def.coroutine}).
+%%NOTE:
 
 \pnum
-An \grammarterm{await-expression} may only appear in a coroutine 
-with an eventual return type (\ref{stmt.return.coroutine}). This constraint does not apply to implicit \grammarterm{await-expression} introduced as a result of evaluation of a \grammarterm{yield-expression} (\ref{expr.yield}), initial, and final suspend points (\ref{dcl.fct.def.coroutine}).
+A coroutine is considered suspended immediately prior to  the invocation of \tcode{$e$.await_suspend($h$)}. If the type of the expression \tcode{$e$.await_suspend($h$)} is \tcode{bool} and the invocation of \tcode{$e$.await_suspend($h$)} returns \tcode{false}, or the invocation of \tcode{$e$.await_suspend($h$)} exits via an exception, execution continues as if coroutine were resumed. 
 
-\pnum
-A coroutine is considered suspended immediately prior to  \textit{await-suspend-expr}. If the return type of \textit{await-suspend-expr} is \tcode{bool} and invocation of \textit{await-suspend-expr} returns \tcode{false}, then execution continues as if coroutine was resumed. An exception thrown from within \textit{await-suspend-expr} is propagated as if coroutine was resumed and an exception was thrown just prior to an invocation of \textit{await-resume-expr}.
+%If  exception thrown from within \textit{await-suspend-expr} is propagated as if coroutine was resumed and an exception was thrown just prior to an invocation of \textit{await-resume-expr}.
 
 \pnum
 \enternote
-An \grammarterm{await-expression} may appear as an unevaluated operand (\cxxref{expr.typeid}, \cxxref{expr.sizeof}, \cxxref{expr.unary.noexcept}, \cxxref{dcl.type.simple}). The presence of such an \grammarterm{await-expression} does not make the enclosing function a coroutine and can be used to examine the type of an \grammarterm{await-expression}.
-
+An \grammarterm{await-expression} may appear as an unevaluated operand (Clause \ref{expr}). 
 \enterexample
 \begin{codeblock}	
   std::future<int> f();
@@ -283,7 +288,8 @@ An \grammarterm{await-expression} may appear as an unevaluated operand (\cxxref{
 \setcounter{section}{17}
 \rSec1[expr.ass]{Assignment and compound assignment operators}%
 
-In paragraph 1, add \grammarterm{yield-expression} to the grammar production \grammarterm{assignment-expression}.
+%In paragraph 1, 
+Add \grammarterm{yield-expression} to the grammar production \grammarterm{assignment-expression}.
 
 \begin{quote}
 \begin{bnf}
@@ -308,7 +314,7 @@ Add a new section to Clause \ref{expr}.
 \end{bnf}
 
 \pnum
-  Let \textit{e} be the operand of the \grammarterm{yield-expression} and \textit{p} be the promise object of the enclosing coroutine, then the \grammarterm{yield-expression} is equivalent to the expression \tcode{await-keyword} \textit{p}\tcode{.yield_value}(\textit{e}).
+  Let \textit{e} be the operand of the \grammarterm{yield-expression} and \textit{p} be the promise object of the enclosing coroutine, then the \grammarterm{yield-expression} is equivalent to the expression \tcode{co_await} \textit{p}\tcode{.yield_value}(\textit{e}).
   % If coroutine promise does not define a function \tcode{yield_value}, the program is ill-formed.
 % An implicit \grammarterm{await-expression} introduced by this evaluation is not considered an \grammarterm{await-expression} for the purpose of type deduction (\ref{dcl.spec.auto}). 
 

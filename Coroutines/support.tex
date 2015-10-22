@@ -404,152 +404,153 @@ The header \tcode{<coroutine>} shall define \tcode{suspend_never} and \tcode{sus
     void await_resume() {}
   };
 \end{codeblock}
-
-\rSec2[coroutine.promise]{Coroutine promise requirements}
-
-\pnum
-A user supplies the definition of the coroutine promise to implement 
-desired high-level semantics associated with a coroutines
-discovered via instantiation of class template \tcode{coroutine_traits}.
-The following tables describe the requirements on
-coroutine promise types.
-
-%\pnum
-%The template struct \tcode{allocator_traits}~(\ref{allocator.traits}) supplies
-%a uniform interface to all allocator types.
-%Table~\ref{tab:desc.var.def} describes the types manipulated
-%through allocators. Table~\ref{tab:utilities.allocator.requirements}
-%describes the requirements on allocator types
-%and thus on types used to instantiate \tcode{allocator_traits}. A requirement
-%is optional if the last column of
-%Table~\ref{tab:utilities.allocator.requirements} specifies a default for a
-%given expression. Within the standard library \tcode{allocator_traits}
-%template, an optional requirement that is not supplied by an allocator is
-%replaced by the specified default expression. A user specialization of
-%\tcode{allocator_traits} may provide different defaults and may provide
-%defaults for different requirements than the primary template. Within
-%Tables~\ref{tab:desc.var.def} and~\ref{tab:utilities.allocator.requirements},
-%the use of \tcode{move} and \tcode{forward} always refers to \tcode{std::move}
-%and \tcode{std::forward}, respectively.
-
-\begin{libreqtab2}
-	{Descriptive variable definitions}
-	{tab:desc.var.def}
-	\\ \topline
-	\lhdr{Variable} &   \rhdr{Definition}   \\  \capsep
-	\endfirsthead
-	\continuedcaption\\
-	\hline
-	\lhdr{Variable} &   \rhdr{Definition}   \\  \capsep
-	\endhead
-	\tcode{Promise}    &   a coroutine promise type       \\ \rowsep
-	\tcode{p}       &   a value of type \tcode{Promise} \\ \rowsep
-	\tcode{e}       &   a value of \tcode{exception_ptr} type   \\ \rowsep
-	\tcode{h}       &   a value of \tcode{coroutine_handle<P>} type    \\ \rowsep
-	\tcode{v}      &   an \grammarterm{expression} or \grammarterm{braced-init-list}   \\ \rowsep
-\end{libreqtab2}
-
-\indextext{requirements!\idxcode{CoroutinePromise}}%
-\begin{concepttable}{\tcode{CoroutinePromise} requirements}{CoroutinePromise}
-	{p{1.6in}p{4.15in}}
-	\topline
-	Expression          &   Note \\ \capsep
-	\tcode{Promise\{\}}     &   Construct an object of type \tcode{Promise}\\ \rowsep
-	\tcode{p.get_return_object()}        &
-The \tcode{get_return_object} is invoked by the coroutine to construct the
-return object prior to reaching the first suspend-resume point,
-a \tcode{return} statement, or flowing off the end of the function.
-	\\ \rowsep
-	\tcode{Promise::get_return_object_on_allocation_failure()}        &
-  \textit{(Optional)} The \tcode{get_return_object_on_allocation_failure} is invoked by the coroutine to construct the
-  return object if allocation of the coroutine state failed.
-  \\ \rowsep
-	\tcode{p.return_value(v)}     &  
-%If present, an enclosing coroutine supports an
-%eventual value of a type that \tcode{v} can be converted to. 
-
-\textit{(Optional)} Invoked by
-a coroutine when 
-a \tcode{return} statement with an operand
-is encountered in a coroutine as described in (\ref{stmt.return.coroutine}).
-%If a promise type does not satisfy this requirement, the presence of 
-%a \tcode{coreturn} statement
-%with an \grammarterm{expression} 
-%or a \grammarterm{braced-init-list}
-%statement in the body results in a compile time error.
-	\\ \rowsep
-	\tcode{p.return_void()}     &   
-%If present, an enclosing coroutine supports an eventual value of type \tcode{void}. 
-\textit{(Optional)} Invoked when 
-a \tcode{return} statement is encountered as described in (\ref{stmt.return.coroutine}).
-	\\ \rowsep
-	\tcode{p.set_exception(e)} & 
-\textit{(Optional)} If present, the \tcode{set_exception} is invoked by a coroutine when an
-unhandled exception occurs within a \grammarterm{function-body} of the coroutine.
-If the promise does not provide \tcode{set_exception}, an unhandled exception
-will propagate from the coroutine normally.
-\\ \rowsep
-	\tcode{p.yield_value(v)}     &
-\textit{(Optional)} The \tcode{yield_value} is invoked
-  when \tcode{yield-keyword} statement is
-  encountered in the coroutine. If
-  promise does not define \tcode{yield_value}, \tcode{yield-keyword}
-  statement shall not appear in the coroutine body.
-	\\ \rowsep
-	\tcode{p.initial_suspend()}     &
-A coroutine invokes \tcode{p.initial_suspend()} to obtain awaitable for \textit{initial suspend point} (\ref{dcl.fct.def.coroutine}).
-	   \\ \rowsep
-	\tcode{p.final_suspend()}     &  
-A coroutine invokes \tcode{p.final_suspend()} to obtain awaitable for \textit{final suspend point} (\ref{dcl.fct.def.coroutine}).
-\\ 
-\end{concepttable}
-
-\pagebreak
-\pnum
-\enterexample
-This example illustrates full implementation
-of a promise type for a simple generator.
-\begin{codeblock}
-  #include <iostream>
-  #include <coroutine>
-  
-  struct generator {
-    struct promise_type {
-      int current_value;
-      auto get_return_object() { return generator{*this}; }
-      auto initial_suspend() { return std::suspend_always{}; }
-      auto final_suspend() { return std::suspend_always{}; }
-      auto yield_value(int value) { 
-        current_value = value; 
-        return std::suspend_always{};
-      }
-    };
-    
-    bool move_next() {
-      coro.resume();
-      return !coro.done();
-    }
-    
-    int current_value() { return coro.promise().current_value; }
-    
-    ~generator() { coro.destroy(); }
-  private:
-    using handle = std::coroutine_handle<promise_type>;
-    explicit generator(promise_type& myPromise): coro(handle::from_promise(myPromise)) {}
-    handle coro;
-  };
-  
-  generator f() {
-    yield-keyword 1;
-    yield-keyword 2;
-  } 
-  
-  int main() {
-    auto g = f();
-    while (g.move_next()) std::cout << g.current_value() << std::endl;
-  }
-  
-\end{codeblock}
-\exitexample
-
 \end{quote}
+
+%\rSec2[coroutine.promise]{Coroutine promise requirements}
+%
+%\pnum
+%A user supplies the definition of the coroutine promise to implement 
+%desired high-level semantics associated with a coroutines
+%discovered via instantiation of class template \tcode{coroutine_traits}.
+%The following tables describe the requirements on
+%coroutine promise types.
+%
+%%\pnum
+%%The template struct \tcode{allocator_traits}~(\ref{allocator.traits}) supplies
+%%a uniform interface to all allocator types.
+%%Table~\ref{tab:desc.var.def} describes the types manipulated
+%%through allocators. Table~\ref{tab:utilities.allocator.requirements}
+%%describes the requirements on allocator types
+%%and thus on types used to instantiate \tcode{allocator_traits}. A requirement
+%%is optional if the last column of
+%Table~\ref{tab:utilities.allocator.requirements} specifies a default for a
+%%given expression. Within the standard library \tcode{allocator_traits}
+%%template, an optional requirement that is not supplied by an allocator is
+%%replaced by the specified default expression. A user specialization of
+%%\tcode{allocator_traits} may provide different defaults and may provide
+%%defaults for different requirements than the primary template. Within
+%%Tables~\ref{tab:desc.var.def} and~\ref{tab:utilities.allocator.requirements},
+%%the use of \tcode{move} and \tcode{forward} always refers to \tcode{std::move}
+%%and \tcode{std::forward}, respectively.
+%
+%\begin{libreqtab2}
+%	{Descriptive variable definitions}
+%	{tab:desc.var.def}
+%	\\ \topline
+%	\lhdr{Variable} &   \rhdr{Definition}   \\  \capsep
+%	\endfirsthead
+%	\continuedcaption\\
+%	\hline
+%	\lhdr{Variable} &   \rhdr{Definition}   \\  \capsep
+%	\endhead
+%	\tcode{Promise}    &   a coroutine promise type       \\ \rowsep
+%	\tcode{p}       &   a value of type \tcode{Promise} \\ \rowsep
+%	\tcode{e}       &   a value of \tcode{exception_ptr} type   \\ \rowsep
+%	\tcode{h}       &   a value of \tcode{coroutine_handle<P>} type    \\ \rowsep
+%	\tcode{v}      &   an \grammarterm{expression} or \grammarterm{braced-init-list}   \\ \rowsep
+%\end{libreqtab2}
+%
+%\indextext{requirements!\idxcode{CoroutinePromise}}%
+%\begin{concepttable}{\tcode{CoroutinePromise} requirements}{CoroutinePromise}
+%	{p{1.6in}p{4.15in}}
+%	\topline
+%	Expression          &   Note \\ \capsep
+%	\tcode{Promise\{\}}     &   Construct an object of type \tcode{Promise}\\ \rowsep
+%	\tcode{p.get_return_object()}        &
+%The \tcode{get_return_object} is invoked by the coroutine to construct the
+%return object prior to reaching the first suspend-resume point,
+%a \tcode{return} statement, or flowing off the end of the function.
+%	\\ \rowsep
+%	\tcode{Promise::get_return_object_on_allocation_failure()}        &
+%  \textit{(Optional)} The \tcode{get_return_object_on_allocation_failure} is invoked by the coroutine to construct the
+%  return object if allocation of the coroutine state failed.
+%  \\ \rowsep
+%	\tcode{p.return_value(v)}     &  
+%%If present, an enclosing coroutine supports an
+%%eventual value of a type that \tcode{v} can be converted to. 
+%
+%\textit{(Optional)} Invoked by
+%a coroutine when 
+%a \tcode{return} statement with an operand
+%is encountered in a coroutine as described in (\ref{stmt.return.coroutine}).
+%%If a promise type does not satisfy this requirement, the presence of 
+%%a \tcode{coreturn} statement
+%%with an \grammarterm{expression} 
+%%or a \grammarterm{braced-init-list}
+%%statement in the body results in a compile time error.
+%	\\ \rowsep
+%	\tcode{p.return_void()}     &   
+%%If present, an enclosing coroutine supports an eventual value of type \tcode{void}. 
+%\textit{(Optional)} Invoked when 
+%a \tcode{return} statement is encountered as described in (\ref{stmt.return.coroutine}).
+%	\\ \rowsep
+%	\tcode{p.set_exception(e)} & 
+%\textit{(Optional)} If present, the \tcode{set_exception} is invoked by a coroutine when an
+%unhandled exception occurs within a \grammarterm{function-body} of the coroutine.
+%If the promise does not provide \tcode{set_exception}, an unhandled exception
+%will propagate from the coroutine normally.
+%\\ \rowsep
+%	\tcode{p.yield_value(v)}     &
+%\textit{(Optional)} The \tcode{yield_value} is invoked
+%  when \tcode{yield-keyword} statement is
+%  encountered in the coroutine. If
+%  promise does not define \tcode{yield_value}, \tcode{yield-keyword}
+%  statement shall not appear in the coroutine body.
+%	\\ \rowsep
+%	\tcode{p.initial_suspend()}     &
+%A coroutine invokes \tcode{p.initial_suspend()} to obtain awaitable for \textit{initial suspend point} (\ref{dcl.fct.def.coroutine}).
+%	   \\ \rowsep
+%	\tcode{p.final_suspend()}     &  
+%A coroutine invokes \tcode{p.final_suspend()} to obtain awaitable for \textit{final suspend point} (\ref{dcl.fct.def.coroutine}).
+%\\ 
+%\end{concepttable}
+%
+%\pagebreak
+%\pnum
+%\enterexample
+%This example illustrates full implementation
+%of a promise type for a simple generator.
+%\begin{codeblock}
+%  #include <iostream>
+%  #include <coroutine>
+%  
+%  struct generator {
+%    struct promise_type {
+%      int current_value;
+%      auto get_return_object() { return generator{*this}; }
+%      auto initial_suspend() { return std::suspend_always{}; }
+%      auto final_suspend() { return std::suspend_always{}; }
+%      auto yield_value(int value) { 
+%        current_value = value; 
+%        return std::suspend_always{};
+%      }
+%    };
+%    
+%    bool move_next() {
+%      coro.resume();
+%      return !coro.done();
+%    }
+%    
+%    int current_value() { return coro.promise().current_value; }
+%    
+%    ~generator() { coro.destroy(); }
+%  private:
+%    using handle = std::coroutine_handle<promise_type>;
+%    explicit generator(promise_type& myPromise): coro(handle::from_promise(myPromise)) {}
+%    handle coro;
+%  };
+%  
+%  generator f() {
+%    yield-keyword 1;
+%    yield-keyword 2;
+%  } 
+%  
+%  int main() {
+%    auto g = f();
+%    while (g.move_next()) std::cout << g.current_value() << std::endl;
+%  }
+%  
+%\end{codeblock}
+%\exitexample
+%
+%\end{quote}
