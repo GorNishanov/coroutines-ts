@@ -492,9 +492,9 @@ The header \tcode{<coroutine>} shall define \tcode{suspend_never} and \tcode{sus
 %\\ \rowsep
 %	\tcode{p.yield_value(v)}     &
 %\textit{(Optional)} The \tcode{yield_value} is invoked
-%  when \tcode{yield-keyword} statement is
+%  when \tcode{co_yield} statement is
 %  encountered in the coroutine. If
-%  promise does not define \tcode{yield_value}, \tcode{yield-keyword}
+%  promise does not define \tcode{yield_value}, \tcode{co_yield}
 %  statement shall not appear in the coroutine body.
 %	\\ \rowsep
 %	\tcode{p.initial_suspend()}     &
@@ -541,8 +541,8 @@ The header \tcode{<coroutine>} shall define \tcode{suspend_never} and \tcode{sus
 %  };
 %  
 %  generator f() {
-%    yield-keyword 1;
-%    yield-keyword 2;
+%    co_yield 1;
+%    co_yield 2;
 %  } 
 %  
 %  int main() {

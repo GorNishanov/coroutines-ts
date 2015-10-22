@@ -19,7 +19,7 @@ Iteration statements specify looping.
 	\terminal{while (} condition \terminal{)} statement\br
 	\terminal{do} statement \terminal{while (} expression \terminal{) ;}\br
 	\terminal{for (} for-init-statement condition\opt \terminal{;} expression\opt \terminal{)} statement\br
-	\terminal{for} \added{\terminal{await-keyword}\opt} \terminal{(} for-range-declaration \terminal{:} for-range-initializer \terminal{)} statement\br
+	\terminal{for} \added{\terminal{co_await}\opt} \terminal{(} for-range-declaration \terminal{:} for-range-initializer \terminal{)} statement\br
 %	\added{\terminal{cofor (} for-range-declaration \terminal{:} for-range-initializer \terminal{)} statement}
 \end{bnf}
 \end{quote}
@@ -37,7 +37,7 @@ Add the underlined text to paragraph 1.
 For a range-based \tcode{for} statement of the form
 
 \begin{ncbnf}
-  \terminal{for}  \added{\terminal{await-keyword}\opt} \terminal{(} for-range-declaration : expression \terminal{)} statement
+  \terminal{for}  \added{\terminal{co_await}\opt} \terminal{(} for-range-declaration : expression \terminal{)} statement
 \end{ncbnf}
 
 let \textit{range-init} be equivalent to the \grammarterm{expression} surrounded
@@ -52,7 +52,7 @@ by parentheses\footnote{this ensures that a top-level comma operator cannot be
 and for a range-based \tcode{for} statement of the form
 
 \begin{ncbnf}
-  \terminal{for} \added{\terminal{await-keyword}\opt} \terminal{(} for-range-declaration \terminal{:} braced-init-list \terminal{)} statement
+  \terminal{for} \added{\terminal{co_await}\opt} \terminal{(} for-range-declaration \terminal{:} braced-init-list \terminal{)} statement
 \end{ncbnf}
 
 let \textit{range-init} be equivalent to the \grammarterm{braced-init-list}. In each case, a
@@ -62,10 +62,10 @@ is equivalent to
 \begin{codeblock}
   {
     auto && __range = range-init;
-    for ( auto __begin =  @\added{\tcode{await-keyword}\opt}@ begin-expr,
+    for ( auto __begin =  @\added{\tcode{co_await}\opt}@ begin-expr,
     __end = end-expr;
     __begin != __end;
-     @\added{\tcode{await-keyword}\opt}@ ++__begin ) {
+     @\added{\tcode{co_await}\opt}@ ++__begin ) {
       @\textit{for-range-declaration}@ = *__begin;
       @\textit{statement}@
     }
@@ -73,7 +73,7 @@ is equivalent to
 \end{codeblock}
 
 where 
-\added{\tcode{await-keyword} appears if and only if it appears immediately after the \tcode{for} keyword, and}\linebreak
+\added{\tcode{co_await} appears if and only if it appears immediately after the \tcode{for} keyword, and}\linebreak
 \tcode{__range}, \tcode{__begin}, and \tcode{__end} are variables defined for
 exposition only, and \tcode{_RangeT} is the type of the
 \grammarterm{}{expression}, and \textit{begin-expr} and \textit{end-expr} are
@@ -101,10 +101,10 @@ determined as follows: ...
 %\begin{codeblock}
 %	{
 %		auto && __range = range-init;
-%		for ( auto __begin = await-keyword begin-expr,
+%		for ( auto __begin = co_await begin-expr,
 %		__end = end-expr;
 %		__begin != __end;
-%		await-keyword ++__begin ) {
+%		co_await ++__begin ) {
 %			@\textit{for-range-declaration}@ = *__begin;
 %			@\textit{statement}@
 %		}
@@ -119,6 +119,21 @@ determined as follows: ...
 \setcounter{section}{5}
 \rSec1[stmt.jump]{Jump statements}%
 
+In paragraph 1 add two productions to the grammar:
+
+\begin{quote}
+  \begin{bnf}
+    \nontermdef{jump-statement}\br
+    \terminal{break ;}\br
+    \terminal{continue ;}\br
+    \terminal{return} expression\opt \terminal{;}\br
+    \terminal{return} braced-init-list \terminal{;}\br
+    \added{\terminal{co_return} expression\opt \terminal{;}}\br
+    \added{\terminal{co_return} braced-init-list \terminal{;}}\br
+    \terminal{goto} identifier \terminal{;}
+  \end{bnf}
+\end{quote}
+
 \setcounter{subsection}{2}
 \rSec2[stmt.return]{The \tcode{return} statement}%
 \indextext{\idxcode{return}}%
@@ -130,7 +145,8 @@ Add underlined text to paragraph 1:
 \begin{quote}
 \pnum
 A function returns to its caller by the \tcode{return} statement.
-\added{In this section, function refers to a function that is not a coroutine. The \tcode{return} statement in a coroutine described in section \ref{stmt.return.coroutine}.}
+\added{A return statement shall not appear in a coroutine. A coroutine return statement shall be used instead \ref{stmt.return.coroutine}.}
+%\added{In this section, function refers to a function that is not a coroutine. The \tcode{return} statement in a coroutine described in section \ref{stmt.return.coroutine}.}
 % \added{A \tcode{return} statement shall not appear in a coroutine.}
 %\added{Using a \tcode{return} statement in a coroutine makes the program ill-formed.}
 \end{quote}
@@ -214,7 +230,7 @@ A function returns to its caller by the \tcode{return} statement.
 %a call to __pr.set_result, where _p
 %\end{quote}
 
-\rSec3[stmt.return.coroutine]{The \tcode{return} statement in a coroutine}%
+\rSec3[stmt.return.coroutine]{The return statement of a coroutine}%
 
 Add this section to \ref{stmt.jump}.
 
@@ -225,38 +241,45 @@ Add this section to \ref{stmt.jump}.
 %\exitnote
 
 \pnum
-A coroutine returns to its caller by the \tcode{return} statement
-or when suspended at a suspend-resume point (\ref{dcl.fct.def.coroutine}). 
+A coroutine returns to its caller by the coroutine return statement
+or when suspended at a suspend-resume point. 
 
 \pnum
-  If the promise type (\ref{dcl.fct.def.coroutine}) of the coroutine defines the member function \tcode{return_void}, the coroutine is considered to have an \term{eventual return type} of \tcode{void}, if the promise type (\ref{dcl.fct.def.coroutine}) of the coroutine defines the member function \tcode{return_value}, the coroutine is considered to have a non-\tcode{void} eventual return  type, otherwise, the coroutine is considered not to have an eventual return type. If the promise type defines both \tcode{return_value} and \tcode{return_void} member functions, the program is ill-formed.
+Let $P$ be a coroutine promise type and $p$ is a coroutine promise object (\ref{dcl.fct.def.coroutine}), 
+the the \grammarterm{unqualified-id}{s}
+\tcode{return_void} and \tcode{return_value} are looked up in the scope of class $P$. 
+If both are found, the program is ill-formed. If none are found, the coroutine does not have an eventual return type.
+If \tcode{return_void} was found, the coroutine has an eventual return type of \tcode{void}.
+If \tcode{return_value} was found, the coroutine has non-void eventual return type.
 
 \pnum
-In this section, \textit{p} refers to the promise object  
-(\ref{dcl.fct.def.coroutine})
-of the enclosing coroutine.
+Coroutine return statement is equivalent to:
 
-\pnum
-A \tcode{return} statement
-with no operand shall be used only in coroutines
-without an eventual return type or with an eventual return type of \tcode{void}. In the latter case, completion of the coroutine
-is signaled to the promise of the coroutine by calling \tcode{\textit{p}.return_void()}.
+\begin{codeblock}
+  { @$S$@; goto @$final{\_}suspend{
+      \_}label$@; }
+\end{codeblock}
 
-\pnum
-A \tcode{return} statement with an operand of type \tcode{void} shall be used only in functions without an eventual return type 
-or with an eventual return type of \tcode{void}; in the former case, the operand is evaluated just before the call to \tcode{\textit{p}.final_suspend()}  (\ref{dcl.fct.def.coroutine}); in the later case, the completion of the coroutine is signaled to the promise of the coroutine by calling \tcode{p.return_void()} and the operand is evaluated just prior to the call to \tcode{\textit{p}.return_void()}. 
+where $final{\_}suspend{\_}label$ is as defined in \ref{dcl.fct.def.coroutine} and $S$ is defined as follows:
 
-\pnum
-A \tcode{return} statement with any other operand shall be used only
-in coroutines producing an eventual value; the completion of the coroutine is signalled to the promise by calling \linebreak 
-\tcode{\textit{p}.return_value(\textit{operand})}.
-Flowing off the end of a coroutine is equivalent to a \tcode{return} with no value; this results in undefined behavior in a coroutine with non-\tcode{void} return type.
-\enternote
-The expression passed to \tcode{return_value} is an xvalue.
-\exitnote
-
-
-
+\begin{itemize}
+  \item A coroutine return statement
+  with no operand shall be used only in coroutines
+  without an eventual return type in which case $S$ is nothing and in coroutine with eventual return type of \tcode{void} in which case $S$ is $p$\tcode{.return_void();}
+  
+  \item A coroutine return statement with an operand of type \tcode{void} shall be used only in functions without an eventual return type 
+  or with an eventual return type of \tcode{void}; in the former case, $S$ is $operand$; in the latter case, $S$ is
+\begin{codeblock}
+  @$operand$@; @p@.return_void();
+\end{codeblock}
+  
+  \item A coroutine return statement with any other operand shall be used only in coroutines with non-\tcode{void} eventual type. In this case $S$ is
+  
+  \begin{codeblock}
+    @p@.return_value(@$operand$@);
+  \end{codeblock}
+  where $operand$ is treated as an xvalue.
+\end{itemize}
 
 % this is fishy ^^^^ 
 
@@ -278,8 +301,8 @@ The expression passed to \tcode{return_value} is an xvalue.
 %
 %\begin{quote}
 %
-%Let \textit{yielded value} be the operand of the \tcode{yield-keyword} statement and \textit{p} be the promise object of the enclosing coroutine.
-%If the result type of \tcode{\textit{p}.yield_value(\textit{yielded-value})} is of type \cvvoid, then the \tcode{yield-keyword} statement is equivalent to:
+%Let \textit{yielded value} be the operand of the \tcode{co_yield} statement and \textit{p} be the promise object of the enclosing coroutine.
+%If the result type of \tcode{\textit{p}.yield_value(\textit{yielded-value})} is of type \cvvoid, then the \tcode{co_yield} statement is equivalent to:
 %
 %\begin{codeblock}
 %  @\textit{p}@.yield_value(@\textit{yielded-value}@);
@@ -296,7 +319,7 @@ The expression passed to \tcode{return_value} is an xvalue.
 %\end{codeblock}
 
 %\pnum
-%A \tcode{yield-keyword} statement may only appear if a \tcode{yield_value} member
+%A \tcode{co_yield} statement may only appear if a \tcode{yield_value} member
 %function is defined in the promise type of the enclosing coroutine.
 
 %NOTE: not pretty, can we remove the duplication
@@ -313,9 +336,9 @@ The expression passed to \tcode{return_value} is an xvalue.
 %    if (n == nullptr)
 %      return;
 %    
-%    yield-keyword flatten(n->left);
-%    yield-keyword n->value;
-%    yield-keyword flatten(n->right);
+%    co_yield flatten(n->left);
+%    co_yield n->value;
+%    co_yield flatten(n->right);
 %  }
 %\end{codeblock}
 %

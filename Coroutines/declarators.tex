@@ -70,13 +70,13 @@ The \grammarterm{parameter-declaration-clause} of the coroutine shall not termin
 %\begin{codeblock}
 %  // coroutine hello world
 %  generator<char> hello_fn() {
-%    for (auto ch: "Hello, world") yield-keyword ch;
+%    for (auto ch: "Hello, world") co_yield ch;
 %  }
 %  
 %  int main() {
 %    // coroutine as a lambda
 %    auto hello_lambda = []()->generator<char> { 
-%      for (auto ch: "Hello, world") yield-keyword ch; };
+%      for (auto ch: "Hello, world") co_yield ch; };
 %    
 %    for (auto ch : hello_lambda()) std::cout << ch;
 %    for (auto ch : hello_fn()) std::cout << ch;
@@ -106,10 +106,10 @@ Then, the coroutine behaves as if its body were:
 \begin{codeblock}
   {
      @\textit{P p}@;
-     await-keyword @\textit{p}@.initial_suspend(); // initial suspend point
+     co_await @\textit{p}@.initial_suspend(); // initial suspend point
      @\textit{F'}@
   @\textit{final_suspend}@:
-     await-keyword @\textit{p}@.final_suspend(); // final suspend point
+     co_await @\textit{p}@.final_suspend(); // final suspend point
   }
 \end{codeblock}
 where 
@@ -255,7 +255,7 @@ private:
   generator(handle h) : coro(h) {}
   handle coro;
 };
-generator f() { yield-keyword 1;  yield-keyword 2; }
+generator f() { co_yield 1;  co_yield 2; }
  
 int main() {
   auto g = f();

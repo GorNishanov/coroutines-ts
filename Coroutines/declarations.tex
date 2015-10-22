@@ -120,25 +120,25 @@ A function declared with a return type that uses a placeholder type shall not be
 %\enterexample
 %\begin{codeblock}
 %// deduces to std::generator<char>
-%auto f() { for(auto ch: "Hello") yield-keyword ch; }
+%auto f() { for(auto ch: "Hello") co_yield ch; }
 %
 %// deduces to std::async_stream<int>
 %auto ticks() {
 %  for(int tick = 0;; ++tick) {
-%    yield-keyword tick;
-%    await-keyword sleep_for(1ms);
+%    co_yield tick;
+%    co_await sleep_for(1ms);
 %  }
 %}
 %
 %future<void> g();
 %
 %// deduces to std::task<void>
-%auto f2() {  await-keyword g(); }
+%auto f2() {  co_await g(); }
 %
 %
 %// deduces to std::task<int>
 %auto f3() {  
-%  await-keyword g();
+%  co_await g();
 %  return 42;
 %}
 %
