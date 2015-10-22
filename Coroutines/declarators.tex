@@ -46,13 +46,14 @@ From the perspective of the caller, a coroutine is just a function with that par
 \enterexample
 \begin{codeblock}
   // coroutine hello world
-  std::experimental::generator<char> hello_fn() {
+  generator<char> hello_fn() {
     for (auto ch: "Hello, world") yield-keyword ch;
   }
   
   int main() {
     // coroutine as a lambda
-    auto hello_lambda = []{ for (auto ch: "Hello, world") yield-keyword ch; };
+    auto hello_lambda = []()->generator<char> { 
+      for (auto ch: "Hello, world") yield-keyword ch; };
     
     for (auto ch : hello_lambda()) cout << ch;
     for (auto ch : hello_fn()) cout << ch;
@@ -65,7 +66,7 @@ A coroutine needs a set of related types and functions
 to complete the definition of its semantics.
 These types and functions are provided as a set of member types or typedefs
 and member functions in the specializations of class template
-\tcode{std::experimental::coroutine_traits} (\ref{coroutine.traits}). 
+\tcode{std::coroutine_traits} (\ref{coroutine.traits}). 
 
 \pnum
 For a coroutine \textit{f}, if 
@@ -77,7 +78,7 @@ Let \textit{R} be the return type and \textit{F} be the \grammarterm{function-bo
 %\grammarterm{compound-statement} or 
 %\grammarterm{function-try-block}.
 %}
-of \textit{f}, \textit{T} be a type \tcode{std::experimental::coroutine_traits<$R$,$P_1$,...,$P_n$>}, and \textit{P} be the type denoted by \textit{T::}\tcode{promise_type}. 
+of \textit{f}, \textit{T} be a type \tcode{std::coroutine_traits<$R$,$P_1$,...,$P_n$>}, and \textit{P} be the type denoted by \textit{T::}\tcode{promise_type}. 
 %If \textit{T}\tcode{::promise_type} does not refer to a type the program is ill-formed. Type \textit{P} is the \term{promise type} of the coroutine.
 Then, the coroutine behaves as if its body were:
 \begin{codeblock}
@@ -115,7 +116,7 @@ of the promise object.
 %For subsequent suspends, if any, the coroutine
 %is invoked via resumption member functions of 
 %%NOTE massage
-%\tcode{std::experimental::coroutine_handle} (\ref{coroutine.handle}) and no return value is expected.
+%\tcode{std::coroutine_handle} (\ref{coroutine.handle}) and no return value is expected.
 %\exitnote
 
 \pnum
@@ -177,7 +178,7 @@ that are live at the current point of execution or suspension of
 a coroutine.
 The coroutine state is destroyed when
 the control flows off the end of the function or
-the \tcode{destroy} member function (\ref{coroutine.handle.resumption}) of an object of \tcode{std::experimental::coroutine_handle<\textit{P}}> associated with that coroutine is invoked. In the latter case objects with automatic storage duration that are in scope
+the \tcode{destroy} member function (\ref{coroutine.handle.resumption}) of an object of \tcode{std::coroutine_handle<\textit{P}}> associated with that coroutine is invoked. In the latter case objects with automatic storage duration that are in scope
 at the suspend point are destroyed in the reverse order of the construction. If the coroutine state required dynamic allocation, the storage is released by calling a deallocation
 function~(\cxxref{basic.stc.dynamic.deallocation}). If \tcode{destroy} is called for a coroutine that is not suspended, the program has undefined behavior.
 
@@ -242,23 +243,24 @@ If type \textit{P} defines static member function \tcode{get_return_object_on_al
 \enterexample
 \begin{codeblock}
 struct generator {
+  using handle = std::coroutine_handle<promise_type>;
   struct promise_type {
     int current_value;
     static auto get_return_object_on_allocation_failure() { return generator{nullptr}; }
-    auto get_return_object() { return generator{this}; }
-    auto initial_suspend() { return std::experimental::suspend_always{}; }
-    auto final_suspend() { return std::experimental::suspend_always{}; }
+    auto get_return_object() { return generator{handle::from_promise(*this)}; }
+    auto initial_suspend() { return std::suspend_always{}; }
+    auto final_suspend() { return std::suspend_always{}; }
     auto yield_value(int value) { 
       current_value = value; 
-      return std::experimental::suspend_always{};
+      return std::suspend_always{};
     }
   };
   bool move_next() { return coro ? (coro.resume(), !coro.done()) : false; }
   int current_value() { return coro.promise().current_value; }
   ~generator() { if(coro) coro.destroy(); }
 private:
-  generator(promise_type* myPromise) : coro(myPromise) {}
-  std::experimental::coroutine_handle<promise_type> coro;
+  generator(handle h) : coro(h) {}
+  handle coro;
 };
 generator f() { yield-keyword 1;  yield-keyword 2; }
  
@@ -283,7 +285,7 @@ int main() {
 %\begin{codeblock}
 %R f(T1 a, T2 b) {
 %  // specialize coroutine_traits to discover customization points
-%  using _Traits = std::experimental::coroutine_traits<R,T1,T2>;
+%  using _Traits = std::coroutine_traits<R,T1,T2>;
 %  <allocate memory for automatic variables>
 %  <transfer parameters as needed>
 %  <prepare return value>

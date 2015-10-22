@@ -72,7 +72,7 @@ A potentially-evaluated \grammarterm{await-expression} shall not appear in a def
 \pnum
 Let \textit{f} be an \tcode{operator await} function found according to the rules of operator function lookup for unary operators and \tcode{operator await}(\ref{over.await}) for \textit{cast-expression}. If such function cannot be found, the program is ill-formed. 
 Let $e$ be a temporary initialized as-if by \tcode{auto\&\& e = \textit{f(cast-expression)}}; let \textit{p} be the promise object (\ref{dcl.fct.def.coroutine})
-of the enclosing coroutine, \textit{P} be the type of the promise object, \textit{h} be an object of \tcode{std::experimental::coroutine_handle<\textit{P}>} referring to the enclosing coroutine, and let \textit{await-ready-expr}, \textit{await-suspend-expr}, and \textit{await-resume-expr} be
+of the enclosing coroutine, \textit{P} be the type of the promise object, \textit{h} be an object of \tcode{std::coroutine_handle<\textit{P}>} referring to the enclosing coroutine, and let \textit{await-ready-expr}, \textit{await-suspend-expr}, and \textit{await-resume-expr} be
 \tcode{\textit{e}.await_ready()}, \tcode{\textit{e}.await_suspend(\textit{h})}, and \tcode{\textit{e}.await_resume()}, respectively;
 
 %If the type of \textit{e.await_suspend(h)} is \tcode{bool}, then
@@ -112,7 +112,7 @@ is equivalent to:
 %\tcode{await_resume} are found in the scope of that class as if by class member access lookup~(\cxxref{basic.lookup.classref}), and if it finds at least one declaration, 
 %If the \grammarterm{cast-expression} is a prvalue, let $e$ be a temporary initialized as-if by \tcode{T e = \textit{cast-expression}}; otherwise let \textit{e} be an lvalue designating the value of the \grammarterm{cast-expression}.
 %Let \textit{p} be the promise object (\ref{dcl.fct.def.coroutine})
-%of the enclosing coroutine, \textit{P} be the type of the promise object, \textit{h} be an object of \tcode{std::experimental::coroutine_handle<\textit{P}>} referring to the enclosing coroutine, then \textit{await-ready-expr}, \textit{await-suspend-expr}, and \textit{await-resume-expr} are expressions defined as follows:
+%of the enclosing coroutine, \textit{P} be the type of the promise object, \textit{h} be an object of \tcode{std::coroutine_handle<\textit{P}>} referring to the enclosing coroutine, then \textit{await-ready-expr}, \textit{await-suspend-expr}, and \textit{await-resume-expr} are expressions defined as follows:
 %\begin{itemize}
 %  %CHECK oxfor comma
 %  \item if \textit{T}  is a class type, the \grammarterm{unqualified-id}{s}
@@ -248,7 +248,7 @@ An \grammarterm{await-expression} may appear as an unevaluated operand (\cxxref{
 %\grammarterm{cast-expression}, and \tcode{_PromiseT} is the 
 %promise type of the enclosing coroutine,
 %and \tcode{_CoroutineHandle}
-%is an object of the type \tcode{std::experimental::coroutine_handle<_PromiseT>} (\ref{coroutine.handle}) corresponding to the enclosing function,
+%is an object of the type \tcode{std::coroutine_handle<_PromiseT>} (\ref{coroutine.handle}) corresponding to the enclosing function,
 %%NOTES add reference to promise
 %and \textit{await-ready-expr}, \textit{await-suspend-expr}, and \textit{await-expr} are
 %determined as follows:
@@ -315,16 +315,10 @@ Add this section to Clause \ref{expr}.
 \enterexample
 \begin{codeblock}
 using namespace std;
-using namespace std::experimental;
   
 generator<pair<int,int>> g1() {
   for (int i = i; i < 10; ++i)
     yield-keyword {i,i};
-}
-
-auto g2() { // deduces to generator<pair<int,int>{}>
-  for (int i = i; i < 10; ++i)
-    yield-keyword make_pair(i,i);
 }
 
 int main() {
@@ -333,6 +327,10 @@ int main() {
   assert(equal(r1.begin(), r1.end(), r2.begin(), r2.end()));
 }
 \end{codeblock}
+%auto g2() { // deduces to generator<pair<int,int>{}>
+%  for (int i = i; i < 10; ++i)
+%  yield-keyword make_pair(i,i);
+%}
 \exitexample
 
 \pnum

@@ -4,7 +4,7 @@
 
 \rSec1[support.general]{General}
 
-Add a row to Table~\ref{tab:lang.sup.lib.summary} for coroutine support header \tcode{<experimental/coroutine>}.
+Add a row to Table~\ref{tab:lang.sup.lib.summary} for coroutine support header \tcode{<coroutine>}.
 
 
 \begin{libsumtab}{Language support library summary}{tab:lang.sup.lib.summary}
@@ -20,7 +20,7 @@ Add a row to Table~\ref{tab:lang.sup.lib.summary} for coroutine support header \
 	\cxxref{support.initlist}    & Initializer lists & \tcode{<initializer_list>}    \\ \rowsep
 	\added{\ref{support.coroutine}} 
   & \added{Coroutines support} 
-  & \added{\tcode{<experimental/coroutine>}}    \\ \rowsep
+  & \added{\tcode{<coroutine>}}    \\ \rowsep
 	&                           &   \tcode{<csignal>}   \\
 	&                           &   \tcode{<csetjmp>}   \\
 	&                           &   \tcode{<cstdalign>} \\
@@ -63,16 +63,15 @@ Add this section to clause \ref{language.support}.
 
 \pnum
 The header
-\tcode{<experimental/coroutine>}
+\tcode{<coroutine>}
 defines several types providing compile and run-time support for coroutines in a \Cpp program.
 
-\synopsis{Header \tcode{<experimental/coroutine>} synopsis}
+\synopsis{Header \tcode{<coroutine>} synopsis}
 
-\indextext{\idxhdr{experimental/coroutine}}%
-\indexlibrary{\idxhdr{experimental/coroutine}}%
+\indextext{\idxhdr{coroutine}}%
+\indexlibrary{\idxhdr{coroutine}}%
 \begin{codeblock}
 namespace std {
-  namespace experimental {
   inline namespace coroutines_v1 {
     // \ref{coroutine.traits} coroutine traits
     template <typename R, typename... ArgTypes>
@@ -95,11 +94,10 @@ namespace std {
     struct suspend_always;
     
   } // namespace coroutines_v1
-  } // namespace experimental
 
   // \ref{coroutine.handle.hash} hash support:
   template <class T> struct hash;
-  template <class P> struct hash<experimental::coroutine_handle<P>>;
+  template <class P> struct hash<coroutine_handle<P>>;
 } // namespace std
 \end{codeblock}
 
@@ -155,21 +153,19 @@ a trait class instantiated as described in \ref{dcl.fct.def.coroutine}.
 \end{concepttable}
 
 \rSec3[coroutine.traits.primary]{Struct template \tcode{coroutine_traits}}
-\pnum The header \tcode{<experimental/coroutine>} shall define
+\pnum The header \tcode{<coroutine>} shall define
 the class template \tcode{coroutine_traits} as follows:
 
 %\pnum The requirements for the members are given in clause \ref{coroutine.traits.requirements}.
 \indexlibrary{\idxcode{coroutine_traits}}%
 \begin{codeblock}
 namespace std {
-namespace experimental {
 inline namespace coroutines_v1 {
   template <typename R, typename... Args>
   struct coroutine_traits {
     using promise_type = typename R::promise_type;
   };
 } // namespace coroutines_v1
-} // namespace experimental
 } // namespace std
 \end{codeblock}
 
@@ -178,7 +174,6 @@ inline namespace coroutines_v1 {
 \indexlibrary{\idxcode{coroutine_handle}}%
 \begin{codeblock}
 namespace std {
-  namespace experimental {
   inline namespace coroutines_v1 {
     template <>
     struct coroutine_handle<void>
@@ -189,8 +184,8 @@ namespace std {
       coroutine_handle& operator=(nullptr_t) noexcept;
       
       // \ref{coroutine.handle.export} export/import
+      void* address() const noexcept;
       static coroutine_handle from_address(void* addr) noexcept;		
-      void* to_address() const noexcept;
       
       // \ref{coroutine.handle.capacity} capacity
       explicit operator bool() const noexcept;
@@ -209,15 +204,13 @@ namespace std {
     {
       // \ref{coroutine.handle.con} construct/reset
       using coroutine_handle<>::coroutine_handle;
-      coroutine_handle(Promise*) noexcept;		
+      static coroutine_handle from_promise(Promise&) noexcept;		
       coroutine_handle& operator=(nullptr_t) noexcept;
       
       // \ref{coroutine.handle.prom} promise access
-      Promise& promise() noexcept;		
-      Promise const& promise() const noexcept;
+      Promise& promise() const noexcept;		
     };
   } // namespace coroutines_v1
-  } // namespace experimental
 } // namespace std
 \end{codeblock}
 
@@ -234,25 +227,25 @@ A default constructed \tcode{coroutine_handle} object has no target.
   constexpr coroutine_handle(nullptr_t) noexcept;
 \end{itemdecl}
 \begin{itemdescr}
-  \pnum\postconditions \tcode{!*this}.
+  \pnum\postconditions \tcode{address() == nullptr}.
 \end{itemdescr}
 
 \begin{itemdecl}
-  coroutine_handle(Promise* p) noexcept;	
+  static coroutine_handle::from_promise(Promise& p) noexcept;	
 \end{itemdecl}
 \begin{itemdescr}
   \pnum
-  \precondition \tcode{p} points to a promise object of a coroutine.
+  \precondition \tcode{p} is a reference to a promise object of a coroutine.
   
 	\pnum
-  \postconditions \tcode{!*this} and \tcode{addressof(this->promise()) == p}.
+  \postconditions \tcode{address() != nullptr} and \tcode{addressof(promise()) == p}.
 \end{itemdescr}
 
 \begin{itemdecl}
   coroutine_handle& operator=(nullptr_t) noexcept;
 \end{itemdecl}
 \begin{itemdescr}
-	\pnum\postconditions \tcode{!*this}.
+	\pnum\postconditions \tcode{address() == nullptr}.
   
   \pnum\returns \tcode{*this}.
 \end{itemdescr}
@@ -260,12 +253,12 @@ A default constructed \tcode{coroutine_handle} object has no target.
 \rSec3[coroutine.handle.export]{\tcode{coroutine_handle} export/import}
 \begin{itemdecl}
   static coroutine_handle from_address(void* addr) noexcept;		
-  void* to_address() const noexcept;
+  void* address() const noexcept;
 \end{itemdecl}
 
 \begin{itemdescr}
   \pnum
-  \postconditions \tcode{coroutine_handle<>::from_address(this->to_address()) == *this}.
+  \postconditions \tcode{coroutine_handle<>::from_address(address()) == *this}.
 \end{itemdescr}
 
 \rSec3[coroutine.handle.capacity]{\tcode{coroutine_handle} capacity}
@@ -275,7 +268,7 @@ A default constructed \tcode{coroutine_handle} object has no target.
 
 \begin{itemdescr}
   \pnum
-  \returns \tcode{true} if \tcode{*this} has a target, otherwise \tcode{false}.
+  \returns \tcode{true} if \tcode{address() != nullptr}, otherwise \tcode{false}.
 \end{itemdescr}
 
 \rSec3[coroutine.handle.resumption]{\tcode{coroutine_handle} resumption}
@@ -288,8 +281,8 @@ A default constructed \tcode{coroutine_handle} object has no target.
   \precondition \tcode{*this} refers to a suspended coroutine.
   
   \pnum
-  \effects resumes the execution of a target function. If the function was suspended
-  at the final suspend point, \tcode{terminate} is called (\cxxref{except.terminate}).
+  \effects resumes the execution of the coroutine. If the coroutine was suspended
+  at the final suspend point, behavior is undefined.
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -300,7 +293,7 @@ A default constructed \tcode{coroutine_handle} object has no target.
   \precondition \tcode{*this} refers to a suspended coroutine.
   
   \pnum
-  \effects destroys the target coroutine (\ref{dcl.fct.def.coroutine}).
+  \effects destroys the coroutine (\ref{dcl.fct.def.coroutine}).
 \end{itemdescr}
 
 \rSec3[coroutine.handle.completion]{\tcode{coroutine_handle} completion check}
@@ -312,7 +305,7 @@ A default constructed \tcode{coroutine_handle} object has no target.
   \precondition \tcode{*this} refers to a suspended coroutine.
   
   \pnum
-  \returns \tcode{true} if the target function is suspended
+  \returns \tcode{true} if the coroutine is suspended
   at final suspend point, otherwise \tcode{false}.
 \end{itemdescr}
 
@@ -327,7 +320,7 @@ A default constructed \tcode{coroutine_handle} object has no target.
   \precondition \tcode{*this} refers to a coroutine.
   
   \pnum
-  \returns a reference to a promise of the target function.
+  \returns a reference to a promise of the coroutine.
 \end{itemdescr}
 
 \rSec3[coroutine.handle.compare]{Comparison operators}
@@ -338,7 +331,7 @@ A default constructed \tcode{coroutine_handle} object has no target.
 
 \begin{itemdescr}
   \pnum
-  \returns \tcode{x.to_address() == y.to_address()}.
+  \returns \tcode{x.address() == y.address()}.
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -347,7 +340,7 @@ A default constructed \tcode{coroutine_handle} object has no target.
 
 \begin{itemdescr}
   \pnum
-  \returns \tcode{x.to_address() < y.to_address()}.
+  \returns \tcode{x.address() < y.address()}.
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -389,7 +382,7 @@ A default constructed \tcode{coroutine_handle} object has no target.
 \rSec3[coroutine.handle.hash]{Hash support}
 
 \begin{itemdecl}
-  template <class P> struct hash<experimental::coroutine_handle<P>>;
+  template <class P> struct hash<coroutine_handle<P>>;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -398,15 +391,15 @@ The template specializations shall meet the requirements of class template hash 
 \end{itemdescr}
 
 \rSec2[coroutine.trivial.awaitables]{trivial awaitables}
-The header \tcode{<experimental/coroutine>} shall define \tcode{suspend_never} and \tcode{suspend_always} as follows.
+The header \tcode{<coroutine>} shall define \tcode{suspend_never} and \tcode{suspend_always} as follows.
 \begin{codeblock}
   struct suspend_never {
-    bool await_ready() { return false; }
+    bool await_ready() { return true; }
     void await_suspend(coroutine_handle<>){}
     void await_resume() {}
   };
   struct suspend_always {
-    bool await_ready() { return true; }
+    bool await_ready() { return false; }
     void await_suspend(coroutine_handle<>){}
     void await_resume() {}
   };
@@ -449,10 +442,10 @@ coroutine promise types.
 	\hline
 	\lhdr{Variable} &   \rhdr{Definition}   \\  \capsep
 	\endhead
-	\tcode{P}    &   a coroutine promise type       \\ \rowsep
-	\tcode{p}       &   a value of type \tcode{P} \\ \rowsep
+	\tcode{Promise}    &   a coroutine promise type       \\ \rowsep
+	\tcode{p}       &   a value of type \tcode{Promise} \\ \rowsep
 	\tcode{e}       &   a value of \tcode{exception_ptr} type   \\ \rowsep
-	\tcode{h}       &   a value of \tcode{experimental::coroutine_handle<P>} type    \\ \rowsep
+	\tcode{h}       &   a value of \tcode{coroutine_handle<P>} type    \\ \rowsep
 	\tcode{v}      &   an \grammarterm{expression} or \grammarterm{braced-init-list}   \\ \rowsep
 \end{libreqtab2}
 
@@ -461,13 +454,13 @@ coroutine promise types.
 	{p{1.6in}p{4.15in}}
 	\topline
 	Expression          &   Note \\ \capsep
-	\tcode{P\{\}}     &   Construct an object of type \tcode{P}\\ \rowsep
+	\tcode{Promise\{\}}     &   Construct an object of type \tcode{Promise}\\ \rowsep
 	\tcode{p.get_return_object()}        &
 The \tcode{get_return_object} is invoked by the coroutine to construct the
 return object prior to reaching the first suspend-resume point,
 a \tcode{return} statement, or flowing off the end of the function.
 	\\ \rowsep
-	\tcode{P::get_return_object_on_allocation_failure()}        &
+	\tcode{Promise::get_return_object_on_allocation_failure()}        &
   \textit{(Optional)} The \tcode{get_return_object_on_allocation_failure} is invoked by the coroutine to construct the
   return object if allocation of the coroutine state failed.
   \\ \rowsep
@@ -518,17 +511,17 @@ This example illustrates full implementation
 of a promise type for a simple generator.
 \begin{codeblock}
   #include <iostream>
-  #include <experimental/coroutine>
+  #include <coroutine>
   
   struct generator {
     struct promise_type {
       int current_value;
-      auto get_return_object() { return generator{this}; }
-      auto initial_suspend() { return std::experimental::suspend_always{}; }
-      auto final_suspend() { return std::experimental::suspend_always{}; }
+      auto get_return_object() { return generator{*this}; }
+      auto initial_suspend() { return std::suspend_always{}; }
+      auto final_suspend() { return std::suspend_always{}; }
       auto yield_value(int value) { 
         current_value = value; 
-        return std::experimental::suspend_always{};
+        return std::suspend_always{};
       }
     };
     
@@ -541,10 +534,9 @@ of a promise type for a simple generator.
     
     ~generator() { coro.destroy(); }
   private:
-    explicit generator(promise_type* myPromise) : coro(myPromise) 
-    {
-    }
-    std::experimental::coroutine_handle<promise_type> coro;
+    using handle = std::coroutine_handle<promise_type>;
+    explicit generator(promise_type& myPromise): coro(handle::from_promise(myPromise)) {}
+    handle coro;
   };
   
   generator f() {

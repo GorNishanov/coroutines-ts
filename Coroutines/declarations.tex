@@ -104,25 +104,25 @@ A function declared with a return type that uses a placeholder type shall not be
 %
 %\begin{itemize}
 %\item If both a \grammarterm{yield-expression} and an \grammarterm{await-expression} are present, then
-%the return type is \tcode{std::experimental::async_stream<T>}, where \tcode{T} is deduced from the \grammarterm{yield-expression}{}s as if a \grammarterm{yield-expression} were a \tcode{return} statement in a function with declared type \tcode{auto} without a \grammarterm{trailing-return-type}.
+%the return type is \tcode{std::async_stream<T>}, where \tcode{T} is deduced from the \grammarterm{yield-expression}{}s as if a \grammarterm{yield-expression} were a \tcode{return} statement in a function with declared type \tcode{auto} without a \grammarterm{trailing-return-type}.
 %
 %%NOTE Jens text
 %
 %\item Otherwise, if an \grammarterm{await-expression} is present in a function, then
-%the return type is\linebreak \tcode{std::experimental::task<T>} where type \tcode{T} is deduced from 
+%the return type is\linebreak \tcode{std::task<T>} where type \tcode{T} is deduced from 
 %\tcode{return} statements as if the \tcode{return} statements were in a function with declared type \tcode{auto} without a \grammarterm{trailing-return-type}.
 %
 %\item Otherwise, if a \grammarterm{yield-expression} is present in a function, then the return type is \linebreak
-%\tcode{std::experimental::generator<T>},
+%\tcode{std::generator<T>},
 %where \tcode{T} is deduced from the \grammarterm{yield-expression}{}s  as if a \grammarterm{yield-expression} were a \tcode{return} statement in a function with declared type \tcode{auto} without a \grammarterm{trailing-return-type}.
 %
 %\end{itemize}
 %\enterexample
 %\begin{codeblock}
-%// deduces to std::experimental::generator<char>
+%// deduces to std::generator<char>
 %auto f() { for(auto ch: "Hello") yield-keyword ch; }
 %
-%// deduces to std::experimental::async_stream<int>
+%// deduces to std::async_stream<int>
 %auto ticks() {
 %  for(int tick = 0;; ++tick) {
 %    yield-keyword tick;
@@ -132,11 +132,11 @@ A function declared with a return type that uses a placeholder type shall not be
 %
 %future<void> g();
 %
-%// deduces to std::experimental::task<void>
+%// deduces to std::task<void>
 %auto f2() {  await-keyword g(); }
 %
 %
-%// deduces to std::experimental::task<int>
+%// deduces to std::task<int>
 %auto f3() {  
 %  await-keyword g();
 %  return 42;
@@ -146,9 +146,9 @@ A function declared with a return type that uses a placeholder type shall not be
 %\exitexample
 %
 %\pnum
-%The templates  \tcode{std::experimental::generator}, 
-%\tcode{std::experimental::task}, and \linebreak
-%\tcode{std::experimental::async_stream} are not predefined;
+%The templates  \tcode{std::generator}, 
+%\tcode{std::task}, and \linebreak
+%\tcode{std::async_stream} are not predefined;
 %if the appropriate headers are not included prior to a use --- even an implicit use in which the type is not
 %named~(\ref{dcl.spec.auto}) --- the program is ill-formed.
 %\end{quote}
