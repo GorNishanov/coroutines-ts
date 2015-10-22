@@ -57,6 +57,7 @@ eliminate multiple copies):
   omitted by constructing the automatic object directly
   into the function's return value
   \item
-  When a parameter would be copied/moved to the coroutine state (\ref{dcl.fct.def.coroutine}) copy move can be omitted by continuing to refer to the function parameters instead of referring to their copies in the coroutine state.
+  \added{
+  When a parameter would be copied/moved to the coroutine state (\ref{dcl.fct.def.coroutine}) the copy/move can be omitted by continuing to refer to the function parameters instead of referring to their copies in the coroutine state.}
 \end{itemize}
 \end{quote}
