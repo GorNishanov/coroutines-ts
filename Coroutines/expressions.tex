@@ -63,8 +63,19 @@ A potentially-evaluated
 %
 In a \grammarterm{declaration-statement} or in the \grammarterm{simple-declaration} (if any) of a \grammarterm{for-init-statement}, a potentially-evaluated \grammarterm{await-expression} shall only appear in an \grammarterm{initializer} of that \grammarterm{declaration-statement} or \grammarterm{simple-declaration}.
 A potentially-evaluated \grammarterm{await-expression} shall not appear in a default argument (\cxxref{dcl.fct.default}).
-An \grammarterm{await-expression} shall not appear in a coroutine without an eventual return type (\ref{stmt.return.coroutine}). 
+%An \grammarterm{await-expression} shall not appear in a coroutine without an eventual return type (\ref{stmt.return.coroutine}). 
 %This constraint does not apply to implicit \grammarterm{await-expression} introduced as a result of evaluation of a \grammarterm{yield-expression} (\ref{expr.yield}), initial, and final suspend points (\ref{dcl.fct.def.coroutine}).
+
+\pnum
+Evaluation of an \grammarterm{await-expression} involves the following auxiliary expressions:
+
+\begin{itemize}
+  \item If the \grammarterm{cast-expression} is a prvalue, $a$ is a temporary object copy-initialized from the \grammarterm{cast-expression}, otherwise $a$ is an lvalue referring to the result of evaluating the \grammarterm{cast-expression}.
+  \item $p$ is an lvalue naming the promise object (8.4.4) of the enclosing coroutine.
+  \item If the \grammarterm{await-expression} is potentially-evaluated and lookup for the unqualified-id \tcode{await_transform} within the scope of \tcode{decltype($p$)} as if by class member access lookup (3.4.5) finds at least one declaration, then $e$ is \tcode{$p$.await_transform(a);} otherwise, $e$ is $a$.
+    
+\end{itemize}
+
 
 \pnum
 Let \textit{f} be the \tcode{operator co_await} function selected by overload resolution for \grammarterm{cast-expression} as the argument. 
@@ -93,7 +104,15 @@ A coroutine is considered suspended immediately prior to  the invocation of \tco
 An \grammarterm{await-expression} may appear as an unevaluated operand (Clause \ref{expr}). 
 \enterexample
 \begin{codeblock}	
-  std::future<int> f();
+  template <typename T>
+  struct my_future {
+    ...
+    bool await_ready();
+    void await_suspend(std::coroutine_handle<>);
+    T await_resume();
+  };
+  
+  my_future<int> f();
   
   int main() {
     using t = decltype(co_await f()); // t is int
