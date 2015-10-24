@@ -73,52 +73,55 @@ Evaluation of an \grammarterm{await-expression} involves the following auxiliary
   \item If the \grammarterm{cast-expression} is a prvalue, $a$ is a temporary object copy-initialized from the \grammarterm{cast-expression}, otherwise $a$ is an lvalue referring to the result of evaluating the \grammarterm{cast-expression}.
   \item $p$ is an lvalue naming the promise object (8.4.4) of the enclosing coroutine.
   \item If the \grammarterm{await-expression} is potentially-evaluated and lookup for the unqualified-id \tcode{await_transform} within the scope of \tcode{decltype($p$)} as if by class member access lookup (3.4.5) finds at least one declaration, then $e$ is \tcode{$p$.await_transform(a);} otherwise, $e$ is $a$.
-    
+  \item $h$ is an object of type \tcode{decltype(std::coroutine_handle<decltype($p$)>} referring to the enclosing coroutine.
+  \item \textit{await-ready} is the expression \tcode{$e$.await_ready()}, contextually converted to \tcode{bool}.
+  \item \textit{await-suspend} is the expression \tcode{$e$.await_suspend($h$)}, which shall be a prvalue of type \tcode{void} or \tcode{bool}.
+  \item \textit{await-resume} is the expression \tcode{$e$.await_resume()}.
 \end{itemize}
+In an unevaluated operand, only the expressions $a$, $e$, and \textit{await-resume} are required to be valid, and the \grammarterm{await-expression} is equivalent to the \textit{await-resume} expression.
 
+\pnum The \grammarterm{await-expression} has the same type and value category as the \tcode{await-resume} expression.
 
-\pnum
-Let \textit{f} be the \tcode{operator co_await} function selected by overload resolution for \grammarterm{cast-expression} as the argument. 
-If there is no viable function, let $e$ be the \textit{cast-expression}, otherwise $e$ is a temporary initialized as-if by \tcode{auto\&\& e = \textit{f(cast-expression)}}.
-Let \textit{p} be the promise object (\ref{dcl.fct.def.coroutine})
-of the enclosing coroutine, \textit{P} be the type of the promise object, \textit{h} be an object of type  \tcode{std::coroutine_handle<\textit{P}>} referring to the enclosing coroutine, then
-
-
-\begin{ncbnf}
-  \terminal{co_await} cast-expression
-\end{ncbnf}
-is equivalent to:
-
-\begin{codeblock}
-  @$e$@.await_ready() ? @$e$@.await_resume() : (@$e$@.await_suspend(@$h$@), @\textit{S}@, @$e$@.await_resume())
-\end{codeblock}
-where $S$ is a coroutine-suspend-point (\ref{dcl.fct.def.coroutine}) treated as an expression of type tcode{void}.
-
-\pnum
-A coroutine is considered suspended immediately prior to  the invocation of \tcode{$e$.await_suspend($h$)}. If the type of the expression \tcode{$e$.await_suspend($h$)} is \tcode{bool} and the invocation of \tcode{$e$.await_suspend($h$)} returns \tcode{false}, or the invocation of \tcode{$e$.await_suspend($h$)} exits via an exception, execution continues as if coroutine were resumed. 
-
-%If  exception thrown from within \textit{await-suspend-expr} is propagated as if coroutine was resumed and an exception was thrown just prior to an invocation of \textit{await-resume-expr}.
+\pnum The \grammarterm{await-expression} evaluates the \textit{await-ready} expression, then:
+\begin{itemize}
+  \item If the result is \tcode{true}, a suspend-resume point (8.4.4) is evaluated. After that evaluation and before control flow returns to the current caller or resumer (TODO: define this somewhere) of the coroutine, the \textit{await-suspend} expression is evaluated. If that expression has type \tcode{bool} and returns \tcode{false}, the coroutine is resumed. If that expression exits via an exception, the exception is caught, the coroutine is resumed, and the exception is immediately re-thrown (15.1). Otherwise, control flow returns to the current caller or resumer.
+  \item If the result is \tcode{false}, or when the coroutine is resumed, the \textit{await-resume} expression is evaluated, and its result is the result of the \grammarterm{await-expression}.
+  
+\end{itemize}
 
 \pnum
 \enternote
 An \grammarterm{await-expression} may appear as an unevaluated operand (Clause \ref{expr}). 
 \enterexample
 \begin{codeblock}	
-  template <typename T>
-  struct my_future {
+template <typename T>
+struct my_future {
+  ...
+  bool await_ready();
+  void await_suspend(std::coroutine_handle<>);
+  T await_resume();
+};
+my_future<int> f();
+  
+template <class Rep, class Period>
+auto operator co_await(std::chrono::duration<Rep, Period> d) {
+  struct awaiter {
+    std::chrono::system_clock::duration duration;
     ...
-    bool await_ready();
-    void await_suspend(std::coroutine_handle<>);
-    T await_resume();
+    awaiter(std::chrono::system_clock::duration d) : duration(d){}
+    bool await_ready() const { return duration.count() <= 0; }
+    void await_resume() {}
+    void await_suspend(std::coroutine_handle<> h){...}
   };
-  
-  my_future<int> f();
-  
-  int main() {
-    using t = decltype(co_await f()); // t is int
-    static_assert(sizeof(co_await f()) == sizeof(int));
-    cout << typeid(co_await f()).name() << endl;
-  }
+  return awaiter{d};
+}
+
+int main() {
+  using t = decltype(co_await f()); // t is int
+  static_assert(sizeof(co_await f()) == sizeof(int));
+  std::cout << typeid(co_await f()).name() << std::endl; // outputs: int
+  std::cout << typeid(co_await 1ms).name() << std::endl; // outputs: void
+}
 \end{codeblock}
 \exitexample%
 \exitnote
