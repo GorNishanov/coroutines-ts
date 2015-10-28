@@ -19,7 +19,8 @@ Iteration statements specify looping.
 	\terminal{while (} condition \terminal{)} statement\br
 	\terminal{do} statement \terminal{while (} expression \terminal{) ;}\br
 	\terminal{for (} for-init-statement condition\opt \terminal{;} expression\opt \terminal{)} statement\br
-	\terminal{for} \added{\terminal{co_await}\opt} \terminal{(} for-range-declaration \terminal{:} for-range-initializer \terminal{)} statement\br
+	\terminal{for} \terminal{\added{co_await\opt{}}} 
+    \terminal{(} for-range-declaration \terminal{:} for-range-initializer \terminal{)} statement\br
 %	\added{\terminal{cofor (} for-range-declaration \terminal{:} for-range-initializer \terminal{)} statement}
 \end{bnf}
 \end{quote}
@@ -37,7 +38,7 @@ Add the underlined text to paragraph 1.
 For a range-based \tcode{for} statement of the form
 
 \begin{ncbnf}
-  \terminal{for}  \added{\terminal{co_await}\opt} \terminal{(} for-range-declaration : expression \terminal{)} statement
+  \terminal{for} \terminal{\added{co_await\opt{}}} \terminal{(} for-range-declaration : expression \terminal{)} statement
 \end{ncbnf}
 
 let \textit{range-init} be equivalent to the \grammarterm{expression} surrounded
@@ -52,7 +53,7 @@ by parentheses\footnote{this ensures that a top-level comma operator cannot be
 and for a range-based \tcode{for} statement of the form
 
 \begin{ncbnf}
-  \terminal{for} \added{\terminal{co_await}\opt} \terminal{(} for-range-declaration \terminal{:} braced-init-list \terminal{)} statement
+  \terminal{for} \terminal{\added{co_await\opt{}}} \terminal{(} for-range-declaration \terminal{:} braced-init-list \terminal{)} statement
 \end{ncbnf}
 
 let \textit{range-init} be equivalent to the \grammarterm{braced-init-list}. In each case, a
@@ -62,10 +63,10 @@ is equivalent to
 \begin{codeblock}
   {
     auto && __range = range-init;
-    for ( auto __begin =  @\added{\tcode{co_await}\opt}@ begin-expr,
+    for ( auto __begin =  @\added{\tcode{co_await}\opt{}}@ begin-expr,
     __end = end-expr;
     __begin != __end;
-     @\added{\tcode{co_await}\opt}@ ++__begin ) {
+     @\added{\tcode{co_await}\opt{}}@ ++__begin ) {
       @\textit{for-range-declaration}@ = *__begin;
       @\textit{statement}@
     }
@@ -102,7 +103,7 @@ determined as follows: ...
 %	{
 %		auto && __range = range-init;
 %		for ( auto __begin = co_await begin-expr,
-%		__end = end-expr;
+%	+	__end = end-expr;
 %		__begin != __end;
 %		co_await ++__begin ) {
 %			@\textit{for-range-declaration}@ = *__begin;
@@ -128,8 +129,7 @@ In paragraph 1 add two productions to the grammar:
     \terminal{continue ;}\br
     \terminal{return} expression\opt \terminal{;}\br
     \terminal{return} braced-init-list \terminal{;}\br
-    \added{\terminal{co_return} expression\opt \terminal{;}}\br
-    \added{\terminal{co_return} braced-init-list \terminal{;}}\br
+    \added{coroutine-return-statement} \br
     \terminal{goto} identifier \terminal{;}
   \end{bnf}
 \end{quote}
@@ -230,7 +230,7 @@ A function returns to its caller by the \tcode{return} statement.
 %a call to __pr.set_result, where _p
 %\end{quote}
 
-\rSec3[stmt.return.coroutine]{The return statement of a coroutine}%
+\rSec3[stmt.return.coroutine]{The coroutine return statement}%
 
 Add this section to \ref{stmt.jump}.
 
@@ -240,9 +240,15 @@ Add this section to \ref{stmt.jump}.
 %The return statement in non-coroutines is described in \ref{stmt.return}
 %\exitnote
 
+\begin{bnf}
+	\nontermdef{coroutine-return-statement}\br
+	\terminal{co_return} expression\opt \terminal{;}\br
+	\terminal{co_return} braced-init-list\terminal{;}
+\end{bnf}
+
 \pnum
 A coroutine returns to its caller by the coroutine return statement
-or when suspended at a suspend-resume point. 
+or when suspended at a suspend-resume point (\ref{dcl.fct.def.coroutine}). 
 
 \pnum
 Let $P$ be a coroutine promise type and $p$ is a coroutine promise object (\ref{dcl.fct.def.coroutine}), 
