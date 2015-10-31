@@ -251,15 +251,17 @@ A coroutine returns to its caller by the coroutine return statement
 or when suspended at a suspend-resume point (\ref{dcl.fct.def.coroutine}). 
 
 \pnum
-Let $P$ be a coroutine promise type and $p$ is a coroutine promise object (\ref{dcl.fct.def.coroutine}), 
-the the \grammarterm{unqualified-id}{s}
-\tcode{return_void} and \tcode{return_value} are looked up in the scope of class $P$. 
-If both are found, the program is ill-formed. If none are found, the coroutine does not have an eventual return type.
-If \tcode{return_void} was found, the coroutine has an eventual return type of \tcode{void}.
-If \tcode{return_value} was found, the coroutine has non-void eventual return type.
-
-\pnum
-Coroutine return statement is equivalent to:
+The \grammarterm{expression} or \grammarterm{braced-init-list} of a coroutine return statement is called its operand.
+If the operand is an expression of non-\tcode{void} type, it is considered to be an xvalue.
+Let $P$ be a coroutine promise type and $p$ be a coroutine promise object (\ref{dcl.fct.def.coroutine}), then a
+coroutine return statement is equivalent to:
+ 
+%the the \grammarterm{unqualified-id}{s}
+%\tcode{return_void} and \tcode{return_value} are looked up in the scope of class $P$. 
+%If both are found, the program is ill-formed. If none are found, the coroutine does not have an eventual return type.
+%If \tcode{return_void} was found, the coroutine has an eventual return type of \tcode{void}.
+%If \tcode{return_value} was found, the coroutine has non-void eventual return type.
+%\pnum
 
 \begin{codeblock}
   { @$S$@; goto @$final{\_}suspend{
@@ -269,23 +271,18 @@ Coroutine return statement is equivalent to:
 where $final{\_}suspend{\_}label$ is as defined in \ref{dcl.fct.def.coroutine} and $S$ is defined as follows:
 
 \begin{itemize}
-  \item A coroutine return statement
-  with no operand shall be used only in coroutines
-  without an eventual return type in which case $S$ is nothing and in coroutine with eventual return type of \tcode{void} in which case $S$ is $p$\tcode{.return_void();}
-  
-  \item A coroutine return statement with an operand of type \tcode{void} shall be used only in functions without an eventual return type 
-  or with an eventual return type of \tcode{void}; in the former case, $S$ is $operand$; in the latter case, $S$ is
-\begin{codeblock}
-  @$operand$@; @p@.return_void();
-\end{codeblock}
-  
-  \item A coroutine return statement with any other operand shall be used only in coroutines with non-\tcode{void} eventual type. In this case $S$ is
-  
-  \begin{codeblock}
-    @p@.return_value(@$operand$@);
-  \end{codeblock}
-  where $operand$ is treated as an xvalue.
+  \item $S$ is $p$\tcode{.return_value(}\grammarterm{braced-init-list}{}\tcode{)}, if the operand is \grammarterm{braced-init-list}
+  \item $S$ is $p$\tcode{.return_value(}\grammarterm{expression}{}\tcode{)}, if the operand is an expression of non-\tcode{void} type;
+  \item $S$ is $p$\tcode{.return_void()}, otherwise;
 \end{itemize}
+
+\pnum
+The \grammarterm{unqualified-id}{s}
+\tcode{return_void} and \tcode{return_value} are looked up in the scope of class $P$. 
+If both are found, the program is ill-formed. Flowing off the end of a coroutine is equivalent to a \tcode{co_return} with no operand; this results in
+undefined behavior if expression $p$\tcode{.return_void()} is ill-formed.
+%If none are found, the coroutine does not have an eventual return type.
+%  $expression$ is treated as an xvalue;
 
 % this is fishy ^^^^ 
 
