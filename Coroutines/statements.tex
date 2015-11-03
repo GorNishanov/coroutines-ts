@@ -153,8 +153,8 @@ Add underlined text to paragraph 1:
 
 \begin{quote}
 \pnum
-A function returns to its caller by the \tcode{return} statement.
-\added{A return statement shall not appear in a coroutine. A coroutine return statement shall be used instead \ref{stmt.return.coroutine}.}
+A function returns to its caller by the \tcode{return} statement\added{; that function shall not be a coroutine (\ref{dcl.fct.def.coroutine}).}
+%\added{A return statement shall not appear in a coroutine. A coroutine return statement shall be used instead \ref{stmt.return.coroutine}.}
 %\added{In this section, function refers to a function that is not a coroutine. The \tcode{return} statement in a coroutine described in section \ref{stmt.return.coroutine}.}
 % \added{A \tcode{return} statement shall not appear in a coroutine.}
 %\added{Using a \tcode{return} statement in a coroutine makes the program ill-formed.}

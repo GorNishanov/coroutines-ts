@@ -28,8 +28,8 @@ Add this section to \ref{dcl.fct.def}.
 %\rSec3[coroutine.definitions]{Definitions}
 \begin{quote}
 \pnum
-A function is a \defn{coroutine} if it contains
-one or more suspend-resume-points introduced by a potentially-evaluated \grammarterm{await-expression} (\ref{expr.await}).
+A function is a \defn{coroutine} if it contains a \grammarterm{coroutine-return-statement} or
+a suspend-resume-point introduced by an \grammarterm{await-expression} (\ref{expr.await}), a \grammarterm{yield-expression} (\ref{expr.yield}), or a \grammarterm{range-based-for} (\ref{stmt.ranged}).
 The \grammarterm{parameter-declaration-clause} of the coroutine shall not terminates with an ellipsis that is not part of an \grammarterm{abstract-declarator}. 
 
 %Every coroutine
