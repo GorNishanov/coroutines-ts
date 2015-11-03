@@ -27,20 +27,20 @@ Change the grammar for \grammarterm{unary-expression} as follows:
 	delete-expression\br
 \end{bnf}
 
-\setcounter{subsection}{6}
-\rSec2[expr.unary.noexcept]{\tcode{noexcept} operator}
-
-%NOTES: noexcept
-% the resul
-
-% if in a potentially-evaluated context would contain the expression
-Add a new paragraph after paragraph 3.
-
-\begin{quote}
-\setcounter{Paras}{3}
-\pnum
-If in a potentially-evaluated context the \textit{expression} would contain a potentially-evaluated \grammarterm{await-expression}, the program is ill-formed.
-\end{quote}
+%\setcounter{subsection}{6}
+%\rSec2[expr.unary.noexcept]{\tcode{noexcept} operator}
+%
+%%NOTES: noexcept
+%% the resul
+%
+%% if in a potentially-evaluated context would contain the expression
+%Add a new paragraph after paragraph 3.
+%
+%\begin{quote}
+%\setcounter{Paras}{3}
+%\pnum
+%If in a potentially-evaluated context the \textit{expression} would contain a potentially-evaluated \grammarterm{await-expression}, the program is ill-formed.
+%\end{quote}
 
 \setcounter{subsection}{7}
 \rSec2[expr.await]{Await}
@@ -50,7 +50,9 @@ Add this section to \ref{expr.unary}.
 %NOTES: add quote
 \begin{quote}
 \pnum
-The \tcode{co_await} operator is used to suspend evaluation of the enclosing coroutine (\ref{dcl.fct.def.coroutine}) while awaiting completion of the computation represented by the operand expression.
+The \tcode{co_await} operator is used to suspend evaluation of a 
+%the enclosing 
+coroutine (\ref{dcl.fct.def.coroutine}) while awaiting completion of the computation represented by the operand expression.
 
 \begin{bnf}
   \nontermdef{await-expression}\br
@@ -58,13 +60,9 @@ The \tcode{co_await} operator is used to suspend evaluation of the enclosing cor
 \end{bnf}
 
 \pnum
-A potentially-evaluated 
-\grammarterm{await-expression} shall only appear within the \grammarterm{compound-statement} of a \grammarterm{function-body} outside of a \grammarterm{handler} (\cxxref{except.handle}).
-%
-In a \grammarterm{declaration-statement} or in the \grammarterm{simple-declaration} (if any) of a \grammarterm{for-init-statement}, a potentially-evaluated \grammarterm{await-expression} shall only appear in an \grammarterm{initializer} of that \grammarterm{declaration-statement} or \grammarterm{simple-declaration}.
-A potentially-evaluated \grammarterm{await-expression} shall not appear in a default argument (\cxxref{dcl.fct.default}).
-%An \grammarterm{await-expression} shall not appear in a coroutine without an eventual return type (\ref{stmt.return.coroutine}). 
-%This constraint does not apply to implicit \grammarterm{await-expression} introduced as a result of evaluation of a \grammarterm{yield-expression} (\ref{expr.yield}), initial, and final suspend points (\ref{dcl.fct.def.coroutine}).
+An \grammarterm{await-expression} shall only appear in a potentially evaluated expression within the \grammarterm{compound-statement} of a \grammarterm{function-body} or \grammarterm{function-try-block}
+ outside of a \grammarterm{handler} (\cxxref{except.handle}). In a \grammarterm{declaration-statement} or in the \grammarterm{simple-declaration} (if any) of a \grammarterm{for-init-statement}, an \grammarterm{await-expression} shall only appear in an \grammarterm{initializer} of that \grammarterm{declaration-statement} or \grammarterm{simple-declaration}.
+An \grammarterm{await-expression} shall not appear in a default argument (\cxxref{dcl.fct.default}). All of the contexts within a function where \grammarterm{await-expression} can appear are collectively called the \term{suspension context} of the function.
 
 \pnum
 Evaluation of an \grammarterm{await-expression} involves the following auxiliary expressions:
@@ -250,7 +248,7 @@ Add a new section to Clause \ref{expr}.
 \end{bnf}
 
 \pnum
-  Let \textit{e} be the operand of the \grammarterm{yield-expression} and \textit{p} be the promise object of the enclosing coroutine, then the \grammarterm{yield-expression} is equivalent to the expression \tcode{co_await} \textit{p}\tcode{.yield_value}(\textit{e}).
+  Let \textit{e} be the operand of the \grammarterm{yield-expression} and \textit{p} be the promise object of the enclosing coroutine, then the \grammarterm{yield-expression} is equivalent to the expression \tcode{co_await} \textit{p}\tcode{.yield_value}(\textit{e}). A \grammarterm{yield-expression} shall only appear within a suspension context of a function (\ref{expr.await}).
   % If coroutine promise does not define a function \tcode{yield_value}, the program is ill-formed.
 % An implicit \grammarterm{await-expression} introduced by this evaluation is not considered an \grammarterm{await-expression} for the purpose of type deduction (\ref{dcl.spec.auto}). 
 

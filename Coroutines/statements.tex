@@ -34,6 +34,7 @@ Iteration statements specify looping.
 Add the underlined text to paragraph 1.
 
 \begin{quote}
+\setcounter{Paras}{0}
 \pnum
 For a range-based \tcode{for} statement of the form
 
@@ -84,6 +85,14 @@ determined as follows: ...
 
 \end{quote}
 
+
+Add the following paragraph after paragraph 2.
+
+\begin{quote}
+	\setcounter{Paras}{2}
+	\pnum
+	A range-based \tcode{for} statement with \tcode{co_await} shall only appear within a suspension context of a function (\ref{expr.await}).
+\end{quote}
 %\setcounter{subsection}{4}
 %\rSec2[stmt.for.await]{The \tcode{cofor} statement}%
 %
