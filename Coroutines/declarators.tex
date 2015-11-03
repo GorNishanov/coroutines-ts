@@ -28,8 +28,7 @@ Add this section to \ref{dcl.fct.def}.
 %\rSec3[coroutine.definitions]{Definitions}
 \begin{quote}
 \pnum
-A function is a \defn{coroutine} if it contains a \grammarterm{coroutine-return-statement} or
-a suspend-resume-point introduced by an \grammarterm{await-expression} (\ref{expr.await}), a \grammarterm{yield-expression} (\ref{expr.yield}), or a \grammarterm{range-based-for} (\ref{stmt.ranged}).
+A function is a \defn{coroutine} if it contains a \grammarterm{coroutine-return-statement},  an \grammarterm{await-expression} (\ref{expr.await}), a \grammarterm{yield-expression} (\ref{expr.yield}), or a \grammarterm{range-based-for} (\ref{stmt.ranged}) with \tcode{co_await}.
 The \grammarterm{parameter-declaration-clause} of the coroutine shall not terminates with an ellipsis that is not part of an \grammarterm{abstract-declarator}. 
 
 %Every coroutine
@@ -147,7 +146,7 @@ A suspended coroutine can be resumed
 to continue execution by invoking
 a resumption member function (\ref{coroutine.handle.resumption}) of an object of type \tcode{coroutine_handle<$P$>} 
 associated with this instance of the coroutine, where $P$
-is the promise type of the coroutine. Invoking resumption member functions in a coroutine that is not suspended results in undefined behavior. 
+is the promise type of the coroutine. The function that invoked a resumption member function is called \term{resumer}. Invoking resumption member functions for a coroutine that is not suspended results in undefined behavior. 
 
 \pnum
 A \defn{coroutine state} consists of 

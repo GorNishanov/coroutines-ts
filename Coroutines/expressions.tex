@@ -82,14 +82,14 @@ In an unevaluated operand, only the expressions $a$, $e$, and \textit{await-resu
 
 \pnum The \grammarterm{await-expression} evaluates the \textit{await-ready} expression, then:
 \begin{itemize}
-  \item If the result is \tcode{true}, a suspend-resume point (8.4.4) is evaluated. After that evaluation and before control flow returns to the current caller or resumer (TODO: define this somewhere) of the coroutine, the \textit{await-suspend} expression is evaluated. If that expression has type \tcode{bool} and returns \tcode{false}, the coroutine is resumed. If that expression exits via an exception, the exception is caught, the coroutine is resumed, and the exception is immediately re-thrown (15.1). Otherwise, control flow returns to the current caller or resumer.
+  \item If the result is \tcode{true}, a coroutine is considered suspended. Before control flow returns to the current caller or resumer of the coroutine, the \textit{await-suspend} expression is evaluated. If that expression has type \tcode{bool} and returns \tcode{false}, the coroutine is resumed. If that expression exits via an exception, the exception is caught, the coroutine is resumed, and the exception is immediately re-thrown (15.1). Otherwise, control flow returns to the current caller or resumer.
   \item If the result is \tcode{false}, or when the coroutine is resumed, the \textit{await-resume} expression is evaluated, and its result is the result of the \grammarterm{await-expression}.
   
 \end{itemize}
 
 \pnum
-\enternote
-An \grammarterm{await-expression} may appear as an unevaluated operand (Clause \ref{expr}). 
+%\enternote
+%An \grammarterm{await-expression} may appear as an unevaluated operand (Clause \ref{expr}). 
 \enterexample
 \begin{codeblock}	
 template <typename T>
@@ -99,7 +99,6 @@ struct my_future {
   void await_suspend(std::coroutine_handle<>);
   T await_resume();
 };
-my_future<int> f();
   
 template <class Rep, class Period>
 auto operator co_await(std::chrono::duration<Rep, Period> d) {
@@ -114,15 +113,16 @@ auto operator co_await(std::chrono::duration<Rep, Period> d) {
   return awaiter{d};
 }
 
-int main() {
-  using t = decltype(co_await f()); // t is int
-  static_assert(sizeof(co_await f()) == sizeof(int));
-  std::cout << typeid(co_await f()).name() << std::endl; // outputs: int
-  std::cout << typeid(co_await 1ms).name() << std::endl; // outputs: void
+using namespace std::chrono;
+
+my_future<void> g() {
+  std::cout << "just about go to sleep...\n";
+  co_await 10ms;
+  std::cout << "resumed\n";
 }
 \end{codeblock}
 \exitexample%
-\exitnote
+%\exitnote
 
 \end{quote}
 %, i.e a coroutine shall have the \tcode{return_value} or \tcode{return_void} member
@@ -236,7 +236,7 @@ Add \grammarterm{yield-expression} to the grammar production \grammarterm{assign
 \end{quote}
 
 \setcounter{section}{20}
-\rSec1[expr.yield]{Yield expressions}%
+\rSec1[expr.yield]{Yield}%
 
 Add a new section to Clause \ref{expr}.
 
