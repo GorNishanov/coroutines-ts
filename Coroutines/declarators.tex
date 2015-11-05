@@ -28,8 +28,8 @@ Add this section to \ref{dcl.fct.def}.
 %\rSec3[coroutine.definitions]{Definitions}
 \begin{quote}
 \pnum
-A function is a \defn{coroutine} if it contains a \grammarterm{coroutine-return-statement},  an \grammarterm{await-expression} (\ref{expr.await}), a \grammarterm{yield-expression} (\ref{expr.yield}), or a \grammarterm{range-based-for} (\ref{stmt.ranged}) with \tcode{co_await}.
-The \grammarterm{parameter-declaration-clause} of the coroutine shall not terminates with an ellipsis that is not part of an \grammarterm{abstract-declarator}. 
+A function is a \defn{coroutine} if it contains a \grammarterm{coroutine-return-statement} (\ref{stmt.return.coroutine}),  an \grammarterm{await-expression} (\ref{expr.await}), a \grammarterm{yield-expression} (\ref{expr.yield}), or a \grammarterm{range-based-for} (\ref{stmt.ranged}) with \tcode{co_await}.
+The \grammarterm{parameter-declaration-clause} of the coroutine shall not terminate with an ellipsis that is not part of an \grammarterm{abstract-declarator}. 
 
 %Every coroutine
 %also has an implicit initial and final suspend-resume point as described later in this section. 
@@ -128,11 +128,14 @@ No header needs to be included for this use of the  \tcode{std::current_exceptio
 %the coroutine \textit{f} and its type is a \defn{promise type}
 %of the coroutine.
 
+%\pnum
+%An execution of a coroutine is suspended when it reaches a suspend-resume-point. 
+%A suspension of a coroutine returns control to the current
+%caller of the coroutine. For the first return of control from the coroutine, the return value is obtained via
+%expression \tcode{$p$.get_return_object()}.
+
 \pnum
-An execution of a coroutine is suspended when it reaches a suspend-resume-point. 
-A suspension of a coroutine returns control to the current
-caller of the coroutine. For the first return of control from the coroutine, the return value is obtained via
-expression \tcode{$p$.get_return_object()}.
+When a coroutine returns to its caller, the return value is obtained by a call to \tcode{$p$.get_return_object()}. A call to a \tcode{get_return_object} is sequenced before the call to \tcode{initial_suspend}.
 
 %\enternote
 %For subsequent suspends, if any, the coroutine
@@ -146,7 +149,7 @@ A suspended coroutine can be resumed
 to continue execution by invoking
 a resumption member function (\ref{coroutine.handle.resumption}) of an object of type \tcode{coroutine_handle<$P$>} 
 associated with this instance of the coroutine, where $P$
-is the promise type of the coroutine. The function that invoked a resumption member function is called \term{resumer}. Invoking resumption member functions for a coroutine that is not suspended results in undefined behavior. 
+is the promise type of the coroutine. The function that invoked a resumption member function is called \term{resumer}. Invoking a resumption member function for a coroutine that is not suspended results in undefined behavior. 
 
 \pnum
 A \defn{coroutine state} consists of 
@@ -284,8 +287,7 @@ int main() {
   
   int main() {
     Pool memPool;
-    for (int i = 0; i < 1'000'000; ++i)
-    my_coroutine(memPool);
+    for (int i = 0; i < 1'000'000; ++i) my_coroutine(memPool);
   };
 \end{codeblock}
 \exitexample

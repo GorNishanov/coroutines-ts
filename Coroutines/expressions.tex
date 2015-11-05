@@ -9,7 +9,7 @@
 %In this section add the \tcode{co_await} \grammarterm{cast-expression} 
 %to the rule for \grammarterm{unary-expression}.
 
-Change the grammar for \grammarterm{unary-expression} as follows:
+Add \grammarterm{await-expression} to the grammar production \grammarterm{unary-expression}:
 
 \begin{bnf}
 	\nontermdef{unary-expression}\br
@@ -70,19 +70,21 @@ Evaluation of an \grammarterm{await-expression} involves the following auxiliary
 \begin{itemize}
   \item If the \grammarterm{cast-expression} is a prvalue, $a$ is a temporary object copy-initialized from the \grammarterm{cast-expression}, otherwise $a$ is an lvalue referring to the result of evaluating the \grammarterm{cast-expression}.
   \item $p$ is an lvalue naming the promise object (8.4.4) of the enclosing coroutine.
-  \item If the \grammarterm{await-expression} is potentially-evaluated and lookup for the unqualified-id \tcode{await_transform} within the scope of \tcode{decltype($p$)} as if by class member access lookup (3.4.5) finds at least one declaration, then $e$ is \tcode{$p$.await_transform(a);} otherwise, $e$ is $a$.
+  \item The unqualified-id \tcode{await_transform} is looked up within the scope of \tcode{decltype($p$)} as if by class member access lookup (3.4.5) and if this lookup finds at least one declaration, then $e$ is \tcode{$p$.await_transform(a);} otherwise, $e$ is $a$.
+  
+%  \item If the \grammarterm{await-expression} is potentially-evaluated and lookup for the unqualified-id \tcode{await_transform} within the scope of \tcode{decltype($p$)} as if by class member access lookup (3.4.5) finds at least one declaration, then $e$ is \tcode{$p$.await_transform(a);} otherwise, $e$ is $a$.
   \item $h$ is an object of type \tcode{decltype(std::coroutine_handle<decltype($p$)>} referring to the enclosing coroutine.
   \item \textit{await-ready} is the expression \tcode{$e$.await_ready()}, contextually converted to \tcode{bool}.
   \item \textit{await-suspend} is the expression \tcode{$e$.await_suspend($h$)}, which shall be a prvalue of type \tcode{void} or \tcode{bool}.
   \item \textit{await-resume} is the expression \tcode{$e$.await_resume()}.
 \end{itemize}
-In an unevaluated operand, only the expressions $a$, $e$, and \textit{await-resume} are required to be valid, and the \grammarterm{await-expression} is equivalent to the \textit{await-resume} expression.
+%In an unevaluated operand, only the expressions $a$, $e$, and \textit{await-resume} are required to be valid, and the \grammarterm{await-expression} is equivalent to the \textit{await-resume} expression.
 
 \pnum The \grammarterm{await-expression} has the same type and value category as the \tcode{await-resume} expression.
 
 \pnum The \grammarterm{await-expression} evaluates the \textit{await-ready} expression, then:
 \begin{itemize}
-  \item If the result is \tcode{true}, a coroutine is considered suspended. Before control flow returns to the current caller or resumer of the coroutine, the \textit{await-suspend} expression is evaluated. If that expression has type \tcode{bool} and returns \tcode{false}, the coroutine is resumed. If that expression exits via an exception, the exception is caught, the coroutine is resumed, and the exception is immediately re-thrown (15.1). Otherwise, control flow returns to the current caller or resumer.
+  \item If the result is \tcode{true}, a coroutine is considered suspended. Then, the \textit{await-suspend} expression is evaluated. If that expression has type \tcode{bool} and returns \tcode{false}, the coroutine is resumed. If that expression exits via an exception, the exception is caught, the coroutine is resumed, and the exception is immediately re-thrown (15.1). Otherwise, control flow returns to the current caller or resumer (\ref{dcl.fct.def.coroutine}).
   \item If the result is \tcode{false}, or when the coroutine is resumed, the \textit{await-resume} expression is evaluated, and its result is the result of the \grammarterm{await-expression}.
   
 \end{itemize}
@@ -248,35 +250,53 @@ Add a new section to Clause \ref{expr}.
 \end{bnf}
 
 \pnum
-  Let \textit{e} be the operand of the \grammarterm{yield-expression} and \textit{p} be the promise object of the enclosing coroutine, then the \grammarterm{yield-expression} is equivalent to the expression \tcode{co_await} \textit{p}\tcode{.yield_value}(\textit{e}). A \grammarterm{yield-expression} shall only appear within a suspension context of a function (\ref{expr.await}).
+  Let \textit{e} be the operand of the \grammarterm{yield-expression} and \textit{p} be the promise object of the enclosing coroutine (\ref{dcl.fct.def.coroutine}), then the \grammarterm{yield-expression} is equivalent to the expression \tcode{co_await} \textit{p}\tcode{.yield_value}(\textit{e}). A \grammarterm{yield-expression} shall only appear within a suspension context of a function (\ref{expr.await}).
+  
   % If coroutine promise does not define a function \tcode{yield_value}, the program is ill-formed.
 % An implicit \grammarterm{await-expression} introduced by this evaluation is not considered an \grammarterm{await-expression} for the purpose of type deduction (\ref{dcl.spec.auto}). 
 
 %\pnum
-%\enterexample
-%\begin{codeblock}
-%using namespace std;
-%  
-%generator<pair<int,int>> g1() {
-%  for (int i = i; i < 10; ++i)
-%    co_yield {i,i};
-%}
-%
-%int main() {
-%  auto r1 = g1();
-%  auto r2 = g2();
-%  assert(equal(r1.begin(), r1.end(), r2.begin(), r2.end()));
-%}
-%\end{codeblock}
-%auto g2() { // deduces to generator<pair<int,int>{}>
-%  for (int i = i; i < 10; ++i)
-%  co_yield make_pair(i,i);
-%}
-%\exitexample
+\enterexample
+\begin{codeblock}
+template <typename T>
+struct my_generator {
+  struct promise_type {
+    T current_value;
+    ...
+    auto yield_value(T v) {
+      current_value = std::move(v);
+      return std::suspend_always{};
+    }
+  };
+  struct iterator { ... };
+  iterator begin();
+  iterator end();
+};
+  
+my_generator<pair<int,int>> g1() {
+  for (int i = i; i < 10; ++i) co_yield {i,i};
+}
+my_generator<pair<int,int>> g2() { 
+  for (int i = i; i < 10; ++i) co_yield make_pair(i,i);
+}
+
+auto f(int x = co_yield 5); // error: yield-expression outside of function suspension context
+int a[] = { co_yield 1 }; // error: yield-expression outside of function suspension context
+
+int main() {
+  auto r1 = g1();
+  auto r2 = g2();
+  assert(std::equal(r1.begin(), r1.end(), r2.begin(), r2.end()));
+}
+\end{codeblock}
+
+\exitexample
 %
 %\pnum
 %All restrictions on where an \textit{await-expression} can appear apply to \textit{yield-expression}{}s.
 %
+
+%\pnum
 %\enterexample
 %\begin{codeblock}
 %  auto f(int x = yield 5); // ill-formed

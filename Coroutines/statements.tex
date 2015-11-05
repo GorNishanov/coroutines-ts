@@ -257,7 +257,7 @@ Add this section to \ref{stmt.jump}.
 
 \pnum
 A coroutine returns to its caller by the coroutine return statement
-or when suspended at a suspend-resume point (\ref{dcl.fct.def.coroutine}). 
+or when suspended (\ref{expr.await}). 
 
 \pnum
 The \grammarterm{expression} or \grammarterm{braced-init-list} of a coroutine return statement is called its operand.
@@ -277,13 +277,14 @@ coroutine return statement is equivalent to:
       \_}label$@; }
 \end{codeblock}
 
-where $final{\_}suspend{\_}label$ is as defined in \ref{dcl.fct.def.coroutine} and $S$ is defined as follows:
+where $final{\_}suspend{\_}label$ is as defined in \ref{dcl.fct.def.coroutine} and $S$ is an expression defined as follows:
 
 \begin{itemize}
-  \item $S$ is $p$\tcode{.return_value(}\grammarterm{braced-init-list}{}\tcode{)}, if the operand is \grammarterm{braced-init-list}
-  \item $S$ is $p$\tcode{.return_value(}\grammarterm{expression}{}\tcode{)}, if the operand is an expression of non-\tcode{void} type;
+  \item $S$ is  $p$\tcode{.return_value(}\grammarterm{braced-init-list}{}\tcode{)}, if the operand is \grammarterm{braced-init-list};
+  \item $S$ is  $p$\tcode{.return_value(}\grammarterm{expression}{}\tcode{)}, if the operand is an expression of non-\tcode{void} type;
   \item $S$ is $p$\tcode{.return_void()}, otherwise;
 \end{itemize}
+$S$ shall be a prvalue of type \tcode{void}.
 
 \pnum
 The \grammarterm{unqualified-id}{s}
