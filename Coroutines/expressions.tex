@@ -61,7 +61,7 @@ coroutine (\ref{dcl.fct.def.coroutine}) while awaiting completion of the computa
 
 \pnum
 An \grammarterm{await-expression} shall only appear in a potentially evaluated expression within the \grammarterm{compound-statement} of a \grammarterm{function-body} or \grammarterm{function-try-block}
- outside of a \grammarterm{handler} (\cxxref{except.handle}). In a \grammarterm{declaration-statement} or in the \grammarterm{simple-declaration} (if any) of a \grammarterm{for-init-statement}, an \grammarterm{await-expression} shall only appear in an \grammarterm{initializer} of that \grammarterm{declaration-statement} or \grammarterm{simple-declaration}.
+ outside of a \grammarterm{handler} (\cxxref{except}). In a \grammarterm{declaration-statement} or in the \grammarterm{simple-declaration} (if any) of a \grammarterm{for-init-statement}, an \grammarterm{await-expression} shall only appear in an \grammarterm{initializer} of that \grammarterm{declaration-statement} or \grammarterm{simple-declaration}.
 An \grammarterm{await-expression} shall not appear in a default argument (\cxxref{dcl.fct.default}). All of the contexts within a function where \grammarterm{await-expression} can appear are collectively called the \term{suspension context} of the function.
 
 \pnum

@@ -124,9 +124,9 @@ as if by class member access lookup (\cxxref{basic.lookup.classref}), then \text
 \end{codeblock}
 
 No header needs to be included for this use of the  \tcode{std::current_exception}.
-%An object denoted as \textit{p} is the \defn{promise object} of
-%the coroutine \textit{f} and its type is a \defn{promise type}
-%of the coroutine.
+An object denoted as \textit{p} is the \defn{promise object} of
+the coroutine and type $P$ is a \defn{promise type}
+of the coroutine.
 
 %\pnum
 %An execution of a coroutine is suspended when it reaches a suspend-resume-point. 
@@ -148,13 +148,12 @@ When a coroutine returns to its caller, the return value is obtained by a call t
 A suspended coroutine can be resumed
 to continue execution by invoking
 a resumption member function (\ref{coroutine.handle.resumption}) of an object of type \tcode{coroutine_handle<$P$>} 
-associated with this instance of the coroutine, where $P$
-is the promise type of the coroutine. The function that invoked a resumption member function is called \term{resumer}. Invoking a resumption member function for a coroutine that is not suspended results in undefined behavior. 
+associated with this instance of the coroutine. The function that invoked a resumption member function is called \term{resumer}. Invoking a resumption member function for a coroutine that is not suspended results in undefined behavior. 
 
 \pnum
 A \defn{coroutine state} consists of 
 storage for objects with automatic storage duration of a coroutine.
-A coroutine may need to allocate
+An implementation may need to allocate
 memory for coroutine state. If so, it shall obtain the storage by calling an
 \term{allocation function}~(\cxxref{basic.stc.dynamic.allocation}).
 The allocation function's name is looked up in the scope of the promise type of the coroutine. If this lookup fails to find the name, the allocation function's name is looked up in the global scope. If the lookup finds an allocation function that takes exactly one parameter, it will be used, otherwise, all parameters of the coroutine are passed to the allocation function after the size parameter in order.
