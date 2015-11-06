@@ -60,20 +60,20 @@ coroutine (\ref{dcl.fct.def.coroutine}) while awaiting completion of the computa
 \end{bnf}
 
 \pnum
-An \grammarterm{await-expression} shall only appear in a potentially evaluated expression within the \grammarterm{compound-statement} of a \grammarterm{function-body} or \grammarterm{function-try-block}
+An \grammarterm{await-expression} shall only appear in a potentially evaluated expression within the \grammarterm{compound-statement} of a \grammarterm{function-body} 
  outside of a \grammarterm{handler} (\cxxref{except}). In a \grammarterm{declaration-statement} or in the \grammarterm{simple-declaration} (if any) of a \grammarterm{for-init-statement}, an \grammarterm{await-expression} shall only appear in an \grammarterm{initializer} of that \grammarterm{declaration-statement} or \grammarterm{simple-declaration}.
-An \grammarterm{await-expression} shall not appear in a default argument (\cxxref{dcl.fct.default}). All of the contexts within a function where \grammarterm{await-expression} can appear are collectively called the \term{suspension context} of the function.
+An \grammarterm{await-expression} shall not appear in a default argument (\cxxref{dcl.fct.default}). A context within a function where an \grammarterm{await-expression} can appear is called a \term{suspension context} of the function.
 
 \pnum
 Evaluation of an \grammarterm{await-expression} involves the following auxiliary expressions:
 
 \begin{itemize}
   \item If the \grammarterm{cast-expression} is a prvalue, $a$ is a temporary object copy-initialized from the \grammarterm{cast-expression}, otherwise $a$ is an lvalue referring to the result of evaluating the \grammarterm{cast-expression}.
-  \item $p$ is an lvalue naming the promise object (8.4.4) of the enclosing coroutine.
-  \item The unqualified-id \tcode{await_transform} is looked up within the scope of \tcode{decltype($p$)} as if by class member access lookup (3.4.5) and if this lookup finds at least one declaration, then $e$ is \tcode{$p$.await_transform(a);} otherwise, $e$ is $a$.
+  \item $p$ is an lvalue naming the promise object (8.4.4) of the enclosing coroutine and $P$ is a type of that object.
+  \item The \grammarterm{unqualified-id} \tcode{await_transform} is looked up within the scope of \tcode{$P$} as if by class member access lookup (3.4.5), and if this lookup finds at least one declaration, then $e$ is \tcode{$p$.await_transform(a);} otherwise, $e$ is $a$.
   
 %  \item If the \grammarterm{await-expression} is potentially-evaluated and lookup for the unqualified-id \tcode{await_transform} within the scope of \tcode{decltype($p$)} as if by class member access lookup (3.4.5) finds at least one declaration, then $e$ is \tcode{$p$.await_transform(a);} otherwise, $e$ is $a$.
-  \item $h$ is an object of type \tcode{decltype(std::coroutine_handle<decltype($p$)>} referring to the enclosing coroutine.
+  \item $h$ is an object of type \tcode{std::coroutine_handle<$P$>} referring to the enclosing coroutine.
   \item \textit{await-ready} is the expression \tcode{$e$.await_ready()}, contextually converted to \tcode{bool}.
   \item \textit{await-suspend} is the expression \tcode{$e$.await_suspend($h$)}, which shall be a prvalue of type \tcode{void} or \tcode{bool}.
   \item \textit{await-resume} is the expression \tcode{$e$.await_resume()}.
@@ -250,7 +250,8 @@ Add a new section to Clause \ref{expr}.
 \end{bnf}
 
 \pnum
-  Let \textit{e} be the operand of the \grammarterm{yield-expression} and \textit{p} be the promise object of the enclosing coroutine (\ref{dcl.fct.def.coroutine}), then the \grammarterm{yield-expression} is equivalent to the expression \tcode{co_await} \textit{p}\tcode{.yield_value}(\textit{e}). A \grammarterm{yield-expression} shall only appear within a suspension context of a function (\ref{expr.await}).
+A \grammarterm{yield-expression} shall only appear within a suspension context of a function (\ref{expr.await}).
+  Let \textit{e} be the operand of the \grammarterm{yield-expression} and \textit{p} be an lvalue naming the promise object of the enclosing coroutine (\ref{dcl.fct.def.coroutine}), then the \grammarterm{yield-expression} is equivalent to the expression \tcode{co_await} \textit{p}\tcode{.yield_value}(\textit{e}). 
   
   % If coroutine promise does not define a function \tcode{yield_value}, the program is ill-formed.
 % An implicit \grammarterm{await-expression} introduced by this evaluation is not considered an \grammarterm{await-expression} for the purpose of type deduction (\ref{dcl.spec.auto}). 

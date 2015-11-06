@@ -262,7 +262,7 @@ or when suspended (\ref{expr.await}).
 \pnum
 The \grammarterm{expression} or \grammarterm{braced-init-list} of a \tcode{co_return} statement is called its operand.
 If the operand is an expression of non-\tcode{void} type, it is considered to be an xvalue.
-Let $P$ be the coroutine promise type (\ref{dcl.fct.def.coroutine}) and $p$ be the coroutine promise object (\ref{dcl.fct.def.coroutine}), then a
+Let $P$ be the coroutine promise type (\ref{dcl.fct.def.coroutine}) and $p$ be an lvalue naming the coroutine promise object (\ref{dcl.fct.def.coroutine}), then a
 \tcode{co_return} statement is equivalent to:
  
 %the the \grammarterm{unqualified-id}{s}
