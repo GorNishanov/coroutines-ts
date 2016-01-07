@@ -10,35 +10,35 @@
 
 Add \tcode{co_await} to the list of operators in paragraph 1 before operators \tcode{()} and \tcode{[]}.
 
-\setcounter{section}{3}
-\setcounter{subsection}{1}
-\setcounter{subsubsection}{1}
-\rSec3[over.match.oper]{Operators in expressions}%
-
-Change \ref{over.match.oper}/9:
-
-\begin{quote}
-\setcounter{Paras}{8}
-\pnum
-If the operator is the operator
-\tcode{,},
-the unary operator
-\tcode{\&},
-\removed{or} the operator
-\tcode{->},
-\added{or the operator \tcode{co_await}},
-and there are no viable functions, then the operator is
-assumed to be the built-in operator and interpreted according to
-Clause~\ref{expr}.
-\end{quote}
-
-Add a new paragraph after paragraph 8:
-
-\begin{quote}
-\setcounter{Paras}{8}
-\pnum
-  When operator \tcode{co_await} returns, the \tcode{co_await} operator is applied to the value returned. The resulting \tcode{co_await} operator is assumed to be the built-in operator and interpreted according to Clause~\ref{expr}.
-\end{quote}
+%\setcounter{section}{3}
+%\setcounter{subsection}{1}
+%\setcounter{subsubsection}{1}
+%\rSec3[over.match.oper]{Operators in expressions}%
+%
+%Change \ref{over.match.oper}/9:
+%
+%\begin{quote}
+%\setcounter{Paras}{8}
+%\pnum
+%If the operator is the operator
+%\tcode{,},
+%the unary operator
+%\tcode{\&},
+%\removed{or} the operator
+%\tcode{->},
+%\added{or the operator \tcode{co_await}},
+%and there are no viable functions, then the operator is
+%assumed to be the built-in operator and interpreted according to
+%Clause~\ref{expr}.
+%\end{quote}
+%
+%Add a new paragraph after paragraph 8:
+%
+%\begin{quote}
+%\setcounter{Paras}{8}
+%\pnum
+%  When operator \tcode{co_await} returns, the \tcode{co_await} operator is applied to the value returned. The resulting \tcode{co_await} operator is assumed to be the built-in operator and interpreted according to Clause~\ref{expr}.
+%\end{quote}
 
 %\setcounter{subsection}{8}
 %\rSec2[over.await]{Await operator}%
