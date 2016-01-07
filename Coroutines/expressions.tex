@@ -89,8 +89,8 @@ Evaluation of an \grammarterm{await-expression} involves the following auxiliary
 
 \pnum The \grammarterm{await-expression} evaluates the \textit{await-ready} expression, then:
 \begin{itemize}
-  \item If the result is \tcode{true}, a coroutine is considered suspended. Then, the \textit{await-suspend} expression is evaluated. If that expression has type \tcode{bool} and returns \tcode{false}, the coroutine is resumed. If that expression exits via an exception, the exception is caught, the coroutine is resumed, and the exception is immediately re-thrown (15.1). Otherwise, control flow returns to the current caller or resumer (\ref{dcl.fct.def.coroutine}).
-  \item If the result is \tcode{false}, or when the coroutine is resumed, the \textit{await-resume} expression is evaluated, and its result is the result of the \grammarterm{await-expression}.
+  \item If the result is \tcode{false}, the coroutine is considered suspended. Then, the \textit{await-suspend} expression is evaluated. If that expression has type \tcode{bool} and returns \tcode{false}, the coroutine is resumed. If that expression exits via an exception, the exception is caught, the coroutine is resumed, and the exception is immediately re-thrown (15.1). Otherwise, control flow returns to the current caller or resumer (\ref{dcl.fct.def.coroutine}).
+  \item If the result is \tcode{true}, or when the coroutine is resumed, the \textit{await-resume} expression is evaluated, and its result is the result of the \grammarterm{await-expression}.
   
 \end{itemize}
 
