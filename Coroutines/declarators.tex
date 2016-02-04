@@ -273,7 +273,10 @@ int main() {
         return pool.allocate(size);
       }
       void* operator delete(void* p, std::size_t size) {
-        return pool.deallocate(p, size);
+      	// reference to a pool is not available
+      	// to the delete operator and should be stored
+      	// by the allocator as a part of the allocation
+        return Arena::deallocate(p, size);
       }
     };
   };
