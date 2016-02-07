@@ -23,19 +23,19 @@ When the criteria for elision of a copy/move operation are met,
 but not for an \nonterminal{exception-declaration},
 and the object
 to be copied is designated by an lvalue,
-or when the \grammarterm{expression} in a \tcode{return} \added{or } \tcode{\added{co_return}} statement\added{s}
+or when the \grammarterm{expression} in a \tcode{return} \added{or } \tcode{\added{co_return}} statement
 is a (possibly parenthesized) \grammarterm{id-expression}
 that names an object with automatic storage duration declared in the body
 or \grammarterm{parameter-declaration-clause} of the innermost enclosing
 function or \grammarterm{lambda-expression},
 overload resolution to select the constructor
-for the copy is first performed as if the object were designated by an rvalue.
+for the copy \added{or the }\tcode{\added{return_value}}\added{ overload to call} is first performed as if the object were designated by an rvalue.
 If the first overload resolution fails or was not performed,
 or if the type of the first parameter of the selected
-constructor is not an rvalue reference to the object's type (possibly cv-qualified),
+constructor \added{or }\tcode{\added{return_value}}\added{ overload }is not an rvalue reference to the object's type (possibly cv-qualified),
 overload resolution is performed again, considering the object as an lvalue.
 \enternote This two-stage overload resolution must be performed regardless
-of whether copy elision will occur. It determines the constructor to be called if
-elision is not performed, and the selected constructor must be accessible even if
+of whether copy elision will occur. It determines the constructor\added{ or }\tcode{\added{return_value}}\added{ overload } to be called if
+elision is not performed, and the selected constructor\added{ or }\tcode{\added{return_value}}\added{ overload } must be accessible even if
 the call is elided. \exitnote
 \end{quote}
