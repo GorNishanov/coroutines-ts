@@ -216,8 +216,8 @@ Creation of a copy of a parameter can be omitted by continuing to refer to the c
 %for the coroutine state is freed and the search for a handler starts in the scope of the calling function. 
 
 \pnum
-If the unqualified-id \tcode{get_return_object_on_allocation_failure} is looked up in the scope of class \textit{P}
-as if by class member access lookup (\cxxref{basic.lookup.classref}), and if a declaration was found,
+The unqualified-id \tcode{get_return_object_on_allocation_failure} is looked up in the scope of class \textit{P}
+as if by class member access lookup (\cxxref{basic.lookup.classref}). If a declaration is found,
 %If type \textit{P} defines static member function \tcode{get_return_object_on_allocation_failure} (\ref{coroutine.traits}), 
  then \tcode{std::nothrow_t} forms of allocation and deallocation functions will be used. If an allocation function returned \tcode{nullptr}, the coroutine must return control to the caller of the coroutine and the return value shall be obtained by a call to \tcode{P::get_return_object_on_allocation_failure()}.
 
