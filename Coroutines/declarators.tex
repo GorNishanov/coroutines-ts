@@ -159,7 +159,7 @@ at the suspend point are destroyed in the reverse order of the construction. If 
 function~(\cxxref{basic.stc.dynamic.deallocation}). If \tcode{destroy} is called for a coroutine that is not suspended, the program has undefined behavior.
 
 \pnum
-The deallocation function's name is looked up in the scope of the coroutine promise type. If this lookup fails to find the name, the deallocation function's name is looked up in the global scope. If deallocation function lookup finds both a usual deallocation function with only a pointer parameter and a usual deallocation function with both a pointer parameter and a size parameter, then the selected deallocation function shall be the one with two parameters. Otherwise, the selected deallocation function shall be the function with one parameter. 
+The deallocation function's name is looked up in the scope of the coroutine promise type. If this lookup fails to find the name, the deallocation function's name is looked up in the global scope. If deallocation function lookup finds both a usual deallocation function with only a pointer parameter and a usual deallocation function with both a pointer parameter and a size parameter, then the selected deallocation function shall be the one with two parameters. Otherwise, the selected deallocation function shall be the function with one parameter. If no usual deallocation functions found, the program is ill-formed.
 
 %introduce metavariable instead of talking about
 %coroutine_handle<>
