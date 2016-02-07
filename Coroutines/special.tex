@@ -13,62 +13,6 @@ Add new paragraph after paragraph 5.
 \setcounter{section}{7}
 \rSec1[class.copy]{Copying and moving class objects}%
 
-% Jens: 8.4.4p10: remove "considered as xvalue", make "elided" a note with xref to 12.8, add elision condition to 12.8, expand special "return" case in 12.8 to try xvalue (= move) first, then lvalue. 
-
-Add the underlined text to paragraph 31.
-
-\begin{quote}
-\setcounter{Paras}{31}
-%\pnum
-%\indextext{temporary!elimination~of}%
-%\indextext{elision!copy constructor|see{constructor, copy, elision}}%
-%\indextext{elision!move constructor|see{constructor, move, elision}}%
-%\indextext{constructor!copy!elision}%
-%\indextext{constructor!move!elision}%
-%When certain criteria are met, an implementation is
-%allowed to omit the copy/move construction of a class object,
-%even if the constructor selected for the copy/move operation and/or the
-%destructor for the object have
-%\indextext{side effects}%
-%side effects.  In such cases, the
-%implementation treats the source and target of the
-%omitted copy/move operation as simply two different ways of
-%referring to the same object, and the destruction of
-%that object occurs at the later of the times when the
-%two objects would have been destroyed without the
-%optimization.\footnote{Because only one object is destroyed instead of two,
-%  and one copy/move constructor
-%  is not executed, there is still one object destroyed for each one constructed.}
-%This elision of copy/move operations, called
-%\indexdefn{copy elision|see{constructor, copy, elision; constructor, move, elision}}%
-%\indexdefn{elision!copy|see{constructor, copy, elision; constructor, move, elision}}%
-%\indexdefn{constructor!copy!elision}\indexdefn{constructor!move!elision}\term{copy elision},
-%is permitted in the
-%following circumstances (which may be combined to
-%eliminate multiple copies):
-
-\begin{itemize}
-%  \item in a \tcode{return} statement in a function with a class return type,
-%  when the expression is the name of a non-volatile
-%  automatic object
-%  (other than a function or catch-clause parameter)
-%  with the same cv-unqualified type as
-%  the function return type, the copy/move operation can be
-%  omitted by constructing the automatic object directly
-%  into the function's return value
-  \item ...
-  \item ...
-  \item ...
-  \item ...
-  \item
-  \added{
-  when a parameter would be copied/moved to the coroutine state (\ref{dcl.fct.def.coroutine}) the copy/move can be omitted by continuing to refer to the function parameters if the meaning of the program will
-  be unchanged except for the execution of constructors and destructors that won't be invoked if the move/copy is not performed
-%  if a parameter has trivial destructor and parameter is not used after coroutine was suspended in any potentially-evaluate expression or if the storage for the coroutine state was not obtained by a call to an allocation function
-%   instead of referring to their copies in the coroutine state.
-   }
-\end{itemize}
-\end{quote}
 
 Modify paragraph 33 as follows:
 

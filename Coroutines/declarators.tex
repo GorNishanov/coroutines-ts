@@ -165,9 +165,10 @@ The deallocation function's name is looked up in the scope of the coroutine prom
 %coroutine_handle<>
 
 \pnum
-When a coroutine is invoked, each of its parameters is moved to the coroutine state, as if parameters were members of a class and were moved by defaulted move constructor as specified in \ref{class.copy}.  
-%The copy/move operations are indeterminately sequenced with respect to each other.
+When a coroutine is invoked, a copy of each parameter is created in the coroutine state. Each such copy is direct-initialized from an lvalue referring to the corresponding parameter if it is an lvalue reference, and an xvalue referring to it otherwise. 
 A reference to a parameter in the function-body of the coroutine is replaced by a reference to the copy of the parameter.
+Creation of a copy of a parameter can be omitted by continuing to refer to the corresponding coroutine parameter if the meaning of the program will be unchanged except for the execution of constructors and destructors involved in creation of a parameter copy.
+  %The copy/move operations are indeterminately sequenced with respect to each other.
 
 %\pnum
 %An invocation of a coroutine may incur an extra copy/move operation for the parameters.
