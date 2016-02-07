@@ -111,21 +111,14 @@ Then, the coroutine behaves as if its body were:
      co_await @\textit{p}@.final_suspend(); // final suspend point
   }
 \end{codeblock}
-where %local variable $p$ is the \textit{promise object} of the coroutine $f$; 
-\textit{F'} is \textit{F} 
-%unless the \grammarterm{unqualified-id} \tcode{set_exception} is looked up in the scope of class \textit{P}
-%as if by class member access lookup (\cxxref{basic.lookup.classref}), and if a declaration was found, then \textit{F'} is
-unless the \grammarterm{unqualified-id} \tcode{set_exception} is found in the scope of \textit{P}
-as if by class member access lookup (\cxxref{basic.lookup.classref}), then \textit{F'} is
-
-
+where \textit{F'} is 
 \begin{codeblock}
-  try {@\textit{ F }@} catch(...) { @\textit{p}@.set_exception(std::current_exception()); }
+	try {@\textit{ F }@} catch(...) { @\textit{p}@.set_exception(std::current_exception()); }
 \end{codeblock}
-
-%No header needs to be included for this use of the  \tcode{std::current_exception}.
+if the \grammarterm{unqualified-id} \tcode{set_exception} is found in the scope of \textit{P}
+as if by class member access lookup (\cxxref{basic.lookup.classref}), and \textit{F'} is \textit{F} otherwise.
 An object denoted as \textit{p} is the \defn{promise object} of
-the coroutine and type $P$ is a \defn{promise type}
+the coroutine and type $P$ is the \defn{promise type}
 of the coroutine.
 
 %\pnum
