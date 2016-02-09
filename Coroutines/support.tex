@@ -83,8 +83,8 @@ namespace std {
   
     // \ref{coroutine.handle.compare} comparison operators:	
     bool operator==(coroutine_handle<> x, coroutine_handle<> y) noexcept;
-    bool operator<(coroutine_handle<> x, coroutine_handle<> y) noexcept;			
     bool operator!=(coroutine_handle<> x, coroutine_handle<> y) noexcept;
+    bool operator<(coroutine_handle<> x, coroutine_handle<> y) noexcept;			
     bool operator<=(coroutine_handle<> x, coroutine_handle<> y) noexcept;			
     bool operator>=(coroutine_handle<> x, coroutine_handle<> y) noexcept;
     bool operator>(coroutine_handle<> x, coroutine_handle<> y) noexcept;
@@ -201,7 +201,7 @@ namespace std {
 \end{codeblock}
 
 \pnum
-Let \textit{P} be a promise type of the coroutine (\ref{dcl.fct.def.coroutine}). An object of the type \tcode{coroutine_handle<\textit{P}>} is called a \term{coroutine handle}
+Let \textit{P} be a promise type of the coroutine (\ref{dcl.fct.def.coroutine}). An object of type \tcode{coroutine_handle<\textit{P}>} is called a \term{coroutine handle}
 and can be used to refer to a suspended or executing coroutine.
 A default constructed \tcode{coroutine_handle} object does not refer to any coroutine.
 
