@@ -290,8 +290,8 @@ $S$ shall be a prvalue of type \tcode{void}.
 \pnum
 The \grammarterm{unqualified-id}{s}
 \tcode{return_void} and \tcode{return_value} are looked up in the scope of class $P$. 
-If both are found, the program is ill-formed. Flowing off the end of a coroutine is equivalent to a \mbox{\tcode{co_return}} with no operand; this results in
-undefined behavior if the expression \mbox{$p$\tcode{.return_void()}} is ill-formed.
+If both are found, the program is ill-formed. 
+If the \grammarterm{unqualified-id} \tcode{return_void} is found, flowing off the end of a coroutine is equivalent to a \tcode{co_return} with no operand. Otherwise, flowing off the end of a coroutine results in undefined behavior.
 %If none are found, the coroutine does not have an eventual return type.
 %  $expression$ is treated as an xvalue;
 
