@@ -72,29 +72,26 @@ defines several types providing compile and run-time support for coroutines in a
 \indexlibrary{\idxhdr{coroutine}}%
 \begin{codeblock}
 namespace std {
-  inline namespace coroutines_v1 {
-    // \ref{coroutine.traits} coroutine traits
-    template <typename R, typename... ArgTypes>
-      class coroutine_traits;
+  // \ref{coroutine.traits} coroutine traits
+  template <typename R, typename... ArgTypes>
+    class coroutine_traits;
   	
-    // \ref{coroutine.handle} coroutine handle
-    template <typename Promise = void>
-      class coroutine_handle;		
+  // \ref{coroutine.handle} coroutine handle
+  template <typename Promise = void>
+    class coroutine_handle;		
   
-    // \ref{coroutine.handle.compare} comparison operators:	
-    bool operator==(coroutine_handle<> x, coroutine_handle<> y) noexcept;
-    bool operator!=(coroutine_handle<> x, coroutine_handle<> y) noexcept;
-    bool operator<(coroutine_handle<> x, coroutine_handle<> y) noexcept;			
-    bool operator<=(coroutine_handle<> x, coroutine_handle<> y) noexcept;			
-    bool operator>=(coroutine_handle<> x, coroutine_handle<> y) noexcept;
-    bool operator>(coroutine_handle<> x, coroutine_handle<> y) noexcept;
+  // \ref{coroutine.handle.compare} comparison operators:	
+  bool operator==(coroutine_handle<> x, coroutine_handle<> y) noexcept;
+  bool operator!=(coroutine_handle<> x, coroutine_handle<> y) noexcept;
+  bool operator<(coroutine_handle<> x, coroutine_handle<> y) noexcept;			
+  bool operator<=(coroutine_handle<> x, coroutine_handle<> y) noexcept;			
+  bool operator>=(coroutine_handle<> x, coroutine_handle<> y) noexcept;
+  bool operator>(coroutine_handle<> x, coroutine_handle<> y) noexcept;
     
-    // \ref{coroutine.trivial.awaitables} trivial awaitables
-    struct suspend_never;
-    struct suspend_always;
+  // \ref{coroutine.trivial.awaitables} trivial awaitables
+  struct suspend_never;
+  struct suspend_always;
     
-  } // namespace coroutines_v1
-
   // \ref{coroutine.handle.hash} hash support:
   template <class T> struct hash;
   template <class P> struct hash<coroutine_handle<P>>;
@@ -146,12 +143,10 @@ the class template \tcode{coroutine_traits} as follows:
 \indexlibrary{\idxcode{coroutine_traits}}%
 \begin{codeblock}
 namespace std {
-inline namespace coroutines_v1 {
   template <typename R, typename... Args>
   struct coroutine_traits {
     using promise_type = typename R::promise_type;
   };
-} // namespace coroutines_v1
 } // namespace std
 \end{codeblock}
 
@@ -160,43 +155,41 @@ inline namespace coroutines_v1 {
 \indexlibrary{\idxcode{coroutine_handle}}%
 \begin{codeblock}
 namespace std {
-  inline namespace coroutines_v1 {
-    template <>
-    struct coroutine_handle<void>
-    {
-      // \ref{coroutine.handle.con} construct/reset
-      constexpr coroutine_handle() noexcept;		
-      constexpr coroutine_handle(nullptr_t) noexcept;
-      coroutine_handle& operator=(nullptr_t) noexcept;
-      
-      // \ref{coroutine.handle.export} export/import
-      void* address() const noexcept;
-      static coroutine_handle from_address(void* addr) noexcept;		
-      
-      // \ref{coroutine.handle.capacity} capacity
-      explicit operator bool() const noexcept;
-      
-      // \ref{coroutine.handle.resumption} resumption
-      void operator()() const;
-      void resume() const;	
-      void destroy() const;
-      
-      // \ref{coroutine.handle.completion} completion check
-      bool done() const noexcept; 
-    };
+  template <>
+  struct coroutine_handle<void>
+  {
+    // \ref{coroutine.handle.con} construct/reset
+    constexpr coroutine_handle() noexcept;		
+    constexpr coroutine_handle(nullptr_t) noexcept;
+    coroutine_handle& operator=(nullptr_t) noexcept;
     
-    template <typename Promise>
-    struct coroutine_handle : coroutine_handle<>
-    {
-      // \ref{coroutine.handle.con} construct/reset
-      using coroutine_handle<>::coroutine_handle;
-      static coroutine_handle from_promise(Promise&) noexcept;		
-      coroutine_handle& operator=(nullptr_t) noexcept;
-      
-      // \ref{coroutine.handle.prom} promise access
-      Promise& promise() const noexcept;		
-    };
-  } // namespace coroutines_v1
+    // \ref{coroutine.handle.export} export/import
+    void* address() const noexcept;
+    static coroutine_handle from_address(void* addr) noexcept;		
+    
+    // \ref{coroutine.handle.capacity} capacity
+    explicit operator bool() const noexcept;
+    
+    // \ref{coroutine.handle.resumption} resumption
+    void operator()() const;
+    void resume() const;	
+    void destroy() const;
+    
+    // \ref{coroutine.handle.completion} completion check
+    bool done() const noexcept; 
+  };
+
+  template <typename Promise>
+  struct coroutine_handle : coroutine_handle<>
+  {
+    // \ref{coroutine.handle.con} construct/reset
+    using coroutine_handle<>::coroutine_handle;
+    static coroutine_handle from_promise(Promise&) noexcept;		
+    coroutine_handle& operator=(nullptr_t) noexcept;
+    
+    // \ref{coroutine.handle.prom} promise access
+    Promise& promise() const noexcept;		
+  };
 } // namespace std
 \end{codeblock}
 
