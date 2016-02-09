@@ -3,7 +3,7 @@
 
 \setcounter{section}{4}
 \rSec1[stmt.iter]{Iteration statements}%
-Add underlined text to paragraph 1.
+Add the underlined text to paragraph 1.
 %NOTE: change the grammar
 
 \begin{quote}
@@ -75,7 +75,7 @@ is equivalent to
 \end{codeblock}
 
 where 
-\tcode{\added{co_await}}\added{ is present only if it appeared immediately after the \tcode{for} keyword, and}\linebreak
+\tcode{\added{co_await}}\added{ is present if and only if it appears immediately after the \tcode{for} keyword, and}\linebreak
 \tcode{__range}, \tcode{__begin}, and \tcode{__end} are variables defined for
 exposition only, and \tcode{_RangeT} is the type of the
 \grammarterm{}{expression}, and \textit{begin-expr} and \textit{end-expr} are
@@ -91,7 +91,7 @@ Add the following paragraph after paragraph 2.
 \begin{quote}
 	\setcounter{Paras}{2}
 	\pnum
-	A range-based \tcode{for} statement with \tcode{co_await} shall only appear within a suspension context of a function (\ref{expr.await}).
+	A range-based \tcode{for} statement with \tcode{co_await} shall appear only within a suspension context of a function (\ref{expr.await}).
 \end{quote}
 %\setcounter{subsection}{4}
 %\rSec2[stmt.for.await]{The \tcode{cofor} statement}%
