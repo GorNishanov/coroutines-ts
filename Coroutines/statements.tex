@@ -261,8 +261,10 @@ or when suspended (\ref{expr.await}).
 
 \pnum
 The \grammarterm{expression} or \grammarterm{braced-init-list} of a \tcode{co_return} statement is called its operand.
-Let $P$ be the coroutine promise type (\ref{dcl.fct.def.coroutine}) and $p$ be an lvalue naming the coroutine promise object (\ref{dcl.fct.def.coroutine}), then a
-\tcode{co_return} statement is equivalent to:
+Let $p$ be an lvalue naming the coroutine promise object (\ref{dcl.fct.def.coroutine}) and $P$ be the type of that object, 
+then a \tcode{co_return} statement is equivalent to:
+
+%Let $P$ be the coroutine promise type (\ref{dcl.fct.def.coroutine}) and $p$ be an lvalue naming the coroutine promise object (\ref{dcl.fct.def.coroutine}), 
  
 %the the \grammarterm{unqualified-id}{s}
 %\tcode{return_void} and \tcode{return_value} are looked up in the scope of class $P$. 
@@ -288,8 +290,8 @@ $S$ shall be a prvalue of type \tcode{void}.
 \pnum
 The \grammarterm{unqualified-id}{s}
 \tcode{return_void} and \tcode{return_value} are looked up in the scope of class $P$. 
-If both are found, the program is ill-formed. Flowing off the end of a coroutine is equivalent to a \tcode{co_return} with no operand; this results in
-undefined behavior if the expression $p$\tcode{.return_void()} is ill-formed.
+If both are found, the program is ill-formed. Flowing off the end of a coroutine is equivalent to a \mbox{\tcode{co_return}} with no operand; this results in
+undefined behavior if the expression \mbox{$p$\tcode{.return_void()}} is ill-formed.
 %If none are found, the coroutine does not have an eventual return type.
 %  $expression$ is treated as an xvalue;
 
