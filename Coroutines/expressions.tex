@@ -258,7 +258,7 @@ Add a new section to Clause \ref{expr}.
 \end{bnf}
 
 \pnum
-A \grammarterm{yield-expression} shall only appear within a suspension context of a function (\ref{expr.await}).
+A \grammarterm{yield-expression} shall appear only within a suspension context of a function (\ref{expr.await}).
   Let \textit{e} be the operand of the \grammarterm{yield-expression} and \textit{p} be an lvalue naming the promise object of the enclosing coroutine (\ref{dcl.fct.def.coroutine}), then the \grammarterm{yield-expression} is equivalent to the expression \tcode{co_await} \textit{p}\tcode{.yield_value}(\textit{e}). 
   
   % If coroutine promise does not define a function \tcode{yield_value}, the program is ill-formed.
