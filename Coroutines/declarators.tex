@@ -128,7 +128,7 @@ of the coroutine.
 %expression \tcode{$p$.get_return_object()}.
 
 \pnum
-When a coroutine returns to its caller, the return value is obtained by a call to \tcode{$p$.get_return_object()}. A call to a \tcode{get_return_object} is sequenced before the call to \tcode{initial_suspend}.
+When a coroutine returns to its caller, the return value is obtained by a call to \tcode{$p$.get_return_object()}. A call to a \tcode{get_return_object} is sequenced before the call to \tcode{initial_suspend} and is invoked at most once.
 
 %\enternote
 %For subsequent suspends, if any, the coroutine
@@ -144,18 +144,17 @@ a resumption member function (\ref{coroutine.handle.resumption}) of an object of
 associated with this instance of the coroutine. The function that invoked a resumption member function is called \term{resumer}. Invoking a resumption member function for a coroutine that is not suspended results in undefined behavior. 
 
 \pnum
-A \defn{coroutine state} consists of 
-storage for objects with automatic storage duration of a coroutine.
-An implementation may need to allocate
-memory for the coroutine state. If so, it shall obtain the storage by calling an
-\term{allocation function}~(\cxxref{basic.stc.dynamic.allocation}).
+An implementation may need to allocate additional storage for the 
+lifetime of a coroutine. This storage is known as the \defn{coroutine state} and is obtained by calling a non-array allocation function~(\cxxref{basic.stc.dynamic.allocation}).
 The allocation function's name is looked up in the scope of $P$. If this lookup fails, the allocation function's name is looked up in the global scope. If the lookup finds an allocation function that takes exactly one parameter, it will be used; otherwise, all parameters of the coroutine are passed to the allocation function after the size parameter in order.
+\enternote An allocation function template shall
+have two or more function parameters. A template instance is never considered to be an allocation function with exactly one parameter, regardless of its signature. \exitnote
 
 \pnum
 The coroutine state is destroyed when
 control flows off the end of the coroutine or
 the \tcode{destroy} member function (\ref{coroutine.handle.resumption}) of an object of type \tcode{std::coroutine_handle<\textit{P}}> associated with this coroutine is invoked. In the latter case objects with automatic storage duration that are in scope
-at the suspend point are destroyed in the reverse order of the construction. If the coroutine state required dynamic allocation, the storage is released by calling a deallocation
+at the suspend point are destroyed in the reverse order of the construction. The dynamically allocated storage is released by calling a non-array deallocation
 function~(\cxxref{basic.stc.dynamic.deallocation}). If \tcode{destroy} is called for a coroutine that is not suspended, the program has undefined behavior.
 
 \pnum
@@ -165,9 +164,7 @@ The deallocation function's name is looked up in the scope of $P$. If this looku
 %coroutine_handle<>
 
 \pnum
-When a coroutine is invoked, a copy of each parameter is created in the coroutine state. Each such copy is direct-initialized from an lvalue referring to the corresponding parameter if it is an lvalue reference, and an xvalue referring to it otherwise. 
-A reference to a parameter in the function-body of the coroutine is replaced by a reference to the copy of the parameter.
-Creation of a copy of a parameter can be omitted by continuing to refer to the corresponding coroutine parameter if the meaning of the program will be unchanged except for the execution of constructors and destructors involved in the creation of a parameter copy.
+When a coroutine is invoked, an implementation may create a copy of one or more coroutine parameters. Each such copy is direct-initialized from an lvalue referring to the corresponding parameter if it is an lvalue reference, and an xvalue referring to it otherwise. A reference to a parameter in the function-body of the coroutine is replaced by a reference to its copy.
   %The copy/move operations are indeterminately sequenced with respect to each other.
 
 %\pnum
@@ -218,8 +215,7 @@ Creation of a copy of a parameter can be omitted by continuing to refer to the c
 \pnum
 The unqualified-id \tcode{get_return_object_on_allocation_failure} is looked up in the scope of class \textit{P}
 by class member access lookup (\cxxref{basic.lookup.classref}). If a declaration is found,
-%If type \textit{P} defines static member function \tcode{get_return_object_on_allocation_failure} (\ref{coroutine.traits}), 
- then \tcode{std::nothrow_t} forms of allocation and deallocation functions will be used. If an allocation function returned \tcode{nullptr}, the coroutine must return control to the caller of the coroutine and the return value shall be obtained by a call to $P$\tcode{::get_return_object_on_allocation_failure()}.
+ then \tcode{std::nothrow_t} forms of allocation and deallocation functions are used. If an allocation function returns \tcode{nullptr}, the coroutine returns control to the caller of the coroutine and the return value is obtained by a call to $P$\tcode{::get_return_object_on_allocation_failure()}.
 
 \enterexample
 \begin{codeblock}
