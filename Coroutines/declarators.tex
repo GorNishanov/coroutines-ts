@@ -28,7 +28,7 @@ Add this section to \ref{dcl.fct.def}.
 %\rSec3[coroutine.definitions]{Definitions}
 \begin{quote}
 \pnum
-A function is a \defn{coroutine} if it contains a \grammarterm{coroutine-return-statement} (\ref{stmt.return.coroutine}),  an \grammarterm{await-expression} (\ref{expr.await}), a \grammarterm{yield-expression} (\ref{expr.yield}), or a \grammarterm{range-based-for} (\ref{stmt.ranged}) with \tcode{co_await}.
+A function is a \defn{coroutine} if it contains a \grammarterm{coroutine-return-statement} (\ref{stmt.return.coroutine}),  an \grammarterm{await-expression} (\ref{expr.await}), a \grammarterm{yield-expression} (\ref{expr.yield}), or a range-based \tcode{for} (\ref{stmt.ranged}) with \tcode{co_await}.
 The \grammarterm{parameter-declaration-clause} of the coroutine shall not terminate with an ellipsis that is not part of a \grammarterm{parameter-declaration}. 
 
 %Every coroutine
@@ -99,7 +99,7 @@ Let \textit{R} be the return type and \textit{F} be the \grammarterm{function-bo
 %\grammarterm{compound-statement} or 
 %\grammarterm{function-try-block}.
 %}
-of \textit{f}, \textit{T} be the type \tcode{std::coroutine_traits<$R$,$P_1$,...,$P_n$>}, and \textit{P} be the class type denoted by \textit{T::}\tcode{promise_type}. 
+of \textit{f}, \textit{T} be the type \tcode{std::coroutine_traits<$R$,$P_1$,...,$P_n$>}, and \textit{P} be the class type denoted by \textit{T}::\tcode{promise_type}. 
 %If \textit{T}\tcode{::promise_type} does not refer to a type the program is ill-formed. Type \textit{P} is the \term{promise type} of the coroutine.
 Then, the coroutine behaves as if its body were:
 \begin{codeblock}
@@ -116,7 +116,7 @@ where \textit{F'} is
 	try {@\textit{ F }@} catch(...) { @\textit{p}@.set_exception(std::current_exception()); }
 \end{codeblock}
 if the \grammarterm{unqualified-id} \tcode{set_exception} is found in the scope of \textit{P}
-as if by class member access lookup (\cxxref{basic.lookup.classref}), and \textit{F'} is \textit{F} otherwise.
+by class member access lookup (\cxxref{basic.lookup.classref}), and \textit{F'} is \textit{F} otherwise.
 An object denoted as \textit{p} is the \defn{promise object} of
 the coroutine and type $P$ is the \defn{promise type}
 of the coroutine.
