@@ -8,48 +8,103 @@
 \setcounter{section}{3}
 \setcounter{subsection}{1}
 \setcounter{subsubsection}{1}
-\rSec3[over.match.oper]{Operators in expressions}%
-Add underlined text to item 3.3.
-
-\begin{quote}
-	\setcounter{Paras}{3}
-	\begin{itemize}
-		\item ...
-		\item ...
-		\item
-For the operator
-\tcode{,},
-the unary operator
-\tcode{\&},
-\added{
-the unary operator}
-\tcode{\added{co_await}}\added{,}
-or the operator
-\tcode{->},
-the built-in candidates set is empty.
-For all other operators, the built-in candidates include all
-of the candidate operator functions defined in~\cxxref{over.built} that,
-compared to the given operator,
-	\end{itemize}
-\end{quote}
+%\rSec3[over.match.oper]{Operators in expressions}%
+%Add the underlined text to item 3.3.
+%
+%\begin{quote}
+%	\setcounter{Paras}{3}
+%	\begin{itemize}
+%		\item ...
+%		\item ...
+%		\item
+%For the operator
+%\tcode{,},
+%the unary operator
+%\tcode{\&},
+%\added{
+%the unary operator}
+%\tcode{\added{co_await}}\added{,}
+%or the operator
+%\tcode{->},
+%the built-in candidates set is empty.
+%For all other operators, the built-in candidates include all
+%of the candidate operator functions defined in~\cxxref{over.built} that,
+%compared to the given operator,
+%	\end{itemize}
+%\end{quote}
 
 \setcounter{section}{4}
 \rSec1[over.oper]{Overloaded operators}
 
 Add \tcode{co_await} to the list of operators in paragraph 1 before operators \tcode{()} and \tcode{[]}.
 
-Add the following paragraph after paragraph 5.
+\rSec1[over.built]{Built-in operators}%
+\indextext{overloading!built-in operators and}
+
+Add the underlined text to the note in paragraph 1.
 
 \begin{quote}
-\setcounter{Paras}{5}
 \pnum
-The 
-\tcode{co_await} operator
-is described completely in~\ref{expr.await}.
-The attributes and restrictions
-found in the rest of this subclause do not apply to it unless explicitly
-stated in~\ref{expr.await}.
+The candidate operator functions that represent the built-in operators
+defined in Clause~\ref{expr} are specified in this subclause.
+These candidate
+functions participate in the operator overload resolution process as
+described in~\cxxref{over.match.oper} and are used for no other purpose.
+\enternote
+Because built-in operators\added{ except for operator }\tcode{\added{co_await}} take only operands with non-class type,
+and operator overload resolution occurs only when an operand expression
+originally has class or enumeration type,
+operator overload resolution can resolve to a built-in operator only
+when an operand has a class type that has a user-defined conversion to
+a non-class type appropriate for the operator, or when an operand has
+an enumeration type that can be converted to a type appropriate
+for the operator.
+Also note that some of the candidate operator functions given in this subclause are
+more permissive than the built-in operators themselves.
+As
+described in~\cxxref{over.match.oper}, after a built-in operator is selected
+by overload resolution the expression is subject to the requirements for
+the built-in operator given in Clause~\ref{expr}, and therefore to any
+additional semantic constraints given there.
+If there is a user-written
+candidate with the same name and parameter types as a built-in
+candidate operator function, the built-in operator function
+is hidden and is not included in the set of candidate functions.
+\exitnote
 \end{quote}
+
+Add new paragraph after paragraph 25.
+
+\begin{quote}
+\setcounter{Paras}{25}
+\pnum
+For every pair
+(\textit{T},
+\textit{CV}),
+where
+\textit{T}
+is a class type containing declarations of any of the following names: \tcode{await_ready}, \tcode{await_suspend}, \tcode{await_resume}, and
+\textit{CQ}
+is \grammarterm{cv-qualifier-seq}, there exist candidate operator functions of the form
+\begin{codeblock}
+  @\textit{CV T}@& operator co_await(@\textit{CV T}@&);
+  @\textit{CV T}@&& operator co_await(@\textit{CV T}@&&);
+\end{codeblock}
+which return their operand as the result.
+\end{quote}
+
+%Add the following paragraph after paragraph 5.
+%
+%\begin{quote}
+%\setcounter{Paras}{5}
+%\pnum
+%The 
+%\tcode{co_await} operator
+%is described completely in~\ref{expr.await}.
+%The attributes and restrictions
+%found in the rest of this subclause do not apply to it unless explicitly
+%stated in~\ref{expr.await}.
+%\end{quote}
 
 %\setcounter{section}{3}
 %\setcounter{subsection}{1}

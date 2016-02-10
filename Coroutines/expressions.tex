@@ -72,10 +72,15 @@ Evaluation of an \grammarterm{await-expression} involves the following auxiliary
 %  \item If the \grammarterm{cast-expression} is a prvalue, $a$ is a temporary object copy-initialized from the \grammarterm{cast-expression}, otherwise $a$ is an lvalue referring to the result of evaluating the \grammarterm{cast-expression}.
   
   \item $p$ is an lvalue naming the promise object (8.4.4) of the enclosing coroutine and $P$ is the type of that object.
-  \item The \grammarterm{unqualified-id} \tcode{await_transform} is looked up within the scope of \tcode{$P$} by class member access lookup (3.4.5), and if this lookup finds at least one declaration, then $a$ is \tcode{$p$.await_transform(\grammarterm{cast-expression});} otherwise, $a$ is \grammarterm{cast-expression}. Let $A$ be the type of $a$. 
-  \item If $A$ is a class type, the \grammarterm{unqualified-id}{s}
-  \tcode{await_ready}, \tcode{await_suspend} and \tcode{await_resume} are looked up in the scope of class $A$ by class member access lookup (3.4.5) and if this lookup finds at least one declaration, then $o$ is $a$; otherwise, $o$ is
-  the result of the invocation of the unary \tcode{co_await} operator function applied to expression $a$ (\cxxref{over.match.oper}).
+  \item The \grammarterm{unqualified-id} \tcode{await_transform} is looked up within the scope of \tcode{$P$} by class member access lookup (3.4.5), and if this lookup finds at least one declaration, then $a$ is \tcode{$p$.await_transform(\grammarterm{cast-expression});} otherwise, $a$ is \grammarterm{cast-expression}.  
+%  Let $A$ be the type of $a$. 
+
+  \item $o$ is
+  the result of the invocation of the unary \tcode{co_await} operator (\cxxref{over.oper}) applied to expression $a$.
+
+%  \item If $A$ is a class type, the \grammarterm{unqualified-id}{s}
+%  \tcode{await_ready}, \tcode{await_suspend} and \tcode{await_resume} are looked up in the scope of class $A$ by class member access lookup (3.4.5) and if this lookup finds at least one declaration, then $o$ is $a$; otherwise, $o$ is
+%  the result of the invocation of the unary \tcode{co_await} operator function applied to expression $a$ (\cxxref{over.match.oper}).
 %  \item If the qualified lookup of \tcode{$A$::operator co_await} finds at least one declaration, $o$ is \break \tcode{$a$.operator co_await()}; otherwise, if the \grammarterm{unqualified-id}{s}
 %  \tcode{await_ready}, \tcode{await_suspend} and \tcode{await_resume} are looked up in the scope of class $A$ as if by class member access lookup (3.4.5) and if this lookup finds at least one declaration, then, $o$ is $a$; otherwise, $o$ is \tcode{operator co_await($a$)}.
   \item If $o$ is a prvalue, $e$ is a temporary object copy-initialized from $o$, otherwise $e$ is an lvalue referring to the result of evaluating $o$.
