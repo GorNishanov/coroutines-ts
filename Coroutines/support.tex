@@ -98,7 +98,7 @@ namespace std {
 } // namespace std
 \end{codeblock}
 
-\rSec2[coroutine.traits]{coroutine traits}
+\rSec2[coroutine.traits]{Coroutine traits}
 \pnum
 This subclause defines requirements on classes representing
 \term{coroutine traits},
@@ -212,14 +212,16 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
 \end{itemdescr}
 
 \begin{itemdecl}
-  static coroutine_handle::from_promise(Promise& p) noexcept;	
+  static coroutine_handle coroutine_handle::from_promise(Promise& p) noexcept;	
 \end{itemdecl}
 \begin{itemdescr}
   \pnum
   \precondition \tcode{p} is a reference to a promise object of a coroutine.
   
 	\pnum
-  \postconditions \tcode{address() != nullptr} and \tcode{addressof(promise()) == addressof(p)}.
+  \returns coroutine handle $h$ refering to the coroutine.
+  
+  \pnum\postconditions \tcode{addressof(}$h$\tcode{.promise()) == addressof(p)}.
 \end{itemdescr}
 
 \begin{itemdecl}
