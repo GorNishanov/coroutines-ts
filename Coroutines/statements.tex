@@ -149,7 +149,7 @@ In paragraph 1 add two productions to the grammar:
 \indextext{function~return|see{\tcode{return}}}%
 
 % A
-Add underlined text to paragraph 1:
+Add the underlined text to paragraph 1:
 
 \begin{quote}
 \pnum
@@ -158,6 +158,13 @@ A function returns to its caller by the \tcode{return} statement\added{; that fu
 %\added{In this section, function refers to a function that is not a coroutine. The \tcode{return} statement in a coroutine described in section \ref{stmt.return.coroutine}.}
 % \added{A \tcode{return} statement shall not appear in a coroutine.}
 %\added{Using a \tcode{return} statement in a coroutine makes the program ill-formed.}
+\end{quote}
+
+Add the underlined text to the last sentence of paragraph 2:
+
+\begin{quote}
+  \pnum ... Flowing off the end of a function \added{that is not a coroutine} is equivalent to a \tcode{return} with no value; this results in
+  undefined behavior in a value-returning function.
 \end{quote}
 
 %NOTE
@@ -287,6 +294,7 @@ where $final{\_}suspend{\_}label$ is as defined in \ref{dcl.fct.def.coroutine} a
 \end{itemize}
 $S$ shall be a prvalue of type \tcode{void}.
 
+\pnum \enternote See \ref{dcl.fct.def.coroutine} about the flowing off the end of a coroutine. \exitnote
 %If none are found, the coroutine does not have an eventual return type.
 %  $expression$ is treated as an xvalue;
 
