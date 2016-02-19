@@ -171,7 +171,8 @@ The deallocation function's name is looked up in the scope of $P$. If this looku
 
 \pnum
 When a coroutine is invoked, an implementation may create a copy of one or more coroutine parameters. Each such copy is direct-initialized from an lvalue referring to the corresponding parameter if it is an lvalue reference, and an xvalue referring to it otherwise. A reference to a parameter in the function-body of the coroutine is replaced by a reference to its copy.
-  %The copy/move operations are indeterminately sequenced with respect to each other.
+Initialization of parameter copies is sequenced before a call to a promise constructor.
+Initialization of parameter copies are indeterminately sequenced with respect to each other.
 
 %\pnum
 %An invocation of a coroutine may incur an extra copy/move operation for the parameters.
