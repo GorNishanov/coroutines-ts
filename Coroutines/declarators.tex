@@ -173,7 +173,7 @@ The deallocation function's name is looked up in the scope of $P$. If this looku
 
 \pnum
 When a coroutine is invoked, an implementation may create a copy of one or more coroutine parameters. Each such copy is direct-initialized from an lvalue referring to the corresponding parameter if it is an lvalue reference, and an xvalue referring to it otherwise. A reference to a parameter in the function-body of the coroutine is replaced by a reference to its copy.
-Initialization of parameter copies is sequenced before a call to a promise constructor.
+Initialization of parameter copies is sequenced before the call to a promise constructor.
 Initialization of parameter copies are indeterminately sequenced with respect to each other.
 
 %\pnum
@@ -223,7 +223,7 @@ Initialization of parameter copies are indeterminately sequenced with respect to
 
 \pnum
 The unqualified-id \tcode{get_return_object_on_allocation_failure} is looked up in the scope of class \textit{P}
-by class member access lookup (\cxxref{basic.lookup.classref}). If a declaration is found,
+by class member access lookup (\cxxref{basic.lookup.classref}). If a declaration is found, and allocation and deallocation function lookup found global functions, 
  then \tcode{std::nothrow_t} forms of allocation and deallocation functions are used. If an allocation function returns \tcode{nullptr}, the coroutine returns control to the caller of the coroutine and the return value is obtained by a call to $P$\tcode{::get_return_object_on_allocation_failure()}.
 
 \enterexample
