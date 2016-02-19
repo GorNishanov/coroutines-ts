@@ -152,9 +152,11 @@ associated with this instance of the coroutine. The function that invoked a resu
 \pnum
 An implementation may need to allocate additional storage for the 
 lifetime of a coroutine. This storage is known as the \defn{coroutine state} and is obtained by calling a non-array allocation function~(\cxxref{basic.stc.dynamic.allocation}).
-The allocation function's name is looked up in the scope of $P$. If this lookup fails, the allocation function's name is looked up in the global scope. If the lookup finds an allocation function in the scope of $P$ that takes exactly one parameter, it will be used; otherwise, all parameters of the coroutine are passed to the allocation function after the size parameter in order.
-\enternote An allocation function template shall
-have two or more function parameters. A template instance is never considered to be an allocation function with exactly one parameter, regardless of its signature. \exitnote
+The allocation function's name is looked up in the scope of $P$. If this lookup fails, the allocation function's name is looked up in the global scope. If the lookup finds an allocation function in the scope of $P$ and that function takes exactly one parameter, it will be used; otherwise, all parameters of the coroutine are passed to the allocation function after the size parameter in order.
+%\enternote 
+%An allocation function template shall have two or more function parameters. 
+A template instance is never considered to be an allocation function with exactly one parameter, regardless of its signature. 
+%\exitnote
 
 \pnum
 The coroutine state is destroyed when
