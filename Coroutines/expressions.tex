@@ -50,7 +50,7 @@ Add this section to \ref{expr.unary}.
 %NOTES: add quote
 \begin{quote}
 \pnum
-The \tcode{co_await} operator is used to suspend evaluation of a 
+The \tcode{co_await} expression is used to suspend evaluation of a 
 %the enclosing 
 coroutine (\ref{dcl.fct.def.coroutine}) while awaiting completion of the computation represented by the operand expression.
 
@@ -75,9 +75,11 @@ Evaluation of an \grammarterm{await-expression} involves the following auxiliary
   \item The \grammarterm{unqualified-id} \tcode{await_transform} is looked up within the scope of \tcode{$P$} by class member access lookup (3.4.5), and if this lookup finds at least one declaration, then $a$ is \tcode{$p$.await_transform(\grammarterm{cast-expression});} otherwise, $a$ is \grammarterm{cast-expression}.  
 %  Let $A$ be the type of $a$. 
 
-  \item $o$ is
-  the result of the invocation of the unary \tcode{co_await} operator (\cxxref{over.oper}) applied to expression $a$.
-
+\item If for an invocation of the operator \tcode{co_await} applied to expression $a$ at least one viable operator \tcode{co_await} candidate is visible 
+%\cxxref{over.match.oper},
+(through unqualified name lookup (\cxxref{basic.lookup.unqual}) or argument-dependent-lookup (\cxxref{basic.lookup.argdep}))
+then $o$ is the result of that invocation (which shall be well-formed); otherwise $o$ is $a$.
+%
 %  \item If $A$ is a class type, the \grammarterm{unqualified-id}{s}
 %  \tcode{await_ready}, \tcode{await_suspend} and \tcode{await_resume} are looked up in the scope of class $A$ by class member access lookup (3.4.5) and if this lookup finds at least one declaration, then $o$ is $a$; otherwise, $o$ is
 %  the result of the invocation of the unary \tcode{co_await} operator function applied to expression $a$ (\cxxref{over.match.oper}).
