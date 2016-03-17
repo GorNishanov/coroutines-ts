@@ -235,11 +235,11 @@ struct generator {
     int current_value;
     static auto get_return_object_on_allocation_failure() { return generator{nullptr}; }
     auto get_return_object() { return generator{handle::from_promise(*this)}; }
-    auto initial_suspend() { return std::suspend_always{}; }
-    auto final_suspend() { return std::suspend_always{}; }
+    auto initial_suspend() { return std::experimental::suspend_always{}; }
+    auto final_suspend() { return std::experimental::suspend_always{}; }
     auto yield_value(int value) { 
       current_value = value; 
-      return std::suspend_always{};
+      return std::experimental::suspend_always{};
     }
   };
   bool move_next() { return coro ? (coro.resume(), !coro.done()) : false; }
