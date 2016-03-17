@@ -271,11 +271,11 @@ int main() {
       void* operator new(std::size_t size, Arena& pool, TheRest const&...) {
         return pool.allocate(size);
       }
-      void* operator delete(void* p, std::size_t size) {
+      void operator delete(void* p, std::size_t size) {
       	// reference to a pool is not available
       	// to the delete operator and should be stored
       	// by the allocator as a part of the allocation
-        return Arena::deallocate(p, size);
+        Arena::deallocate(p, size);
       }
     };
   };
