@@ -20,7 +20,7 @@ Add a row to Table~\ref{tab:lang.sup.lib.summary} for coroutine support header \
 	\cxxref{support.initlist}    & Initializer lists & \tcode{<initializer_list>}    \\ \rowsep
 	\added{\ref{support.coroutine}} 
   & \added{Coroutines support} 
-  & \added{\tcode{<coroutine>}}    \\ \rowsep
+  & \added{\tcode{<experimental/coroutine>}}    \\ \rowsep
 	&                           &   \tcode{<csignal>}   \\
 	&                           &   \tcode{<csetjmp>}   \\
 	&                           &   \tcode{<cstdalign>} \\
@@ -66,12 +66,15 @@ The header
 \tcode{<coroutine>}
 defines several types providing compile and run-time support for coroutines in a \Cpp program.
 
-\synopsis{Header \tcode{<coroutine>} synopsis}
+\synopsis{Header \tcode{<experimental/coroutine>} synopsis}
 
 \indextext{\idxhdr{coroutine}}%
 \indexlibrary{\idxhdr{coroutine}}%
 \begin{codeblock}
 namespace std {
+namespace experimental {
+inline namespace coroutines_v1 {
+
   // \ref{coroutine.traits} coroutine traits
   template <typename R, typename... ArgTypes>
     class coroutine_traits;
@@ -95,6 +98,9 @@ namespace std {
   // \ref{coroutine.handle.hash} hash support:
   template <class T> struct hash;
   template <class P> struct hash<coroutine_handle<P>>;
+
+} // namespace coroutines_v1
+} // namespace experimental
 } // namespace std
 \end{codeblock}
 
@@ -136,17 +142,23 @@ to customize the semantics of coroutines.
 %\end{concepttable}
 
 \rSec3[coroutine.traits.primary]{Struct template \tcode{coroutine_traits}}
-\pnum The header \tcode{<coroutine>} shall define
+\pnum The header \tcode{<experimental/coroutine>} shall define
 the class template \tcode{coroutine_traits} as follows:
 
 %\pnum The requirements for the members are given in clause \ref{coroutine.traits.requirements}.
 \indexlibrary{\idxcode{coroutine_traits}}%
 \begin{codeblock}
 namespace std {
+namespace experimental {
+inline namespace coroutines_v1 {
+  
   template <typename R, typename... Args>
   struct coroutine_traits {
     using promise_type = typename R::promise_type;
   };
+
+} // namespace coroutines_v1
+} // namespace experimental
 } // namespace std
 \end{codeblock}
 
@@ -155,6 +167,9 @@ namespace std {
 \indexlibrary{\idxcode{coroutine_handle}}%
 \begin{codeblock}
 namespace std {
+namespace experimental {
+inline namespace coroutines_v1 {
+
   template <>
   struct coroutine_handle<void>
   {
@@ -190,6 +205,9 @@ namespace std {
     // \ref{coroutine.handle.prom} promise access
     Promise& promise() const noexcept;		
   };
+
+} // namespace coroutines_v1
+} // namespace experimental
 } // namespace std
 \end{codeblock}
 
@@ -365,7 +383,7 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
 \rSec3[coroutine.handle.hash]{Hash support}
 
 \begin{itemdecl}
-  template <class P> struct hash<coroutine_handle<P>>;
+  template <class P> struct hash<experimental::coroutine_handle<P>>;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -374,7 +392,7 @@ The template specializations shall meet the requirements of class template hash 
 \end{itemdescr}
 
 \rSec2[coroutine.trivial.awaitables]{Trivial awaitables}
-The header \tcode{<coroutine>} shall define \tcode{suspend_never} and \tcode{suspend_always} as follows.
+The header \tcode{<experimental/coroutine>} shall define \tcode{suspend_never} and \tcode{suspend_always} as follows.
 \begin{codeblock}
   struct suspend_never {
     bool await_ready() { return true; }
