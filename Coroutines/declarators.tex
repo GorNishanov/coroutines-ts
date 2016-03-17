@@ -140,7 +140,7 @@ When a coroutine returns to its caller, the return value is obtained by a call t
 %For subsequent suspends, if any, the coroutine
 %is invoked via resumption member functions of 
 %%NOTE massage
-%\tcode{std::coroutine_handle} (\ref{coroutine.handle}) and no return value is expected.
+%\tcode{std::experimental::coroutine_handle} (\ref{coroutine.handle}) and no return value is expected.
 %\exitnote
 
 \pnum
@@ -161,7 +161,7 @@ A template instance is never considered to be an allocation function with exactl
 \pnum
 The coroutine state is destroyed when
 control flows off the end of the coroutine or
-the \tcode{destroy} member function (\ref{coroutine.handle.resumption}) of an object of type \tcode{std::coroutine_handle<\textit{P}}> associated with this coroutine is invoked. In the latter case objects with automatic storage duration that are in scope
+the \tcode{destroy} member function (\ref{coroutine.handle.resumption}) of an object of type \tcode{std::experimental::coroutine_handle<\textit{P}}> associated with this coroutine is invoked. In the latter case objects with automatic storage duration that are in scope
 at the suspend point are destroyed in the reverse order of the construction. The storage for the coroutine state is released by calling a non-array deallocation
 function~(\cxxref{basic.stc.dynamic.deallocation}). If \tcode{destroy} is called for a coroutine that is not suspended, the program has undefined behavior.
 
@@ -230,7 +230,7 @@ If an allocation function returns \tcode{nullptr}, the coroutine returns control
 \begin{codeblock}
 // ::operator new(size_t, nothrow_t) will be used if allocation is needed
 struct generator {
-  using handle = std::coroutine_handle<promise_type>;
+  using handle = std::experimental::coroutine_handle<promise_type>;
   struct promise_type {
     int current_value;
     static auto get_return_object_on_allocation_failure() { return generator{nullptr}; }

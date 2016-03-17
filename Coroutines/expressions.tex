@@ -88,7 +88,7 @@ then $o$ is the result of that invocation (which shall be well-formed); otherwis
   \item If $o$ is a prvalue, $e$ is a temporary object copy-initialized from $o$, otherwise $e$ is an lvalue referring to the result of evaluating $o$.
   
 %  \item If the \grammarterm{await-expression} is potentially-evaluated and lookup for the unqualified-id \tcode{await_transform} within the scope of \tcode{decltype($p$)} as if by class member access lookup (3.4.5) finds at least one declaration, then $e$ is \tcode{$p$.await_transform(a);} otherwise, $e$ is $a$.
-  \item $h$ is an object of type \tcode{std::coroutine_handle<$P$>} referring to the enclosing coroutine.
+  \item $h$ is an object of type \tcode{std::experimental::coroutine_handle<$P$>} referring to the enclosing coroutine.
   \item \textit{await-ready} is the expression \tcode{$e$.await_ready()}, contextually converted to \tcode{bool}.
   \item \textit{await-suspend} is the expression \tcode{$e$.await_suspend($h$)}, which shall be a prvalue of type \tcode{void} or \tcode{bool}.
   \item \textit{await-resume} is the expression \tcode{$e$.await_resume()}.
@@ -113,7 +113,7 @@ template <typename T>
 struct my_future {
   ...
   bool await_ready();
-  void await_suspend(std::coroutine_handle<>);
+  void await_suspend(std::experimental::coroutine_handle<>);
   T await_resume();
 };
   
@@ -125,7 +125,7 @@ auto operator co_await(std::chrono::duration<Rep, Period> d) {
     awaiter(std::chrono::system_clock::duration d) : duration(d){}
     bool await_ready() const { return duration.count() <= 0; }
     void await_resume() {}
-    void await_suspend(std::coroutine_handle<> h){...}
+    void await_suspend(std::experimental::coroutine_handle<> h){...}
   };
   return awaiter{d};
 }
@@ -204,7 +204,7 @@ my_future<void> g() {
 %\grammarterm{cast-expression}, and \tcode{_PromiseT} is the 
 %promise type of the enclosing coroutine,
 %and \tcode{_CoroutineHandle}
-%is an object of the type \tcode{std::coroutine_handle<_PromiseT>} (\ref{coroutine.handle}) corresponding to the enclosing function,
+%is an object of the type \tcode{std::experimental::coroutine_handle<_PromiseT>} (\ref{coroutine.handle}) corresponding to the enclosing function,
 %%NOTES add reference to promise
 %and \textit{await-ready-expr}, \textit{await-suspend-expr}, and \textit{await-expr} are
 %determined as follows:

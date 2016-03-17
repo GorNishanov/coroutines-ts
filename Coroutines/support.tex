@@ -544,7 +544,7 @@ inline namespace coroutines_v1 {
 %    
 %    ~generator() { coro.destroy(); }
 %  private:
-%    using handle = std::coroutine_handle<promise_type>;
+%    using handle = std::experimental::coroutine_handle<promise_type>;
 %    explicit generator(promise_type& myPromise): coro(handle::from_promise(myPromise)) {}
 %    handle coro;
 %  };
