@@ -88,7 +88,7 @@ The \grammarterm{parameter-declaration-clause} of the coroutine shall not termin
 %to complete the definition of its semantics.
 %These types and functions are provided as a set of member types or typedefs
 %and member functions in the specializations of class template
-%\tcode{std::coroutine_traits} (\ref{coroutine.traits}). 
+%\tcode{std::experimental::coroutine_traits} (\ref{coroutine.traits}). 
 
 \pnum
 For a coroutine \textit{f} that is a non-static member function, let $P_1$ denote the type of the implicit object parameter (\cxxref{over.match.funcs}) and $P_2$ ... $P_n$ be the types of the function parameters; otherwise let $P_1$ ... $P_n$ be the types of the function parameters.
@@ -99,7 +99,7 @@ Let \textit{R} be the return type and \textit{F} be the \grammarterm{function-bo
 %\grammarterm{compound-statement} or 
 %\grammarterm{function-try-block}.
 %}
-of \textit{f}, \textit{T} be the type \tcode{std::coroutine_traits<$R$,$P_1$,...,$P_n$>}, and \textit{P} be the class type denoted by \textit{T}\tcode{::promise_type}. 
+of \textit{f}, \textit{T} be the type \tcode{std::experimental::coroutine_traits<$R$,$P_1$,...,$P_n$>}, and \textit{P} be the class type denoted by \textit{T}\tcode{::promise_type}. 
 %If \textit{T}\tcode{::promise_type} does not refer to a type the program is ill-formed. Type \textit{P} is the \term{promise type} of the coroutine.
 Then, the coroutine behaves as if its body were:
 \begin{codeblock}
