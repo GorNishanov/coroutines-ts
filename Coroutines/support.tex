@@ -394,6 +394,10 @@ The template specializations shall meet the requirements of class template hash 
 \rSec2[coroutine.trivial.awaitables]{Trivial awaitables}
 The header \tcode{<experimental/coroutine>} shall define \tcode{suspend_never} and \tcode{suspend_always} as follows.
 \begin{codeblock}
+namespace std {
+namespace experimental {
+inline namespace coroutines_v1 {
+
   struct suspend_never {
     bool await_ready() { return true; }
     void await_suspend(coroutine_handle<>) {}
@@ -404,6 +408,10 @@ The header \tcode{<experimental/coroutine>} shall define \tcode{suspend_never} a
     void await_suspend(coroutine_handle<>) {}
     void await_resume() {}
   };
+
+} // namespace coroutines_v1
+} // namespace experimental
+} // namespace std
 \end{codeblock}
 \end{quote}
 
