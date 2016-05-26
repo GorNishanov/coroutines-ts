@@ -1,0 +1,34 @@
+%!TEX root = D0057.tex
+\setcounter{chapter}{16}
+\rSec0[library]{Library introduction}
+
+\setcounter{section}{6}
+\setcounter{subsection}{1}
+\setcounter{subsubsection}{2}
+%\rSec1[requirements]{Library-wide requirements}
+
+%\rSec2[using]{Using the library}
+
+\rSec3[compliance]{Freestanding implementations}
+
+Add a row to Table~\ref{tab:cpp.headers.freestanding} for coroutine support header \tcode{<experimental/coroutine>}.
+
+
+\setcounter{table}{15}
+\begin{libsumtab}{\Cpp headers for freestanding implementations}{tab:cpp.headers.freestanding}
+	&                            &   \tcode{<ciso646>}       \\ \rowsep
+	\cxxref{support.types} & Types                       &   \tcode{<cstddef>}       \\ \rowsep
+	\cxxref{support.limits}& Implementation properties  &  \tcode{<cfloat>} \tcode{<limits>} \tcode{<climits>}        \\ \rowsep
+	\cxxref{cstdint}       & Integer types               &  \tcode{<cstdint>}        \\ \rowsep
+	\cxxref{support.start.term}& Start and termination  &   \tcode{<cstdlib>}       \\ \rowsep
+	\cxxref{support.dynamic} & Dynamic memory management &   \tcode{<new>}           \\ \rowsep
+	\cxxref{support.rtti}  & Type identification          &   \tcode{<typeinfo>}      \\ \rowsep
+	\cxxref{support.exception} & Exception handling      &   \tcode{<exception>}     \\ \rowsep
+	\cxxref{support.initlist}  & Initializer lists & \tcode{<initializer_list>} \\ \rowsep
+	\cxxref{support.runtime} & Other runtime support     &   \tcode{<cstdalign>} \tcode{<cstdarg>} \tcode{<cstdbool>}       \\ \rowsep
+		\added{\ref{support.coroutine}} 
+		& \added{Coroutines support} 
+		& \added{\tcode{<experimental/coroutine>}}    \\ \rowsep
+	\cxxref{meta} & Type traits     &   \tcode{<type_traits>}  \\ \rowsep
+	\cxxref{atomics} & Atomics       &   \tcode{<atomic>}     \\
+\end{libsumtab}

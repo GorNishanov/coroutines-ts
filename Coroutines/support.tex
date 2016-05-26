@@ -4,9 +4,9 @@
 
 \rSec1[support.general]{General}
 
-Add a row to Table~\ref{tab:lang.sup.lib.summary} for coroutine support header \tcode{<coroutine>}.
+Add a row to Table~\ref{tab:lang.sup.lib.summary} for coroutine support header \tcode{<experimental/coroutine>}.
 
-
+\setcounter{table}{29}
 \begin{libsumtab}{Language support library summary}{tab:lang.sup.lib.summary}
 	\cxxref{support.types}       & Types                     &   \tcode{<cstddef>}   \\ \rowsep
 	&                           &   \tcode{<limits>}    \\
@@ -63,7 +63,7 @@ Add this section to clause \ref{language.support}.
 
 \pnum
 The header
-\tcode{<coroutine>}
+\tcode{<experimental/coroutine>}
 defines several types providing compile and run-time support for coroutines in a \Cpp program.
 
 \synopsis{Header \tcode{<experimental/coroutine>} synopsis}
@@ -521,7 +521,7 @@ inline namespace coroutines_v1 {
 %of a promise type for a simple generator.
 %\begin{codeblock}
 %  #include <iostream>
-%  #include <coroutine>
+%  #include <experimental/coroutine>
 %  
 %  struct generator {
 %    struct promise_type {
