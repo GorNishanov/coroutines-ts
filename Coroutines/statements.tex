@@ -281,11 +281,10 @@ then a \tcode{co_return} statement is equivalent to:
 %\pnum
 
 \begin{codeblock}
-  { @$S$@; goto @$final{\_}suspend{
-      \_}label$@; }
+  { @$S$@; goto @$final{\_}suspend$@; }
 \end{codeblock}
 
-where $final{\_}suspend{\_}label$ is as defined in \ref{dcl.fct.def.coroutine} and $S$ is an expression defined as follows:
+where $final$\tcode{\_}$suspend$ is as defined in \ref{dcl.fct.def.coroutine} and $S$ is an expression defined as follows:
 
 \begin{itemize}
   \item $S$ is  $p$\tcode{.return_value(}\grammarterm{braced-init-list}{}\tcode{)}, if the operand is a \grammarterm{braced-init-list};
