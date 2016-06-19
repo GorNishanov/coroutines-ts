@@ -104,16 +104,17 @@ of \textit{f}, \textit{T} be the type \tcode{std::experimental::coroutine_traits
 Then, the coroutine behaves as if its body were:
 \begin{codeblock}
   {
-     @\textit{P p}@;
-     co_await @\textit{p}@.initial_suspend(); // initial suspend point
+     @\textit{P }$p$@;
+     auto @$gro$@ = @$p$@.get_return_object();
+     co_await @$p$@.initial_suspend(); // initial suspend point
      @\textit{F'}@
   @\textit{final_suspend}@:
-     co_await @\textit{p}@.final_suspend(); // final suspend point
+     co_await @$p$@.final_suspend(); // final suspend point
   }
 \end{codeblock}
 where \textit{F'} is 
 \begin{codeblock}
-	try {@\textit{ F }@} catch(...) { @\textit{p}@.set_exception(std::current_exception()); }
+	try {@\textit{ F }@} catch(...) { @$p$@.set_exception(std::current_exception()); }
 \end{codeblock}
 if the \grammarterm{unqualified-id} \tcode{set_exception} is found in the scope of \textit{P}
 by class member access lookup (\cxxref{basic.lookup.classref}), and \textit{F'} is \textit{F} otherwise.
@@ -134,7 +135,7 @@ If the \grammarterm{unqualified-id} \tcode{return_void} is found, flowing off th
 %expression \tcode{$p$.get_return_object()}.
 
 \pnum
-When a coroutine returns to its caller, the return value is obtained by a call to \tcode{$p$.get_return_object()}. A call to a \tcode{get_return_object} is sequenced before the call to \tcode{initial_suspend} and is invoked at most once.
+When a coroutine returns to its caller, the return value is produced as if by the statement \mbox{\tcode{return}{ }$gro$\tcode{;}}
 
 %\enternote
 %For subsequent suspends, if any, the coroutine
