@@ -65,7 +65,9 @@ An \grammarterm{await-expression} shall appear only in a potentially-evaluated e
 An \grammarterm{await-expression} shall not appear in a default argument (\cxxref{dcl.fct.default}). A context within a function where an \grammarterm{await-expression} can appear is called a \term{suspension context} of the function.
 
 \pnum
-Evaluation of an \grammarterm{await-expression} involves the following auxiliary expressions:
+\cbstart
+Evaluation of an \grammarterm{await-expression} involves the following auxiliary \added{types, } expressions\added{, and objects}:
+\cbend
 
 \begin{itemize}
 	
@@ -73,7 +75,10 @@ Evaluation of an \grammarterm{await-expression} involves the following auxiliary
   
   \item $p$ is an lvalue naming the promise object (8.4.4) of the enclosing coroutine and $P$ is the type of that object.
   
-  \item $a$ is \grammarterm{cast-expression} if an \grammarterm{await-expression} is an implicit one produced by \grammarterm{yield-expression} (\ref{expr.yield}), initial, or final suspend points (\ref{dcl.fct.def.coroutine}).
+  \cbstart
+  \item $a$ is \grammarterm{cast-expression} if 
+  \removed{an \grammarterm{await-expression} is an implicit one} \added{the \grammarterm{await-expression} was implicitly} produced by a \grammarterm{yield-expression} (\ref{expr.yield}), or an initial, or final suspend points (\ref{dcl.fct.def.coroutine}).
+  \cbend
    
   \item Otherwise, the \grammarterm{unqualified-id} \tcode{await_transform} is looked up within the scope of \tcode{$P$} by class member access lookup (3.4.5), and if this lookup finds at least one declaration, then $a$ is \tcode{$p$.await_transform(\grammarterm{cast-expression});} otherwise, $a$ is \grammarterm{cast-expression}. 
   
