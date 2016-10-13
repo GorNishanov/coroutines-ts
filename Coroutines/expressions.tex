@@ -248,7 +248,7 @@ int a[] = { co_await h() }; // error: await-expression outside of function suspe
 %%\end{codeblock}
 %%\exitexample%
 
-\setcounter{section}{17}
+\setcounter{section}{16}
 \rSec1[expr.ass]{Assignment and compound assignment operators}%
 
 %In paragraph 1, 
@@ -264,7 +264,23 @@ Add \grammarterm{yield-expression} to the grammar production \grammarterm{assign
 \end{bnf}
 \end{quote}
 
-\setcounter{section}{20}
+\cbstart
+\setcounter{section}{18}
+\rSec1[expr.const]{Constant expressions}%
+
+Add bullets prohibiting \grammarterm{await-expression} and \grammarterm{yield-expression} to paragraph 2.
+
+\begin{quote}
+\begin{itemize}
+	\item 
+	\added{an \grammarterm{await-expression} (\ref{expr.await});}
+	\item 
+	\added{a \grammarterm{yield-expression} (\ref{expr.yield});}
+\end{itemize}
+\end{quote}
+\cbend
+
+\setcounter{section}{19}
 \rSec1[expr.yield]{Yield}%
 
 Add a new section to Clause \ref{expr}.
