@@ -194,7 +194,7 @@ inline namespace coroutines_v1 {
     // \ref{coroutine.handle.completion} completion check
     bool done() const @\cbstart\removed{noexcept}\cbend@; 
   @\cbstart\added{private:}@
-    @\added{void *ptr;}\cbend@ // exposition only
+    @\added{void* ptr;}\cbend@ // exposition only
   };
 
   template <typename Promise>
@@ -204,6 +204,9 @@ inline namespace coroutines_v1 {
     using coroutine_handle<>::coroutine_handle;
     static coroutine_handle from_promise(Promise&) noexcept;		
     coroutine_handle& operator=(nullptr_t) noexcept;
+
+    @\cbstart@// \ref{coroutine.handle.export} export/import
+    @\added{constexpr static coroutine_handle from_address(void* addr) noexcept;}\cbend@
     
     // \ref{coroutine.handle.prom} promise access
     Promise& promise() const @\cbstart\removed{noexcept}\cbend@;		
