@@ -192,7 +192,7 @@ inline namespace coroutines_v1 {
     void destroy() const;
     
     // \ref{coroutine.handle.completion} completion check
-    bool done() const noexcept; 
+    bool done() const @\cbstart\removed{noexcept}\cbend@; 
   };
 
   template <typename Promise>
@@ -204,7 +204,7 @@ inline namespace coroutines_v1 {
     coroutine_handle& operator=(nullptr_t) noexcept;
     
     // \ref{coroutine.handle.prom} promise access
-    Promise& promise() const noexcept;		
+    Promise& promise() const @\cbstart\removed{noexcept}\cbend@;		
   };
 
 } // namespace coroutines_v1
