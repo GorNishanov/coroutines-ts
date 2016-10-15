@@ -184,7 +184,7 @@ inline namespace coroutines_v1 {
     @\added{constexpr}\cbend@ static coroutine_handle from_address(void* addr) noexcept;		
     
     // \ref{coroutine.handle.capacity} capacity
-    explicit @\cbstart\added{constexpr}\cbend@ operator bool() const noexcept;
+    @\cbstart\added{constexpr}\cbend@ explicit operator bool() const noexcept;
     
     // \ref{coroutine.handle.resumption} resumption
     void operator()() const;
@@ -256,8 +256,8 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
 
 \rSec3[coroutine.handle.export]{\tcode{coroutine_handle} export/import}
 \begin{itemdecl}
-  static coroutine_handle from_address(void* addr) noexcept;		
-  void* address() const noexcept;
+  @\cbstart\added{constexpr}\cbend@ static coroutine_handle from_address(void* addr) noexcept;		
+  @\cbstart\added{constexpr}\cbend@ void* address() const noexcept;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -267,7 +267,7 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
 
 \rSec3[coroutine.handle.capacity]{\tcode{coroutine_handle} capacity}
 \begin{itemdecl}
-  explicit operator bool() const noexcept;
+  @\cbstart\added{constexpr}\cbend@ explicit operator bool() const noexcept;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -302,7 +302,7 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
 
 \rSec3[coroutine.handle.completion]{\tcode{coroutine_handle} completion check}
 \begin{itemdecl}
-  bool done() const noexcept; 
+  bool done() const  @\cbstart\removed{noexcept}\cbend@; 
 \end{itemdecl}
 \begin{itemdescr}
   \pnum
@@ -315,8 +315,8 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
 
 \rSec3[coroutine.handle.prom]{\tcode{coroutine_handle} promise access}
 \begin{itemdecl}
-  Promise& promise() noexcept;		
-  Promise const& promise() const noexcept;
+  Promise& promise()  @\cbstart\removed{noexcept}\cbend@;		
+  Promise const& promise() const  @\cbstart\removed{noexcept}\cbend@;
 \end{itemdecl}
 
 \begin{itemdescr}
