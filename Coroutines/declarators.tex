@@ -190,7 +190,7 @@ The deallocation function's name is looked up in the scope of $P$. If this looku
 %coroutine_handle<>
 
 \pnum
-When a coroutine is invoked, an implementation may create a copy of one or more coroutine parameters. Each such copy is direct-initialized from an lvalue \cbstart\added{denoting}\removed{referring to} \cbend the corresponding parameter if it is an lvalue reference, and an xvalue referring to it otherwise. A reference to a parameter in the function-body of the coroutine is replaced by a reference to its copy.
+When a coroutine is invoked, an implementation may create a copy of one or more coroutine parameters. Each such copy is direct-initialized from an lvalue referring to the corresponding parameter if it is an lvalue reference, and an xvalue referring to it otherwise. A reference to a parameter in the function-body of the coroutine is replaced by a reference to its copy.
 Initializations of parameter copies are sequenced before the call to the coroutine promise constructor and indeterminately sequenced with respect to each other.
 Parameter copies scope is a block scope of the coroutine promise.
 %\pnum
