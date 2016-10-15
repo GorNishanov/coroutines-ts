@@ -91,7 +91,7 @@ The \grammarterm{parameter-declaration-clause} of the coroutine shall not termin
 %\tcode{std::experimental::coroutine_traits} (\ref{coroutine.traits}). 
 
 \pnum
-For a coroutine \textit{f} that is a non-static member function, let $P_1$ denote the type of the implicit object parameter (\cxxref{over.match.funcs}) and $P_2$ ... $P_n$ be the types of the function parameters; otherwise let $P_1$ ... $P_n$ be the types of the function parameters.
+For a coroutine \textit{f} that is a non-static member function, let $P_1$ denote the type of the implicit object parameter (\cxxref{over.match.funcs}) and $P_2$ ... $P_n$ be the types of the function parameters; otherwise let $P_1$ ... $P_n$ be the types of the function parameters. \cbstart \added{Let $p_1$ ... $p_n$ be lvalues denoting those objects.} \cbend
 Let \textit{R} be the return type and \textit{F} be the \grammarterm{function-body}
 %\footnote{
 %Due to requirement of having suspend-resume points,
@@ -155,7 +155,9 @@ associated with this instance of the coroutine. The function that invoked a resu
 An implementation may need to allocate additional storage for \removed{the lifetime of} a coroutine. 
 \cbend
 This storage is known as the \defn{coroutine state} and is obtained by calling a non-array allocation function~(\cxxref{basic.stc.dynamic.allocation}).
-The allocation function's name is looked up in the scope of $P$. If this lookup fails, the allocation function's name is looked up in the global scope. If the lookup finds an allocation function in the scope of $P$ and that function takes exactly one parameter, it will be used; otherwise, all parameters of the coroutine are passed to the allocation function after the size parameter in order.
+The allocation function's name is looked up in the scope of $P$. If this lookup fails, the allocation function's name is looked up in the global scope. If the lookup finds an allocation function in the scope of $P$, \cbstart \removed{and that function takes exactly one parameter, it will be used; otherwise, all parameters of the coroutine are passed to the allocation function after the size parameter in order.}
+\added{overload resolution is performed on a function call created by assembling an argument list. The first argument is the amount of space requested, and has type \tcode{std::size_t}. The lvalues $p_1$ ... $p_n$ are the succeeding arguments. If no matching function is found, overload resolution is performed again on a function call created by passing just the amount of space required as an argument of type \tcode{std::size_t}.}
+\cbend
 %\enternote 
 %An allocation function template shall have two or more function parameters. 
 %A template instance is never considered to be an allocation function with exactly one parameter, regardless of its signature. 
@@ -167,7 +169,9 @@ The \grammarterm{unqualified-id} \tcode{get_return_object_on_allocation_failure}
 by class member access lookup (\cxxref{basic.lookup.classref}). If a declaration is found, then the result of a call to an allocation function used to obtain storage for the coroutine state is assumed to return
 \tcode{nullptr} if it fails to obtain storage, and if a global allocation function is selected, \cbstart \added{the} \cbend \tcode{::operator new(size_t, nothrow_t)} form shall be used.
 %is passed to an allocaiton. 
-If an allocation function returns \tcode{nullptr}, the coroutine returns control to the caller of the coroutine and the return value is obtained by a call to $P$\tcode{::get_return_object_on_allocation_failure()}.
+If an allocation function returns \tcode{nullptr}, the coroutine returns control to the caller of the coroutine and the return value is obtained by a call to $P$\tcode{::get_return_object_on_allocation_failure()}. 
+\cbstart \added{The allocation function used in this case must have a non-throwing \grammarterm{noexcept-specification}.}
+\cbend
 
 \pnum
 The coroutine state is destroyed when
