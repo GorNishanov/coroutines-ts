@@ -180,11 +180,11 @@ inline namespace coroutines_v1 {
     coroutine_handle& operator=(nullptr_t) noexcept;
     
     // \ref{coroutine.handle.export} export/import
-    void* address() const noexcept;
-    static coroutine_handle from_address(void* addr) noexcept;		
+    @\cbstart\added{constexpr}@ void* address() const noexcept;
+    @\added{constexpr}\cbend@ static coroutine_handle from_address(void* addr) noexcept;		
     
     // \ref{coroutine.handle.capacity} capacity
-    explicit operator bool() const noexcept;
+    explicit @\cbstart\added{constexpr}\cbend@ operator bool() const noexcept;
     
     // \ref{coroutine.handle.resumption} resumption
     void operator()() const;
