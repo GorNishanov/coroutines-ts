@@ -95,12 +95,13 @@ inline namespace coroutines_v1 {
   struct suspend_never;
   struct suspend_always;
     
-  // \ref{coroutine.handle.hash} hash support:
-  template <class T> struct hash;
-  template <class P> struct hash<coroutine_handle<P>>;
-
 } // namespace coroutines_v1
 } // namespace experimental
+
+@\cbstart@// \ref{coroutine.handle.hash} hash support:
+template <class T> struct hash;
+template <class P> struct hash<@\added{std::experimental::}@coroutine_handle<P>>;@\cbend@
+
 } // namespace std
 \end{codeblock}
 
