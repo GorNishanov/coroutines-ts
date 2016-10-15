@@ -3,8 +3,8 @@
 \setcounter{chapter}{2}
 \rSec0[basic]{Basic concepts}
 
-\setcounter{section}{5}
-\rSec1[basic.start]{Start and termination}
+\setcounter{section}{6}
+%\rSec1[basic.start]{Start and termination}
 
 \rSec2[basic.start.main]{Main function}
 
@@ -27,6 +27,31 @@ not otherwise reserved. \enterexample member functions, classes, and
 enumerations can be called \tcode{main}, as can entities in other
 namespaces. \exitexample
 \end{quote}
+
+\cbstart
+\setcounter{section}{7}
+\setcounter{subsection}{4}
+\rSec3[basic.stc.dynamic.allocation]{Allocation functions}
+
+Add underlined text to paragraph 4.
+
+\begin{quote}
+	\setcounter{Paras}{3}
+\pnum
+A global allocation function is only called as the result of a new
+expression~(\cxxref{expr.new}), or called directly using the function call
+syntax~(\cxxref{expr.call}), 
+\added{or called indirectly to allocate storage for a coroutine frame (\ref{dcl.fct.def.coroutine}), }
+or called indirectly through calls to the
+functions in the \Cpp standard library. \enternote In particular, a
+global allocation function is not called to allocate storage for objects
+with static storage duration~(\cxxref{basic.stc.static}), for objects or references
+with thread storage duration~(\cxxref{basic.stc.thread}), for objects of
+type \tcode{std::type_info}~(\cxxref{expr.typeid}), or for an
+exception object~(\cxxref{except.throw}).
+\exitnote
+\end{quote}
+\cbend
 
 %\setcounter{section}{6}
 %\rSec1[basic.stc]{Storage duration}
