@@ -143,8 +143,25 @@ to customize the semantics of coroutines.
 %\end{concepttable}
 
 \rSec3[coroutine.traits.primary]{Struct template \tcode{coroutine_traits}}
+\cbstart
+\begin{addedblock}
 \pnum The header \tcode{<experimental/coroutine>} shall define
-the \cbstart\added{struct}\removed{class} \cbend template \tcode{coroutine_traits} as follows:
+the primary template \tcode{coroutine_traits} such that 
+if \tcode{ArgTypes...} is a sequence of zero or more types and if \tcode{R} is a type that has a valid (\cxxref{temp.deduct}) member type \tcode{promise_type}, then
+\tcode{coroutine_traits<R,ArgTypes...>} shall have the following publicly accessible member:
+
+\begin{codeblock}
+  using promise_type = typename R::promise_type;
+\end{codeblock}
+
+Otherwise, \tcode{coroutine_traits<R,ArgTypes...>} shall have no members.
+\end{addedblock}
+	
+%\pnum A user specialization of \tcode{coroutine_traits} shall have a valid member type \tcode{promise_type}.
+
+\begin{removedblock}
+\pnum The header \tcode{<experimental/coroutine>} shall define
+the class template \tcode{coroutine_traits} as follows:
 
 %\pnum The requirements for the members are given in clause \ref{coroutine.traits.requirements}.
 \indexlibrary{\idxcode{coroutine_traits}}%
@@ -162,6 +179,8 @@ inline namespace coroutines_v1 {
 } // namespace experimental
 } // namespace std
 \end{codeblock}
+\end{removedblock}
+\cbend
 
 \rSec2[coroutine.handle]{Struct template \tcode{coroutine_handle}}
 
