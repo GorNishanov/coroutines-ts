@@ -225,7 +225,7 @@ inline namespace coroutines_v1 {
     coroutine_handle& operator=(nullptr_t) noexcept;
 
     @\cbstart@// \ref{coroutine.handle.export} export/import
-    @\added{constexpr static coroutine_handle from_address(void* addr) noexcept;}\cbend@
+    @\added{static coroutine_handle from_address(void* addr) noexcept;}\cbend@
     
     // \ref{coroutine.handle.prom} promise access
     Promise& promise() const @\cbstart\removed{noexcept}\cbend@;		
@@ -278,7 +278,7 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
 
 \rSec3[coroutine.handle.export]{\tcode{coroutine_handle} export/import}
 \begin{itemdecl}
-  @\cbstart\added{constexpr}\cbend@ static coroutine_handle from_address(void* addr) noexcept;		
+  static coroutine_handle from_address(void* addr) noexcept;		
   @\cbstart\added{constexpr}\cbend@ void* address() const noexcept;
 \end{itemdecl}
 
