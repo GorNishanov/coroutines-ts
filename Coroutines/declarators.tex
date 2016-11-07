@@ -105,20 +105,19 @@ Then, the coroutine behaves as if its body were:
 \begin{codeblock}
   {
      @\textit{P }$p$@;
-     auto @$gro$@ = @$p$@.get_return_object();
+     @\cbstart\removed{auto gro = p.get_return_object();}\cbend@
      co_await @$p$@.initial_suspend(); // initial suspend point
-     @\textit{F'}@
+     @\cbstart\added{\tcode{try \{ \textit{F} \} catch(...) \{ \textit{p}.unhandled_exception(); \} }}\cbend@
   @\textit{final_suspend}@:
      co_await @$p$@.final_suspend(); // final suspend point
   }
 \end{codeblock}
-where \textit{F'} is 
-\begin{codeblock}
-	try {@\textit{ F }@} catch(...) { @$p$@.set_exception(std::current_exception()); }
-\end{codeblock}
+where \cbstart
+\removed{\textit{F'} is}
+\removed{\tcode{try \{ \textit{F} \} catch(...) \{ \textit{p}.unhandled_exception(); \}}
 if the \grammarterm{unqualified-id} \tcode{set_exception} is found in the scope of \textit{P}
 by class member access lookup (\cxxref{basic.lookup.classref}), and \textit{F'} is \textit{F} otherwise.
-An object denoted as \textit{p} is the \defn{promise object} of
+An}\cbend \added{an} object denoted as \textit{p} is the \defn{promise object} of
 the coroutine and its type $P$ is the \defn{promise type}
 of the coroutine.
 
@@ -134,8 +133,17 @@ If the \grammarterm{unqualified-id} \tcode{return_void} is found, flowing off th
 %caller of the coroutine. For the first return of control from the coroutine, the return value is obtained via
 %expression \tcode{$p$.get_return_object()}.
 
-\pnum
-When a coroutine returns to its caller, the return value is produced as if by the statement \mbox{\tcode{return}{ }$gro$\tcode{;}}
+%\pnum
+%When a coroutine returns to its caller, the return value is produced as if by the statement \mbox{\tcode{return}{ }$gro$\tcode{;}}
+
+\pnum 
+When a coroutine returns to its caller, the return value is produced
+\cbstart
+\removed{When a coroutine returns to its caller, the return value is produced as if by the statement \mbox{\tcode{return}{ }$gro$\tcode{;}}}
+\added{by a call to \linebreak
+ \mbox{\tcode{$p$.get_return_object()}}. A call to a \tcode{get_return_object} is sequenced before the call to \linebreak
+\mbox{\tcode{initial_suspend}} and is invoked at most once.}
+\cbend
 
 %\enternote
 %For subsequent suspends, if any, the coroutine
