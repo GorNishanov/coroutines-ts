@@ -225,7 +225,7 @@ inline namespace coroutines_v1 {
     coroutine_handle& operator=(nullptr_t) noexcept;
 
     @\cbstart@// \ref{coroutine.handle.export} export/import
-    @\added{static coroutine_handle from_address(void* addr) noexcept;}\cbend@
+    @\added{constexpr static coroutine_handle from_address(void* addr) noexcept;}\cbend@
     
     // \ref{coroutine.handle.prom} promise access
     Promise& promise() const @\cbstart\removed{noexcept}\cbend@;		
