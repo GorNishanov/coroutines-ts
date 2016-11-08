@@ -188,6 +188,11 @@ When a coroutine is invoked, an implementation may create a copy of one or more 
 Initializations of parameter copies are sequenced before the call to the coroutine promise constructor and indeterminately sequenced with respect to each other.
 \cbstart
 \added{The lifetime of parameter copies} \removed{Parameter copies lifetime} ends immediately after the coroutine promise object lifetime ends.
+\begin{addedblock}
+\enternote
+If a coroutine has a parameter passed by reference, resuming the coroutine after the lifetime of the entity referred to by that parameter has ended is likely to result in undefined behavior.
+\exitnote
+\end{addedblock}
 \cbend
 %\pnum
 %An invocation of a coroutine may incur an extra copy/move operation for the parameters.
