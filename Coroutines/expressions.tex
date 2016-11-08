@@ -74,9 +74,8 @@ Evaluation of an \grammarterm{await-expression} involves the following auxiliary
   \item $p$ is an lvalue naming the promise object (8.4.4) of the enclosing coroutine and $P$ is the type of that object.
   
   \item $a$ is \grammarterm{cast-expression} if 
-  the \grammarterm{await-expression} was implicitly produced by a \grammarterm{yield-expression} (\ref{expr.yield}), \cbstart\removed{or} an initial \added{suspend point}, or \added{a} final suspend point\removed{s}\cbend (\ref{dcl.fct.def.coroutine}).
-   
-  \item Otherwise, the \grammarterm{unqualified-id} \tcode{await_transform} is looked up within the scope of \tcode{$P$} by class member access lookup (3.4.5), and if this lookup finds at least one declaration, then $a$ is \tcode{$p$.await_transform(\grammarterm{cast-expression});} otherwise, $a$ is \grammarterm{cast-expression}. 
+  the \grammarterm{await-expression} was implicitly produced by a \grammarterm{yield-expression} (\ref{expr.yield}), \cbstart\removed{or} an initial \added{suspend point}, or \added{a} final suspend point\removed{s}\cbend (\ref{dcl.fct.def.coroutine}). 
+  Otherwise, the \grammarterm{unqualified-id} \tcode{await_transform} is looked up within the scope of \tcode{$P$} by class member access lookup (3.4.5), and if this lookup finds at least one declaration, then $a$ is \linebreak\mbox{\tcode{$p$.await_transform(\grammarterm{cast-expression});}} otherwise, $a$ is \grammarterm{cast-expression}. \cbend
   
 %  \item The \grammarterm{unqualified-id} \tcode{await_transform} is looked up within the scope of \tcode{$P$} by class member access lookup (3.4.5), and if this lookup finds at least one declaration, then $a$ is \tcode{$p$.await_transform(\grammarterm{cast-expression});} otherwise, $a$ is \grammarterm{cast-expression}. $a$ is always \grammarterm{cast-expression} for implicit \grammarterm{await-expression}s produced by \grammarterm{yield-expression} (\ref{expr.yield}), or initial and final suspend points (\ref{dcl.fct.def.coroutine}).
 %  Let $A$ be the type of $a$. 
