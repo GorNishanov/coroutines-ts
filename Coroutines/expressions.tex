@@ -90,7 +90,7 @@ then $o$ is the result of that invocation (which shall be well-formed)\cbstart\r
 %  the result of the invocation of the unary \tcode{co_await} operator function applied to expression $a$ (\cxxref{over.match.oper}).
 %  \item If the qualified lookup of \tcode{$A$::operator co_await} finds at least one declaration, $o$ is \break \tcode{$a$.operator co_await()}; otherwise, if the \grammarterm{unqualified-id}{s}
 %  \tcode{await_ready}, \tcode{await_suspend} and \tcode{await_resume} are looked up in the scope of class $A$ as if by class member access lookup (3.4.5) and if this lookup finds at least one declaration, then, $o$ is $a$; otherwise, $o$ is \tcode{operator co_await($a$)}.
-  \item If $o$ is a prvalue, $e$ is a temporary object copy-initialized from $o$\cbstart\added{;} \cbend otherwise $e$ is an lvalue referring to the result of evaluating $o$.
+  \item \cbstart\removed{If $o$ is a prvalue,} $e$ is a temporary object copy-initialized from $o$ \added{if $o$ is a prvalue;} otherwise $e$ is an lvalue referring to the result of evaluating $o$. \cbend 
   
 %  \item If the \grammarterm{await-expression} is potentially-evaluated and lookup for the unqualified-id \tcode{await_transform} within the scope of \tcode{decltype($p$)} as if by class member access lookup (3.4.5) finds at least one declaration, then $e$ is \tcode{$p$.await_transform(a);} otherwise, $e$ is $a$.
   \item $h$ is an object of type \tcode{std::experimental::coroutine_handle<$P$>} referring to the enclosing coroutine.
