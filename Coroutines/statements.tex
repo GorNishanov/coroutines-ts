@@ -143,6 +143,21 @@ In paragraph 1 add two productions to the grammar:
   \end{bnf}
 \end{quote}
 
+Add the underlined text to paragraph 2:
+
+\begin{quote}
+\setcounter{Paras}{1}
+\pnum
+\cbstart
+On exit from a scope (however accomplished), objects with automatic storage
+duration~(\cxxref{basic.stc.auto}) that have been constructed in that scope are destroyed
+in the reverse order of their construction.
+\added{A suspension of a coroutine (\ref{expr.await}) is not considered to be an exit from the scope.}
+
+...
+\cbend
+\end{quote}
+
 \setcounter{subsection}{2}
 \rSec2[stmt.return]{The \tcode{return} statement}%
 \indextext{\idxcode{return}}%

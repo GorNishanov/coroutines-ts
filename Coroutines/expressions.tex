@@ -112,7 +112,7 @@ then $o$ is the result of that invocation (which shall be well-formed); otherwis
   \item If the result is \tcode{false}, the coroutine is considered suspended. Then, the \textit{await-suspend} expression is evaluated. If that expression has
   \cbstart \added{non-\tcode{void} type, then it has}
   type \tcode{bool} and \added{if the value is} \removed{returns} \tcode{false}, the coroutine is resumed. \cbend
-  If that expression exits via an exception, the exception is caught, the coroutine is resumed, and the exception is immediately re-thrown (15.1). Otherwise, control flow returns to the current caller or resumer (\ref{dcl.fct.def.coroutine}).
+  If that expression exits via an exception, the exception is caught, the coroutine is resumed, and the exception is immediately re-thrown (15.1). Otherwise, control flow returns to the current caller or resumer (\ref{dcl.fct.def.coroutine}) \cbstart \added{without exiting any scopes (\ref{stmt.jump})}\cbend.
   \item If the result is \tcode{true}, or when the coroutine is resumed, the \textit{await-resume} expression is evaluated, and its result is the result of the \grammarterm{await-expression}.
   
 \end{itemize}
