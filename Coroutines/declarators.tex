@@ -186,8 +186,9 @@ The selected deallocation function shall be called with the address of the block
 \pnum
 When a coroutine is invoked, an implementation may create a copy of one or more coroutine parameters. Each such copy is direct-initialized from an lvalue referring to the corresponding parameter if it is an lvalue reference, and an xvalue referring to it otherwise. A reference to a parameter in the function-body of the coroutine is replaced by a reference to its copy.
 Initializations of parameter copies are sequenced before the call to the coroutine promise constructor and indeterminately sequenced with respect to each other.
-Parameter copies lifetime ends immediately after the coroutine promise object lifetime ends.
-
+\cbstart
+\added{The lifetime of parameter copies} \removed{Parameter copies lifetime} ends immediately after the coroutine promise object lifetime ends.
+\cbend
 %\pnum
 %An invocation of a coroutine may incur an extra copy/move operation for the parameters.
 %%These copies are defined in the same scope as a \term{promise object}. 
