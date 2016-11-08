@@ -152,7 +152,7 @@ Add the underlined text to paragraph 2:
 On exit from a scope (however accomplished), objects with automatic storage
 duration~(\cxxref{basic.stc.auto}) that have been constructed in that scope are destroyed
 in the reverse order of their construction.
-\added{A suspension of a coroutine (\ref{expr.await}) is not considered to be an exit from the scope.}
+\added{A suspension of a coroutine (\ref{expr.await}) is not considered to be an exit from a scope.}
 
 ...
 \cbend
@@ -163,9 +163,8 @@ in the reverse order of their construction.
 \indextext{\idxcode{return}}%
 \indextext{function~return|see{\tcode{return}}}%
 
-% A
 %Add the underlined text to paragraph 1:
-
+%
 %\begin{quote}
 %\pnum
 %A function returns to its caller by the \tcode{return} statement\added{; that function shall not be a coroutine (\ref{dcl.fct.def.coroutine}).}
@@ -178,6 +177,7 @@ in the reverse order of their construction.
 Add the underlined text to the last sentence of paragraph 2:
 
 \begin{quote}
+\setcounter{Paras}{1}
   \pnum ... Flowing off the end of a function \added{that is not a coroutine} is equivalent to a \tcode{return} with no value; this results in
   undefined behavior in a value-returning function.
 \end{quote}
