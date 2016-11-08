@@ -32,15 +32,16 @@ namespaces. \exitexample
 \setcounter{subsection}{4}
 \rSec3[basic.stc.dynamic.allocation]{Allocation functions}
 
-Add underlined text to paragraph 4.
+Modify paragraph 4 as follows:
 
 \begin{quote}
 	\setcounter{Paras}{3}
 \pnum
+\cbstart
 A global allocation function is only called as the result of a new
-expression~(\cxxref{expr.new}), or called directly using the function call
+expression~(\cxxref{expr.new}), \removed{or} called directly using the function call
 syntax~(\cxxref{expr.call}), 
-\added{or called indirectly to allocate storage for a coroutine frame (\ref{dcl.fct.def.coroutine}), }
+\removed{or} \added{called indirectly to allocate storage for a coroutine frame (\ref{dcl.fct.def.coroutine}), }\cbend
 or called indirectly through calls to the
 functions in the \Cpp standard library. \enternote In particular, a
 global allocation function is not called to allocate storage for objects
