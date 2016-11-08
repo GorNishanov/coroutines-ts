@@ -80,10 +80,15 @@ Evaluation of an \grammarterm{await-expression} involves the following auxiliary
 %  \item The \grammarterm{unqualified-id} \tcode{await_transform} is looked up within the scope of \tcode{$P$} by class member access lookup (3.4.5), and if this lookup finds at least one declaration, then $a$ is \tcode{$p$.await_transform(\grammarterm{cast-expression});} otherwise, $a$ is \grammarterm{cast-expression}. $a$ is always \grammarterm{cast-expression} for implicit \grammarterm{await-expression}s produced by \grammarterm{yield-expression} (\ref{expr.yield}), or initial and final suspend points (\ref{dcl.fct.def.coroutine}).
 %  Let $A$ be the type of $a$. 
 
-\item \cbstart\added{$o$ is $a$, unless} \removed{If} \cbend for an invocation of the operator \tcode{co_await} applied to expression $a$ at least one viable operator \tcode{co_await} candidate is visible 
+\item \cbstart \removed{If for an invocation of the operator \tcode{co_await} applied to expression $a$ at least one viable operator \tcode{co_await} candidate is visible 
 %\cxxref{over.match.oper},
-(through unqualified name lookup (\cxxref{basic.lookup.unqual}) or argument-dependent-lookup (\cxxref{basic.lookup.argdep}))
-then $o$ is the result of that invocation (which shall be well-formed)\cbstart\removed{; otherwise $o$ is $a$}\cbend.
+(through unqualified name lookup (\cxxref{basic.lookup.unqual}) 
+or \linebreak 
+argument-dependent-lookup (\cxxref{basic.lookup.argdep}))
+then $o$ is the result of that invocation (which shall be well-formed); otherwise $o$ is $a$.}
+
+\added{$o$ is the function call expression }\tcode{\added{operator co_await(\textit{a})}} \added{if overload resolution for that function call finds at least one viable function; otherwise, $o$ is $a$.} 
+\cbend
 %
 %  \item If $A$ is a class type, the \grammarterm{unqualified-id}{s}
 %  \tcode{await_ready}, \tcode{await_suspend} and \tcode{await_resume} are looked up in the scope of class $A$ by class member access lookup (3.4.5) and if this lookup finds at least one declaration, then $o$ is $a$; otherwise, $o$ is
