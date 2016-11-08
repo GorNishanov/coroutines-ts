@@ -293,7 +293,12 @@ where $final$\tcode{\_}$suspend$ is as defined in \ref{dcl.fct.def.coroutine} an
 \end{itemize}
 $S$ shall be a prvalue of type \tcode{void}.
 
-\pnum \enternote See \ref{dcl.fct.def.coroutine} about the flowing off the end of a coroutine. \exitnote
+\pnum 
+\cbstart
+\removed{\enternote See \ref{dcl.fct.def.coroutine} about the flowing off the end of a coroutine. \exitnote}
+
+\added{If $p$}\tcode{\added{.return_void()}} \added{is a valid expression, flowing off the end of a coroutine is equivalent to a }\tcode{\added{co_return}} \added{with no operand; otherwise flowing off the end of a coroutine results in undefined behavior.}
+\cbend
 %If none are found, the coroutine does not have an eventual return type.
 %  $expression$ is treated as an xvalue;
 
