@@ -91,7 +91,7 @@ The \grammarterm{parameter-declaration-clause} of the coroutine shall not termin
 %\tcode{std::experimental::coroutine_traits} (\ref{coroutine.traits}). 
 
 \pnum
-For a coroutine \textit{f} that is a non-static member function, let $P_1$ denote the type of the implicit object parameter (\cxxref{over.match.funcs}) and $P_2$ ... $P_n$ be the types of the function parameters; otherwise let $P_1$ ... $P_n$ be the types of the function parameters. \cbstart \added{Let $p_1$ ... $p_n$ be lvalues denoting those objects.} \cbend
+For a coroutine \textit{f} that is a non-static member function, let $P_1$ denote the type of the implicit object parameter (\cxxref{over.match.funcs}) and $P_2$ ... $P_n$ be the types of the function parameters; otherwise let $P_1$ ... $P_n$ be the types of the function parameters. Let $p_1$ ... $p_n$ be lvalues denoting those objects.
 Let \textit{R} be the return type and \textit{F} be the \grammarterm{function-body}
 %\footnote{
 %Due to requirement of having suspend-resume points,
@@ -105,19 +105,13 @@ Then, the coroutine behaves as if its body were:
 \begin{codeblock}
   {
      @\textit{P }$p$@;
-     @\cbstart\removed{auto gro = p.get_return_object();}\cbend@
      co_await @$p$@.initial_suspend(); // initial suspend point
-     @\cbstart\added{\tcode{try \{ \textit{F} \} catch(...) \{ \textit{p}.unhandled_exception(); \} }}\cbend@
+     try { @\textit{F}@ } catch(...) { @\textit{p}@.unhandled_exception(); }
   @\textit{final_suspend}@:
      co_await @$p$@.final_suspend(); // final suspend point
   }
 \end{codeblock}
-where \cbstart
-\removed{\textit{F'} is}
-\removed{\tcode{try \{ \textit{F} \} catch(...) \{ \textit{p}.unhandled_exception(); \}}
-if the \grammarterm{unqualified-id} \tcode{set_exception} is found in the scope of \textit{P}
-by class member access lookup (\cxxref{basic.lookup.classref}), and \textit{F'} is \textit{F} otherwise.
-An}\cbend \added{an} object denoted as \textit{p} is the \defn{promise object} of
+where an object denoted as \textit{p} is the \defn{promise object} of
 the coroutine and its type $P$ is the \defn{promise type}
 of the coroutine.
 
@@ -137,13 +131,10 @@ If the \grammarterm{unqualified-id} \tcode{return_void} is found, flowing off th
 %When a coroutine returns to its caller, the return value is produced as if by the statement \mbox{\tcode{return}{ }$gro$\tcode{;}}
 
 \pnum 
-When a coroutine returns to its caller, the return value is produced
-\cbstart
-\removed{When a coroutine returns to its caller, the return value is produced as if by the statement \mbox{\tcode{return}{ }$gro$\tcode{;}}}
-\added{by a call to \linebreak
+When a coroutine returns to its caller, the return value is produced by a call to \linebreak
  \mbox{\tcode{$p$.get_return_object()}}. A call to a \tcode{get_return_object} is sequenced before the call to \linebreak
-\mbox{\tcode{initial_suspend}} and is invoked at most once.}
-\cbend
+\mbox{\tcode{initial_suspend}} and is invoked at most once.
+
 
 %\enternote
 %For subsequent suspends, if any, the coroutine
@@ -159,13 +150,11 @@ a resumption member function (\ref{coroutine.handle.resumption}) of an object of
 associated with this instance of the coroutine. The function that invoked a resumption member function is called \term{resumer}. Invoking a resumption member function for a coroutine that is not suspended results in undefined behavior. 
 
 \pnum
-\cbstart
-An implementation may need to allocate additional storage for \removed{the lifetime of} a coroutine. 
-\cbend
+An implementation may need to allocate additional storage for a coroutine. 
 This storage is known as the \defn{coroutine state} and is obtained by calling a non-array allocation function~(\cxxref{basic.stc.dynamic.allocation}).
-The allocation function's name is looked up in the scope of $P$. If this lookup fails, the allocation function's name is looked up in the global scope. If the lookup finds an allocation function in the scope of $P$, \cbstart \removed{and that function takes exactly one parameter, it will be used; otherwise, all parameters of the coroutine are passed to the allocation function after the size parameter in order.}
-\added{overload resolution is performed on a function call created by assembling an argument list. The first argument is the amount of space requested, and has type \tcode{std::size_t}. The lvalues $p_1$ ... $p_n$ are the succeeding arguments. If no matching function is found, overload resolution is performed again on a function call created by passing just the amount of space required as an argument of type \tcode{std::size_t}.}
-\cbend
+The allocation function's name is looked up in the scope of $P$. If this lookup fails, the allocation function's name is looked up in the global scope. If the lookup finds an allocation function in the scope of $P$, 
+%\removed{and that function takes exactly one parameter, it will be used; otherwise, all parameters of the coroutine are passed to the allocation function after the size parameter in order.}
+overload resolution is performed on a function call created by assembling an argument list. The first argument is the amount of space requested, and has type \tcode{std::size_t}. The lvalues $p_1$ ... $p_n$ are the succeeding arguments. If no matching function is found, overload resolution is performed again on a function call created by passing just the amount of space required as an argument of type \tcode{std::size_t}.
 %\enternote 
 %An allocation function template shall have two or more function parameters. 
 %A template instance is never considered to be an allocation function with exactly one parameter, regardless of its signature. 
@@ -175,11 +164,10 @@ The allocation function's name is looked up in the scope of $P$. If this lookup 
 \pnum
 The \grammarterm{unqualified-id} \tcode{get_return_object_on_allocation_failure} is looked up in the scope of class \textit{P}
 by class member access lookup (\cxxref{basic.lookup.classref}). If a declaration is found, then the result of a call to an allocation function used to obtain storage for the coroutine state is assumed to return
-\tcode{nullptr} if it fails to obtain storage, and if a global allocation function is selected, \cbstart \added{the} \cbend \tcode{::operator new(size_t, nothrow_t)} form shall be used.
+\tcode{nullptr} if it fails to obtain storage, and if a global allocation function is selected, the \tcode{::operator new(size_t, nothrow_t)} form shall be used.
 %is passed to an allocaiton. 
 If an allocation function returns \tcode{nullptr}, the coroutine returns control to the caller of the coroutine and the return value is obtained by a call to $P$\tcode{::get_return_object_on_allocation_failure()}. 
-\cbstart \added{The allocation function used in this case must have a non-throwing \grammarterm{noexcept-specification}.}
-\cbend
+The allocation function used in this case must have a non-throwing \grammarterm{noexcept-specification}.
 
 \pnum
 The coroutine state is destroyed when
@@ -190,9 +178,7 @@ function~(\cxxref{basic.stc.dynamic.deallocation}). If \tcode{destroy} is called
 
 \pnum
 The deallocation function's name is looked up in the scope of $P$. If this lookup fails, the deallocation function's name is looked up in the global scope. If deallocation function lookup finds both a usual deallocation function with only a pointer parameter and a usual deallocation function with both a pointer parameter and a size parameter, then the selected deallocation function shall be the one with two parameters. Otherwise, the selected deallocation function shall be the function with one parameter. If no usual deallocation function is found, the program is ill-formed.
-\cbstart
-\added{The selected deallocation function shall be called with the address of the block of storage to be reclaimed as its first argument. If a deallocation function with a parameter of type \tcode{std::size_t} is used, the size of the block is passed as the corresponding argument.}
-\cbend
+The selected deallocation function shall be called with the address of the block of storage to be reclaimed as its first argument. If a deallocation function with a parameter of type \tcode{std::size_t} is used, the size of the block is passed as the corresponding argument.
 
 %introduce metavariable instead of talking about
 %coroutine_handle<>
@@ -200,10 +186,8 @@ The deallocation function's name is looked up in the scope of $P$. If this looku
 \pnum
 When a coroutine is invoked, an implementation may create a copy of one or more coroutine parameters. Each such copy is direct-initialized from an lvalue referring to the corresponding parameter if it is an lvalue reference, and an xvalue referring to it otherwise. A reference to a parameter in the function-body of the coroutine is replaced by a reference to its copy.
 Initializations of parameter copies are sequenced before the call to the coroutine promise constructor and indeterminately sequenced with respect to each other.
-\cbstart
-\removed{Parameter copies scope is a block scope of the coroutine promise.}
-\added{Parameter copies lifetime ends immediately after the coroutine promise object lifetime ends.}
-\cbend
+Parameter copies lifetime ends immediately after the coroutine promise object lifetime ends.
+
 %\pnum
 %An invocation of a coroutine may incur an extra copy/move operation for the parameters.
 %%These copies are defined in the same scope as a \term{promise object}. 
@@ -253,7 +237,7 @@ Initializations of parameter copies are sequenced before the call to the corouti
 \begin{codeblock}
 // ::operator new(size_t, nothrow_t) will be used if allocation is needed
 struct generator {
-  @\cbstart\added{struct promise_type;}\cbend@
+  struct promise_type;
   using handle = std::experimental::coroutine_handle<promise_type>;
   struct promise_type {
     int current_value;
