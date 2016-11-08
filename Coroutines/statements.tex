@@ -149,16 +149,16 @@ In paragraph 1 add two productions to the grammar:
 \indextext{function~return|see{\tcode{return}}}%
 
 % A
-Add the underlined text to paragraph 1:
+%Add the underlined text to paragraph 1:
 
-\begin{quote}
-\pnum
-A function returns to its caller by the \tcode{return} statement\added{; that function shall not be a coroutine (\ref{dcl.fct.def.coroutine}).}
+%\begin{quote}
+%\pnum
+%A function returns to its caller by the \tcode{return} statement\added{; that function shall not be a coroutine (\ref{dcl.fct.def.coroutine}).}
 %\added{A return statement shall not appear in a coroutine. A coroutine return statement shall be used instead \ref{stmt.return.coroutine}.}
 %\added{In this section, function refers to a function that is not a coroutine. The \tcode{return} statement in a coroutine described in section \ref{stmt.return.coroutine}.}
 % \added{A \tcode{return} statement shall not appear in a coroutine.}
 %\added{Using a \tcode{return} statement in a coroutine makes the program ill-formed.}
-\end{quote}
+%\end{quote}
 
 Add the underlined text to the last sentence of paragraph 2:
 
@@ -264,7 +264,7 @@ Add this section to \ref{stmt.jump}.
 
 \pnum
 A coroutine returns to its caller or resumer (\ref{dcl.fct.def.coroutine}) by the \tcode{co_return} statement
-or when suspended (\ref{expr.await}). 
+or when suspended (\ref{expr.await}). \cbstart\added{A coroutine shall not return to its caller or resumer by the \tcode{return} statement (\ref{stmt.return}).}\cbend
 
 \pnum
 The \grammarterm{expression} or \grammarterm{braced-init-list} of a \tcode{co_return} statement is called its operand.
