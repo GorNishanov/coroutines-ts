@@ -89,7 +89,7 @@ $o$ is determined by enumerating the applicable \tcode{operator co_await} functi
 %  the result of the invocation of the unary \tcode{co_await} operator function applied to expression $a$ (\cxxref{over.match.oper}).
 %  \item If the qualified lookup of \tcode{$A$::operator co_await} finds at least one declaration, $o$ is \break \tcode{$a$.operator co_await()}; otherwise, if the \grammarterm{unqualified-id}{s}
 %  \tcode{await_ready}, \tcode{await_suspend} and \tcode{await_resume} are looked up in the scope of class $A$ as if by class member access lookup (3.4.5) and if this lookup finds at least one declaration, then, $o$ is $a$; otherwise, $o$ is \tcode{operator co_await($a$)}.
-  \item \cbstart $e$ is a temporary object copy-initialized from $o$ \added{if $o$ is a prvalue;} otherwise $e$ is an lvalue referring to the result of evaluating $o$. \cbend 
+  \item $e$ is a temporary object copy-initialized from $o$ if $o$ is a prvalue; otherwise $e$ is an lvalue referring to the result of evaluating $o$.
   
 %  \item If the \grammarterm{await-expression} is potentially-evaluated and lookup for the unqualified-id \tcode{await_transform} within the scope of \tcode{decltype($p$)} as if by class member access lookup (3.4.5) finds at least one declaration, then $e$ is \tcode{$p$.await_transform(a);} otherwise, $e$ is $a$.
   \item $h$ is an object of type \tcode{std::experimental::coroutine_handle<$P$>} referring to the enclosing coroutine.
@@ -104,9 +104,8 @@ $o$ is determined by enumerating the applicable \tcode{operator co_await} functi
 \pnum The \grammarterm{await-expression} evaluates the \textit{await-ready} expression, then:
 \begin{itemize}
   \item If the result is \tcode{false}, the coroutine is considered suspended. Then, the \textit{await-suspend} expression is evaluated. If that expression has
-  \cbstart 
-  type \tcode{bool} and \added{evaluates to} \tcode{false}, the coroutine is resumed. \cbend
-  If that expression exits via an exception, the exception is caught, the coroutine is resumed, and the exception is immediately re-thrown (15.1). Otherwise, control flow returns to the current caller or resumer (\ref{dcl.fct.def.coroutine}) \cbstart \added{without exiting any scopes (\ref{stmt.jump})}\cbend.
+  type \tcode{bool} and evaluates to \tcode{false}, the coroutine is resumed.
+  If that expression exits via an exception, the exception is caught, the coroutine is resumed, and the exception is immediately re-thrown (15.1). Otherwise, control flow returns to the current caller or resumer (\ref{dcl.fct.def.coroutine}) without exiting any scopes (\ref{stmt.jump}).
   \item If the result is \tcode{true}, or when the coroutine is resumed, the \textit{await-resume} expression is evaluated, and its result is the result of the \grammarterm{await-expression}.
   
 \end{itemize}
