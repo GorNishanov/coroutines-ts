@@ -152,8 +152,9 @@ Add the underlined text to paragraph 2:
 On exit from a scope (however accomplished), objects with automatic storage
 duration~(\cxxref{basic.stc.auto}) that have been constructed in that scope are destroyed
 in the reverse order of their construction.
+\enternote
 \added{A suspension of a coroutine (\ref{expr.await}) is not considered to be an exit from a scope.}
-
+\exitnote
 ...
 \cbend
 \end{quote}
@@ -279,7 +280,7 @@ Add this section to \ref{stmt.jump}.
 
 \pnum
 A coroutine returns to its caller or resumer (\ref{dcl.fct.def.coroutine}) by the \tcode{co_return} statement
-or when suspended (\ref{expr.await}). \cbstart\added{A coroutine shall not return to its caller or resumer by the \tcode{return} statement (\ref{stmt.return}).}\cbend
+or when suspended (\ref{expr.await}). \cbstart\added{A coroutine shall not return to its caller or resumer by a \tcode{return} statement (\ref{stmt.return}).}\cbend
 
 \pnum
 The \grammarterm{expression} or \grammarterm{braced-init-list} of a \tcode{co_return} statement is called its operand.
