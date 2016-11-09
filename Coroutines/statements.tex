@@ -148,15 +148,15 @@ Add the underlined text to paragraph 2:
 \begin{quote}
 \setcounter{Paras}{1}
 \pnum
-\cbstart
 On exit from a scope (however accomplished), objects with automatic storage
 duration~(\cxxref{basic.stc.auto}) that have been constructed in that scope are destroyed
 in the reverse order of their construction.
+\added{
 \enternote
-\added{A suspension of a coroutine (\ref{expr.await}) is not considered to be an exit from a scope.}
+A suspension of a coroutine (\ref{expr.await}) is not considered to be an exit from a scope.
 \exitnote
+}
 ...
-\cbend
 \end{quote}
 
 \setcounter{subsection}{2}
@@ -280,7 +280,7 @@ Add this section to \ref{stmt.jump}.
 
 \pnum
 A coroutine returns to its caller or resumer (\ref{dcl.fct.def.coroutine}) by the \tcode{co_return} statement
-or when suspended (\ref{expr.await}). \cbstart\added{A coroutine shall not return to its caller or resumer by a \tcode{return} statement (\ref{stmt.return}).}\cbend
+or when suspended (\ref{expr.await}). A coroutine shall not return to its caller or resumer by a \tcode{return} statement (\ref{stmt.return}).
 
 \pnum
 The \grammarterm{expression} or \grammarterm{braced-init-list} of a \tcode{co_return} statement is called its operand.
@@ -310,11 +310,7 @@ where $final$\tcode{\_}$suspend$ is as defined in \ref{dcl.fct.def.coroutine} an
 $S$ shall be a prvalue of type \tcode{void}.
 
 \pnum 
-\cbstart
-\removed{\enternote See \ref{dcl.fct.def.coroutine} about the flowing off the end of a coroutine. \exitnote}
-
-\added{If $p$}\tcode{\added{.return_void()}} \added{is a valid expression, flowing off the end of a coroutine is equivalent to a }\tcode{\added{co_return}} \added{with no operand; otherwise flowing off the end of a coroutine results in undefined behavior.}
-\cbend
+If $p$\tcode{.return_void()} is a valid expression, flowing off the end of a coroutine is equivalent to a \tcode{co_return} with no operand; otherwise flowing off the end of a coroutine results in undefined behavior.
 %If none are found, the coroutine does not have an eventual return type.
 %  $expression$ is treated as an xvalue;
 
