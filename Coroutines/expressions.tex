@@ -73,16 +73,16 @@ Evaluation of an \grammarterm{await-expression} involves the following auxiliary
   
   \item $p$ is an lvalue naming the promise object (8.4.4) of the enclosing coroutine and $P$ is the type of that object.
   
-  \item $a$ is \cbstart\added{the} \cbend \grammarterm{cast-expression} if 
-  the \grammarterm{await-expression} was implicitly produced by a \grammarterm{yield-expression} (\ref{expr.yield}), \cbstart an initial \added{suspend point}, or \added{a} final suspend point (\ref{dcl.fct.def.coroutine}). 
-  Otherwise, the \grammarterm{unqualified-id} \tcode{await_transform} is looked up within the scope of \tcode{$P$} by class member access lookup (3.4.5), and if this lookup finds at least one declaration, then $a$ is \linebreak\mbox{\tcode{$p$.await_transform(\grammarterm{cast-expression});}} otherwise, $a$ is \cbstart\added{the} \cbend\grammarterm{cast-expression}. \cbend
+  \item $a$ is the \grammarterm{cast-expression} if 
+  the \grammarterm{await-expression} was implicitly produced by a \grammarterm{yield-expression} (\ref{expr.yield}), an initial suspend point, or a final suspend point (\ref{dcl.fct.def.coroutine}). 
+  Otherwise, the \grammarterm{unqualified-id} \tcode{await_transform} is looked up within the scope of \tcode{$P$} by class member access lookup (3.4.5), and if this lookup finds at least one declaration, then $a$ is \linebreak\mbox{\tcode{$p$.await_transform(\grammarterm{cast-expression});}} otherwise, $a$ is the  \grammarterm{cast-expression}.
   
 %  \item The \grammarterm{unqualified-id} \tcode{await_transform} is looked up within the scope of \tcode{$P$} by class member access lookup (3.4.5), and if this lookup finds at least one declaration, then $a$ is \tcode{$p$.await_transform(\grammarterm{cast-expression});} otherwise, $a$ is \grammarterm{cast-expression}. $a$ is always \grammarterm{cast-expression} for implicit \grammarterm{await-expression}s produced by \grammarterm{yield-expression} (\ref{expr.yield}), or initial and final suspend points (\ref{dcl.fct.def.coroutine}).
 %  Let $A$ be the type of $a$. 
 
-\item \cbstart 
+\item  
 $o$ is determined by enumerating the applicable \tcode{operator co_await} functions for an argument $a$ (\cxxref{over.match.oper}), and choosing the best one through overload resolution (\cxxref{over.match}). If overload resolution is ambiguous, the program is ill-formed. If no viable functions are found, $o$ is $a$. Otherwise, $o$ is a call to the selected function.
-\cbend
+
 %
 %  \item If $A$ is a class type, the \grammarterm{unqualified-id}{s}
 %  \tcode{await_ready}, \tcode{await_suspend} and \tcode{await_resume} are looked up in the scope of class $A$ by class member access lookup (3.4.5) and if this lookup finds at least one declaration, then $o$ is $a$; otherwise, $o$ is
