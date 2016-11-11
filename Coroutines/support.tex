@@ -49,7 +49,7 @@ by \tcode{catch} and \tcode{throw} would invoke any non-trivial destructors for 
 objects.
 %
 \added{A call to \tcode{setjmp} or \tcode{longjmp} has undefined
-behavior if invoked in a coroutine.}
+behavior if invoked in a suspension context of a coroutine (\ref{expr.await}).}
 
 \xref ISO C~7.10.4, 7.8, 7.6, 7.12.
 \end{quote}
