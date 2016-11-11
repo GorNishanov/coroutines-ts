@@ -98,9 +98,9 @@ inline namespace coroutines_v1 {
 } // namespace coroutines_v1
 } // namespace experimental
 
-@\cbstart@// \ref{coroutine.handle.hash} hash support:
+// \ref{coroutine.handle.hash} hash support:
 template <class T> struct hash;
-template <class P> struct hash<@\added{std::experimental::}@coroutine_handle<P>>;@\cbend@
+template <class P> struct hash<std::experimental::coroutine_handle<P>>;
 
 } // namespace std
 \end{codeblock}
