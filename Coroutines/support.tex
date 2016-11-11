@@ -398,14 +398,14 @@ namespace experimental {
 inline namespace coroutines_v1 {
 
   struct suspend_never {
-    bool await_ready() @\cbstart\added{const}@ { return true; }
-    void await_suspend(coroutine_handle<>) @\added{const}@ {}
-    void await_resume() @\added{const}\cbend@ {}
+    bool await_ready() const { return true; }
+    void await_suspend(coroutine_handle<>) const {}
+    void await_resume() const {}
   };
   struct suspend_always {
-    bool await_ready() @\cbstart\added{const}@ { return false; }
-    void await_suspend(coroutine_handle<>) @\added{const}@ {}
-    void await_resume() @\added{const}\cbend@ {}
+    bool await_ready() const { return false; }
+    void await_suspend(coroutine_handle<>) const {}
+    void await_resume() const {}
   };
 
 } // namespace coroutines_v1
