@@ -172,9 +172,9 @@ inline namespace coroutines_v1 {
     constexpr coroutine_handle(nullptr_t) noexcept;
     coroutine_handle& operator=(nullptr_t) noexcept;
     
-    // \ref{coroutine.handle.export} export/import
+    // \ref{coroutine.handle.import.export} export/import
     constexpr void* address() const noexcept;
-    constexpr static coroutine_handle from_address(void* addr) noexcept;		
+    constexpr static coroutine_handle from_address(void* addr);
     
     // \ref{coroutine.handle.observers} observers
     constexpr explicit operator bool() const noexcept;
@@ -197,8 +197,8 @@ inline namespace coroutines_v1 {
     static coroutine_handle from_promise(Promise&);		
     coroutine_handle& operator=(nullptr_t) noexcept;
 
-    // \ref{coroutine.handle.export} export/import
-    constexpr static coroutine_handle from_address(void* addr) noexcept;
+    // \ref{coroutine.handle.import} import
+    constexpr static coroutine_handle from_address(void* addr);
     
     // \ref{coroutine.handle.promise} promise access
     Promise& promise() const;
@@ -249,15 +249,40 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
   \pnum\returns \tcode{*this}.
 \end{itemdescr}
 
-\rSec3[coroutine.handle.export]{\tcode{coroutine_handle} export/import}
+\rSec3[coroutine.handle.import.export]{\tcode{coroutine_handle} export/import}
+
 \begin{itemdecl}
-  static coroutine_handle from_address(void* addr) noexcept;		
   constexpr void* address() const noexcept;
 \end{itemdecl}
 
 \begin{itemdescr}
-  \pnum
-  \postconditions \tcode{coroutine_handle<>::from_address(address()) == *this}.
+	\pnum
+	\returns \tcode{ptr}.
+\end{itemdescr}
+
+
+\begin{itemdecl}
+  static coroutine_handle from_address(void* addr);		
+\end{itemdecl}
+
+\begin{itemdescr}
+	\pnum
+	\precondition \tcode{addr} was obtained via prior call to \tcode{address()}.
+	
+	\pnum
+	\postconditions \tcode{from_address(address()) == *this}.
+\end{itemdescr}
+
+\rSec3[coroutine.handle.import]{\tcode{coroutine_handle} import}
+\begin{itemdecl}
+	static coroutine_handle from_address(void* addr);
+\end{itemdecl}
+\begin{itemdescr}
+	\pnum
+	\precondition \tcode{addr} was obtained via prior call to \tcode{address()}.
+
+	\pnum
+	\postconditions \tcode{from_address(address()) == *this}.
 \end{itemdescr}
 
 \rSec3[coroutine.handle.observers]{\tcode{coroutine_handle} observers}
