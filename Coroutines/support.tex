@@ -200,7 +200,7 @@ inline namespace coroutines_v1 {
     // \ref{coroutine.handle.export} export/import
     constexpr static coroutine_handle from_address(void* addr) noexcept;
     
-    // \ref{coroutine.handle.prom} promise access
+    // \ref{coroutine.handle.promise} promise access
     Promise& promise() const;
   };
 
@@ -307,10 +307,9 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
   \effects destroys the coroutine (\ref{dcl.fct.def.coroutine}).
 \end{itemdescr}
 
-\rSec3[coroutine.handle.prom]{\tcode{coroutine_handle} promise access}
+\rSec3[coroutine.handle.promise]{\tcode{coroutine_handle} promise access}
 \begin{itemdecl}
-  Promise& promise();		
-  Promise const& promise() const;
+  Promise& promise() const;		
 \end{itemdecl}
 
 \begin{itemdescr}
