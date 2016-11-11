@@ -279,7 +279,7 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
 	
 	\pnum
 	\returns \tcode{true} if the coroutine is suspended
-	at final suspend point, otherwise \tcode{false}.
+	at its final suspend point, otherwise \tcode{false}.
 \end{itemdescr}
 
 \rSec3[coroutine.handle.resumption]{\tcode{coroutine_handle} resumption}
@@ -293,7 +293,7 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
   
   \pnum
   \effects resumes the execution of the coroutine. If the coroutine was suspended
-  at the final suspend point, behavior is undefined.
+  at its final suspend point, behavior is undefined.
 \end{itemdescr}
 
 \begin{itemdecl}
