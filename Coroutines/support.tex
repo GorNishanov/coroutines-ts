@@ -396,14 +396,14 @@ namespace experimental {
 inline namespace coroutines_v1 {
 
   struct suspend_never {
-    bool await_ready() const { return true; }
-    void await_suspend(coroutine_handle<>) const {}
-    void await_resume() const {}
+    constexpr bool await_ready() const noexcept { return true; }
+    constexpr void await_suspend(coroutine_handle<>) const noexcept {}
+    constexpr void await_resume() const noexcept {}
   };
   struct suspend_always {
-    bool await_ready() const { return false; }
-    void await_suspend(coroutine_handle<>) const {}
-    void await_resume() const {}
+    constexpr bool await_ready() const noexcept { return false; }
+    constexpr void await_suspend(coroutine_handle<>) const noexcept {}
+    constexpr void await_resume() const noexcept {}
   };
 
 } // namespace coroutines_v1
