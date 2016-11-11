@@ -194,7 +194,7 @@ inline namespace coroutines_v1 {
   {
     // \ref{coroutine.handle.con} construct/reset
     using coroutine_handle<>::coroutine_handle;
-    static coroutine_handle from_promise(Promise&) noexcept;		
+    static coroutine_handle from_promise(Promise&);		
     coroutine_handle& operator=(nullptr_t) noexcept;
 
     // \ref{coroutine.handle.export} export/import
@@ -228,7 +228,7 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
 \end{itemdescr}
 
 \begin{itemdecl}
-  static coroutine_handle coroutine_handle::from_promise(Promise& p) noexcept;	
+  static coroutine_handle coroutine_handle::from_promise(Promise& p);
 \end{itemdecl}
 \begin{itemdescr}
   \pnum
