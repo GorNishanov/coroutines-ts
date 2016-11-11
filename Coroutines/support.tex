@@ -274,15 +274,17 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
 \end{itemdescr}
 
 \rSec3[coroutine.handle.import]{\tcode{coroutine_handle} import}
-\begin{itemdecl}
-	static coroutine_handle from_address(void* addr);
-\end{itemdecl}
-\begin{itemdescr}
-	\pnum
-	\precondition \tcode{addr} was obtained via prior call to \tcode{address()}.
 
-	\pnum
-	\postconditions \tcode{from_address(address()) == *this}.
+\begin{itemdecl}
+  static coroutine_handle from_address(void* addr);
+\end{itemdecl}
+
+\begin{itemdescr}
+ \pnum
+ \precondition \tcode{addr} was obtained via prior call to \tcode{address()}.
+
+ \pnum
+ \postconditions \tcode{from_address(address()) == *this}.
 \end{itemdescr}
 
 \rSec3[coroutine.handle.observers]{\tcode{coroutine_handle} observers}
@@ -296,15 +298,15 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
 \end{itemdescr}
 
 \begin{itemdecl}
-	bool done() const; 
+  bool done() const; 
 \end{itemdecl}
 \begin{itemdescr}
-	\pnum
-	\precondition \tcode{*this} refers to a suspended coroutine.
+  \pnum
+  \precondition \tcode{*this} refers to a suspended coroutine.
 	
-	\pnum
-	\returns \tcode{true} if the coroutine is suspended
-	at its final suspend point, otherwise \tcode{false}.
+  \pnum
+  \returns \tcode{true} if the coroutine is suspended
+    at its final suspend point, otherwise \tcode{false}.
 \end{itemdescr}
 
 \rSec3[coroutine.handle.resumption]{\tcode{coroutine_handle} resumption}
