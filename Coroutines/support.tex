@@ -77,11 +77,11 @@ inline namespace coroutines_v1 {
 
   // \ref{coroutine.traits} coroutine traits
   template <typename R, typename... ArgTypes>
-    @\cbstart\added{struct}\removed{class}\cbend@ coroutine_traits;
+    struct coroutine_traits;
   	
   // \ref{coroutine.handle} coroutine handle
   template <typename Promise = void>
-    @\cbstart\added{struct}\removed{class}\cbend@ coroutine_handle;		
+    struct coroutine_handle;		
   
   // \ref{coroutine.handle.compare} comparison operators:	
   bool operator==(coroutine_handle<> x, coroutine_handle<> y) noexcept;
