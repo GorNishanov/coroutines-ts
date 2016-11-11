@@ -228,14 +228,14 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
 \end{itemdescr}
 
 \begin{itemdecl}
-  static coroutine_handle coroutine_handle::from_promise(Promise& p);
+  static coroutine_handle from_promise(Promise& p);
 \end{itemdecl}
 \begin{itemdescr}
   \pnum
   \precondition \tcode{p} is a reference to a promise object of a coroutine.
   
 	\pnum
-  \returns coroutine handle $h$ refering to the coroutine.
+  \returns A coroutine handle $h$ referring to the coroutine.
   
   \pnum\postconditions \tcode{addressof(}$h$\tcode{.promise()) == addressof(p)}.
 \end{itemdescr}
