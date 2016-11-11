@@ -253,7 +253,7 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
 \rSec3[coroutine.handle.export]{\tcode{coroutine_handle} export/import}
 \begin{itemdecl}
   static coroutine_handle from_address(void* addr) noexcept;		
-  @\cbstart\added{constexpr}\cbend@ void* address() const noexcept;
+  constexpr void* address() const noexcept;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -263,7 +263,7 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
 
 \rSec3[coroutine.handle.capacity]{\tcode{coroutine_handle} capacity}
 \begin{itemdecl}
-  @\cbstart\added{constexpr}\cbend@ explicit operator bool() const noexcept;
+  constexpr explicit operator bool() const noexcept;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -298,7 +298,7 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
 
 \rSec3[coroutine.handle.completion]{\tcode{coroutine_handle} completion check}
 \begin{itemdecl}
-  bool done() const  @\cbstart\removed{noexcept}\cbend@; 
+  bool done() const; 
 \end{itemdecl}
 \begin{itemdescr}
   \pnum
@@ -311,8 +311,8 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
 
 \rSec3[coroutine.handle.prom]{\tcode{coroutine_handle} promise access}
 \begin{itemdecl}
-  Promise& promise()  @\cbstart\removed{noexcept}\cbend@;		
-  Promise const& promise() const  @\cbstart\removed{noexcept}\cbend@;
+  Promise& promise();		
+  Promise const& promise() const;
 \end{itemdecl}
 
 \begin{itemdescr}
