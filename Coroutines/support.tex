@@ -173,11 +173,11 @@ inline namespace coroutines_v1 {
     coroutine_handle& operator=(nullptr_t) noexcept;
     
     // \ref{coroutine.handle.export} export/import
-    @\cbstart\added{constexpr}@ void* address() const noexcept;
-    @\added{constexpr}\cbend@ static coroutine_handle from_address(void* addr) noexcept;		
+    constexpr void* address() const noexcept;
+    constexpr static coroutine_handle from_address(void* addr) noexcept;		
     
     // \ref{coroutine.handle.capacity} capacity
-    @\cbstart\added{constexpr}\cbend@ explicit operator bool() const noexcept;
+    constexpr explicit operator bool() const noexcept;
     
     // \ref{coroutine.handle.resumption} resumption
     void operator()() const;
@@ -185,9 +185,9 @@ inline namespace coroutines_v1 {
     void destroy() const;
     
     // \ref{coroutine.handle.completion} completion check
-    bool done() const @\cbstart\removed{noexcept}\cbend@; 
-  @\cbstart\added{private:}@
-    @\added{void* ptr;}\cbend@ // exposition only
+    bool done() const noexcept; 
+  private:
+    void* ptr; // exposition only
   };
 
   template <typename Promise>
@@ -198,11 +198,11 @@ inline namespace coroutines_v1 {
     static coroutine_handle from_promise(Promise&) noexcept;		
     coroutine_handle& operator=(nullptr_t) noexcept;
 
-    @\cbstart@// \ref{coroutine.handle.export} export/import
-    @\added{constexpr static coroutine_handle from_address(void* addr) noexcept;}\cbend@
+    // \ref{coroutine.handle.export} export/import
+    constexpr static coroutine_handle from_address(void* addr) noexcept;
     
     // \ref{coroutine.handle.prom} promise access
-    Promise& promise() const @\cbstart\removed{noexcept}\cbend@;		
+    Promise& promise() const;
   };
 
 } // namespace coroutines_v1
