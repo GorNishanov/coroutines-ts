@@ -181,9 +181,9 @@ inline namespace coroutines_v1 {
     bool done() const; 
     
     // \ref{coroutine.handle.resumption} resumption
-    void operator()() const;
-    void resume() const;	
-    void destroy() const;
+    void operator()();
+    void resume();	
+    void destroy();
     
   private:
     void* ptr; // exposition only
@@ -235,7 +235,7 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
   \precondition \tcode{p} is a reference to a promise object of a coroutine.
   
 	\pnum
-  \returns A coroutine handle $h$ referring to the coroutine.
+  \returns a coroutine handle $h$ referring to the coroutine.
   
   \pnum\postconditions \tcode{addressof(}$h$\tcode{.promise()) == addressof(p)}.
 \end{itemdescr}
@@ -284,8 +284,8 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
 
 \rSec3[coroutine.handle.resumption]{\tcode{coroutine_handle} resumption}
 \begin{itemdecl}
-  void operator()() const;
-  void resume() const;	
+  void operator()();
+  void resume();	
 \end{itemdecl}
 \begin{itemdescr}
   \pnum
@@ -294,10 +294,14 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
   \pnum
   \effects resumes the execution of the coroutine. If the coroutine was suspended
   at its final suspend point, behavior is undefined.
+  
+  \pnum
+  \sync a concurrent resumption of a coroutine by multiple threads may result in a data race.
+  
 \end{itemdescr}
 
 \begin{itemdecl}
-  void destroy() const;
+  void destroy();
 \end{itemdecl}
 \begin{itemdescr}
   \pnum
@@ -305,6 +309,9 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
   
   \pnum
   \effects destroys the coroutine (\ref{dcl.fct.def.coroutine}).
+  
+\pnum
+\sync a concurrent resumption of a coroutine by multiple threads may result in a data race.
 \end{itemdescr}
 
 \rSec3[coroutine.handle.promise]{\tcode{coroutine_handle} promise access}
