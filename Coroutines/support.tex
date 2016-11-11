@@ -143,16 +143,16 @@ to customize the semantics of coroutines.
 %\end{concepttable}
 
 \rSec3[coroutine.traits.primary]{Struct template \tcode{coroutine_traits}}
-\pnum The header \tcode{<experimental/coroutine>} shall define
+\pnum The header \tcode{<experimental/coroutine>} defines
 the primary template \tcode{coroutine_traits} such that 
 if \tcode{ArgTypes...} is a sequence of zero or more types and if \tcode{R} is a type that has a valid (\cxxref{temp.deduct}) member type \tcode{promise_type}, then
-\tcode{coroutine_traits<R,ArgTypes...>} shall have the following publicly accessible member:
+\tcode{coroutine_traits<R,ArgTypes...>} has the following publicly accessible member:
 
 \begin{codeblock}
   using promise_type = typename R::promise_type;
 \end{codeblock}
 
-Otherwise, \tcode{coroutine_traits<R,ArgTypes...>} shall have no members.
+Otherwise, \tcode{coroutine_traits<R,ArgTypes...>} has no members.
 	
 %\pnum A user specialization of \tcode{coroutine_traits} shall have a valid member type \tcode{promise_type}.
 
@@ -391,7 +391,7 @@ The template specializations shall meet the requirements of class template hash 
 \end{itemdescr}
 
 \rSec2[coroutine.trivial.awaitables]{Trivial awaitables}
-The header \tcode{<experimental/coroutine>} shall define \tcode{suspend_never} and \tcode{suspend_always} as follows.
+The header \tcode{<experimental/coroutine>} defines \tcode{suspend_never} and \tcode{suspend_always} as follows.
 \begin{codeblock}
 namespace std {
 namespace experimental {
