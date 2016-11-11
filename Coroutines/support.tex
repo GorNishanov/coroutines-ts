@@ -176,16 +176,15 @@ inline namespace coroutines_v1 {
     constexpr void* address() const noexcept;
     constexpr static coroutine_handle from_address(void* addr) noexcept;		
     
-    // \ref{coroutine.handle.capacity} capacity
+    // \ref{coroutine.handle.observers} observers
     constexpr explicit operator bool() const noexcept;
+    bool done() const; 
     
     // \ref{coroutine.handle.resumption} resumption
     void operator()() const;
     void resume() const;	
     void destroy() const;
     
-    // \ref{coroutine.handle.completion} completion check
-    bool done() const noexcept; 
   private:
     void* ptr; // exposition only
   };
@@ -261,7 +260,7 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
   \postconditions \tcode{coroutine_handle<>::from_address(address()) == *this}.
 \end{itemdescr}
 
-\rSec3[coroutine.handle.capacity]{\tcode{coroutine_handle} capacity}
+\rSec3[coroutine.handle.observers]{\tcode{coroutine_handle} observers}
 \begin{itemdecl}
   constexpr explicit operator bool() const noexcept;
 \end{itemdecl}
@@ -269,6 +268,18 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
 \begin{itemdescr}
   \pnum
   \returns \tcode{true} if \tcode{address() != nullptr}, otherwise \tcode{false}.
+\end{itemdescr}
+
+\begin{itemdecl}
+	bool done() const; 
+\end{itemdecl}
+\begin{itemdescr}
+	\pnum
+	\precondition \tcode{*this} refers to a suspended coroutine.
+	
+	\pnum
+	\returns \tcode{true} if the coroutine is suspended
+	at final suspend point, otherwise \tcode{false}.
 \end{itemdescr}
 
 \rSec3[coroutine.handle.resumption]{\tcode{coroutine_handle} resumption}
@@ -294,19 +305,6 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
   
   \pnum
   \effects destroys the coroutine (\ref{dcl.fct.def.coroutine}).
-\end{itemdescr}
-
-\rSec3[coroutine.handle.completion]{\tcode{coroutine_handle} completion check}
-\begin{itemdecl}
-  bool done() const; 
-\end{itemdecl}
-\begin{itemdescr}
-  \pnum
-  \precondition \tcode{*this} refers to a suspended coroutine.
-  
-  \pnum
-  \returns \tcode{true} if the coroutine is suspended
-  at final suspend point, otherwise \tcode{false}.
 \end{itemdescr}
 
 \rSec3[coroutine.handle.prom]{\tcode{coroutine_handle} promise access}
