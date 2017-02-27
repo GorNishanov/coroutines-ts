@@ -1,7 +1,5 @@
 
-\rSec0[intro]{General}
-
-\rSec1[intro.scope]{Scope}
+\rSec0[intro.scope]{Scope}
 
 \pnum
 This Technical Specification describes extensions to the C++ 
@@ -18,8 +16,33 @@ Modifications made directly to existing text from the International
 Standard use \added{underlining} to represent added text and
 \removed{strikethrough} to represent deleted text. 
 
+\rSec0[intro.refs]{Normative references}
+
+\pnum
+The following referenced document is indispensable for the
+application of this document. For dated references, only the
+edition cited applies. 
+
+\begin{itemize}
+	\item ISO/IEC 14882:2014, \doccite{Programming Languages -- \Cpp}
+\end{itemize}
+
+ISO/IEC 14882:2014 is hereafter called the \defn{\Cpp Standard}.
+%
+Beginning with section 5, all clause and section numbers, titles,
+and symbolic references in [brackets] refer to the corresponding elements of the \Cpp Standard. Sections 1 through 4 of this Technical
+Specification 
+%are introductory material and 
+are unrelated to the similarly-numbered sections of the \Cpp Standard.
+
+% NOTES: N4302 use transaction memory edits to fix this. 
+
+\rSec0[intro.defs]{Terms and definitions}
+
 %\pnum
 %This revision updates N4499 with changes proposed in papers P0054 and P0070.
+
+\rSec0[intro]{General}
 
 \rSec1[intro.ack]{Acknowledgements}
 
@@ -50,26 +73,6 @@ Vladimir Petter,
 and many others not named here who contributed to
 the discussion.
 
-\rSec1[intro.refs]{Normative references}
-
-\pnum
-The following referenced document is indispensable for the
-application of this document. For dated references, only the
-edition cited applies. 
-
-\begin{itemize}
-\item ISO/IEC 14882:2014, \doccite{Programming Languages -- \Cpp}
-\end{itemize}
-
-ISO/IEC 14882:2014 is hereafter called the \defn{\Cpp Standard}.
-%
-Beginning with section 1.9 below, all clause and section numbers, titles,
-and symbolic references in [brackets] refer to the corresponding elements of the \Cpp Standard. Sections 1.1 through 1.5 of this Technical
-Specification are introductory material and are unrelated to the similarly-numbered sections of the \Cpp Standard.
-
-% NOTES: N4302 use transaction memory edits to fix this. 
-
-%\rSec1[intro.defs]{Terms and definitions}
 %
 %Add the definitions of ``suspend-resume-point'' and ``coroutine''.
 %
@@ -96,7 +99,7 @@ Specification are introductory material and are unrelated to the similarly-numbe
 %%
 \rSec1[intro.compliance]{Implementation compliance}
 
-\pnum
+%\pnum
 Conformance requirements for this specification are the same as those 
 defined in section 1.4 of the \Cpp Standard. 
 \enternote 
@@ -130,9 +133,8 @@ An implementation that provides support for this Technical Specification shall d
 %Palo Alto report and this Technical Specification, the report can be seen as a 
 %large-scale test of the expressiveness of this Technical Specification.
 
-\setcounter{section}{8}
 \rSec1[intro.execution]{Program execution}
-Modify paragraph 7 to read:
+In section \cxxref{intro.execution} of the \Cpp Standard modify paragraph 7 to read:
 \begin{quote}
 \setcounter{Paras}{6}
 \pnum 
@@ -142,4 +144,67 @@ block. Such an object exists and retains its last-stored value during
 the execution of the block and while the block is suspended (by a call 
 of a function\added{, suspension of a coroutine (\ref{expr.await})}, 
 or receipt of a signal). 
+\end{quote}
+
+\rSec1[lex]{Lexical conventions}
+
+In section \cxxref{lex.key} of the \Cpp Standard 
+add the keywords \tcode{co_await}, \tcode{co_yield}, and
+\tcode{co_return} to Table~4 "Keywords".
+
+
+%sdf sad
+%\setcounter{chapter}{2}
+\rSec1[basic]{Basic concepts}
+
+%\setcounter{section}{6}
+%\rSec1[basic.start]{Start and termination}
+
+%\rSec2[basic.start.main]{Main function}
+
+In section \cxxref{basic.start.main} of the \Cpp Standard 
+add underlined text to paragraph 3.
+
+\begin{quote}
+	\setcounter{Paras}{2}
+	
+	\pnum
+	The function \tcode{main} shall not be used within
+	a program.
+	\indextext{\idxcode{main()}!implementation-defined linkage~of}%
+	The linkage~(\cxxref{basic.link}) of \tcode{main} is
+	\impldef{linkage of \tcode{main}}. A program that defines \tcode{main} as
+	deleted or that declares \tcode{main} to be
+	\tcode{inline,} \tcode{static}, or \tcode{constexpr} is ill-formed. 
+	\added{The function \tcode{main} shall not be a coroutine (\ref{dcl.fct.def.coroutine}).}
+	The name \tcode{main} is
+	not otherwise reserved. \enterexample member functions, classes, and
+	enumerations can be called \tcode{main}, as can entities in other
+	namespaces. \exitexample
+\end{quote}
+
+\rSec1[basic.stc.dynamic]{Dynamic storage duration}
+
+%\setcounter{section}{7}
+%\setcounter{subsection}{4}
+%\rSec3[basic.stc.dynamic.allocation]{Allocation functions}
+
+In section \cxxref{basic.stc.dynamic.allocation} of the \Cpp Standard 
+modify paragraph 4 as follows:
+
+\begin{quote}
+	\setcounter{Paras}{3}
+	\pnum
+	A global allocation function is only called as the result of a new
+	expression~(\cxxref{expr.new}), \removed{or} called directly using the function call
+	syntax~(\cxxref{expr.call}), 
+	\added{called indirectly to allocate storage for a coroutine frame (\ref{dcl.fct.def.coroutine}),}
+	or called indirectly through calls to the
+	functions in the \Cpp standard library. \enternote In particular, a
+	global allocation function is not called to allocate storage for objects
+	with static storage duration~(\cxxref{basic.stc.static}), for objects or references
+	with thread storage duration~(\cxxref{basic.stc.thread}), for objects of
+	type \tcode{std::type_info}~(\cxxref{expr.typeid}), or for an
+	exception object~(\cxxref{except.throw}).
+	\exitnote
 \end{quote}
