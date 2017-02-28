@@ -184,9 +184,10 @@ The selected deallocation function shall be called with the address of the block
 %coroutine_handle<>
 
 \pnum
-When a coroutine is invoked, an implementation may create a copy of one or more coroutine parameters. Each such copy is direct-initialized from an lvalue referring to the corresponding parameter if it is an lvalue reference, and an xvalue referring to it otherwise. A reference to a parameter in the function-body of the coroutine is replaced by a reference to its copy.
+When a coroutine is invoked, a copy is created for each coroutine parameter. Each such copy is an object with automatic storage duration that is direct-initialized from an lvalue referring to the corresponding parameter if the parameter is an lvalue reference, and from an xvalue referring to it otherwise. A reference to a parameter in the function-body of the coroutine is replaced by a reference to its copy.
+The initialization and destruction of each parameter copy occurs in the context of the called coroutine.
 Initializations of parameter copies are sequenced before the call to the coroutine promise constructor and indeterminately sequenced with respect to each other.
-The lifetime of parameter copies ends immediately after the coroutine promise object lifetime ends.
+The lifetime of parameter copies ends immediately after the lifetime of the coroutine promise object ends.
 \enternote
 If a coroutine has a parameter passed by reference, resuming the coroutine after the lifetime of the entity referred to by that parameter has ended is likely to result in undefined behavior.
 \exitnote
