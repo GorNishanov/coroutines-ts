@@ -291,15 +291,15 @@ int main() {
     };
   };
   
-  my_coroutine (Arena& a) {
+  my_coroutine f(Arena& a) {
     // will call my_coroutine::promise_type::operator new(<required-size>, a)
     // to obtain storage for the coroutine state
     co_yield 1;
   }
   
   int main() {
-    Pool memPool;
-    for (int i = 0; i < 1'000'000; ++i) my_coroutine(memPool);
+    Arena memPool;
+    for (int i = 0; i < 1'000'000; ++i) f(memPool);
   };
 \end{codeblock}
 \exitexample
