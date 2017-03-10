@@ -261,7 +261,8 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
 \end{itemdescr}
 
 \begin{itemdecl}
-  constexpr static coroutine_handle from_address(void* addr);
+  constexpr static coroutine_handle<> coroutine_handle<>::from_address(void* addr);
+  constexpr static coroutine_handle<Promise> coroutine_handle<Promise>::from_address(void* addr);
 \end{itemdecl}
 
 \begin{itemdescr}
