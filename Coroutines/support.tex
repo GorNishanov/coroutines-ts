@@ -197,7 +197,7 @@ inline namespace coroutines_v1 {
     static coroutine_handle from_promise(Promise&);		
     coroutine_handle& operator=(nullptr_t) noexcept;
 
-    // \ref{coroutine.handle.import} import
+    // \ref{coroutine.handle.import.export} import
     constexpr static coroutine_handle from_address(void* addr);
     
     // \ref{coroutine.handle.promise} promise access
@@ -259,21 +259,6 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
 	\pnum
 	\returns \tcode{ptr}.
 \end{itemdescr}
-
-
-\begin{itemdecl}
-  static coroutine_handle coroutine_handle<>::from_address(void* addr);		
-\end{itemdecl}
-
-\begin{itemdescr}
-	\pnum
-	\precondition \tcode{addr} was obtained via a prior call to \tcode{address()}.
-	
-	\pnum
-	\postconditions \tcode{from_address(address()) == *this}.
-\end{itemdescr}
-
-\rSec3[coroutine.handle.import]{\tcode{coroutine_handle} import}
 
 \begin{itemdecl}
   static coroutine_handle from_address(void* addr);
