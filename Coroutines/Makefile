@@ -11,14 +11,16 @@
 #   texlive-fonts-extra
 #   texlive-generic-recommended
 
+TARGET = coroutine-ts-v1
+
 FIGURES = $(patsubst %.dot,%.pdf,$(wildcard *.dot))
 
-TSPDF = pdflatex ts | grep -v "^Overfull"
+TSPDF = pdflatex $(TARGET) | grep -v "^Overfull"
 
 default: rebuild
 
 clean:
-	rm -f *.aux *.idx *.ilg *.ind *.log *.lot *.lof *.tmp *.out *.toc ts.pdf
+	rm -f *.aux *.idx *.ilg *.ind *.log *.lot *.lof *.tmp *.out *.toc $(TARGET).pdf
 
 refresh:
 	$(TSPDF)
