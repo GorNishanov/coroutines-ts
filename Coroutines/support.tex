@@ -122,9 +122,9 @@ that satisfies those requirements.
 %\tcode{coroutine_traits}. This subclause defines the semantics of these
 %members.
 
-\pnum
-Users may specialize \tcode{coroutine_traits}
-to customize the semantics of coroutines.
+%\removed{\pnum
+%Users may specialize \tcode{coroutine_traits}
+%to customize the semantics of coroutines.}
 
 %\rSec3[coroutine.traits.requirements]{Coroutine traits requirements}
 %\pnum
@@ -154,6 +154,8 @@ if \tcode{ArgTypes} is a parameter pack of types and if \tcode{R} is a type that
 \end{codeblock}
 
 Otherwise, \tcode{coroutine_traits<R,ArgTypes...>} has no members.
+
+\pnum A program may specialize this template. Such specialization shall define a publicly accessible nested type named \tcode{promise_type}.
 	
 %\pnum A user specialization of \tcode{coroutine_traits} shall have a valid member type \tcode{promise_type}.
 
@@ -214,6 +216,8 @@ inline namespace coroutines_v1 {
 Let \textit{P} be the promise type of a coroutine (\ref{dcl.fct.def.coroutine}). An object of type \tcode{coroutine_handle<\textit{P}>} is called a \term{coroutine handle}
 and can be used to refer to a suspended or executing coroutine.
 A default constructed \tcode{coroutine_handle} object does not refer to any coroutine.
+
+\pnum The behavior of a program that adds specializations for \tcode{coroutine_handle} is undefined.
 
 %Such a function is called a \textit{target} of a coroutine handle.
 %A default constructed \tcode{coroutine_handle} object has no target.
