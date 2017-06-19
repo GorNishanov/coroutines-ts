@@ -49,7 +49,7 @@
 <h2> Introduction </h2>
 <p>All proposed resolutions wording is relative to N4663 (ISO/IEC PDTS 22277).</p>
 
-<h2>Core Issues (Editorial) </h2>
+<h2>Core Issues (with proposed wording) </h2>
 <hr>
 <h3><a name="2" href="#2">2.</a> Change to italics <code>await-resume</code> in 5.3.8/4</h3>
 <p><b>Section:</b> 5.3.8 [expr.await] <b>Status:</b> Has wording
@@ -62,6 +62,22 @@
 </blockquote>
 
 <h3><a name="6" href="#6">6.</a> Remove or update stateful allocator example in 8.4.4/12</h3>
+<p><b>Section:</b> 8.4.4 [dcl.fct.def.coroutine] <b>Status:</b> Has wording
+ <b>Submitter:</b> US006 <b>Opened:</b> 2017-06-05 <b>Last modified:</b> 2017-06-05</p>
+<p><b>Discussion:</b></p>
+<p>
+    Stateful allocators (pmr) do not work this way, there's
+    no mechanism for allocator propagation to the
+    captured state.
+</p>
+<p>
+    Strike section 12, or provide mechanism for holding allocator.
+</p>
+<p><b>Proposed resolution:</b></p>
+
+<p>Remove example 8.4.4/12<p>
+
+<h3><a name="7" href="#6">7.</a> Remove or update stateful allocator example in 8.4.4/12</h3>
 <p><b>Section:</b> 8.4.4 [dcl.fct.def.coroutine] <b>Status:</b> Has wording
  <b>Submitter:</b> US006 <b>Opened:</b> 2017-06-05 <b>Last modified:</b> 2017-06-05</p>
 <p><b>Discussion:</b></p>
