@@ -26,6 +26,10 @@
 <table>
 <tr>
 <td align="left">Doc. no.</td>
+<td align="left">D0664R1</td>
+</tr>
+<tr>
+<td align="left">Revises</td>
 <td align="left">P0664R0</td>
 </tr>
 <tr>
@@ -66,10 +70,10 @@
     Core comments (no action): <a href="#4">4</a>
   </li>
   <li>
-    LWG issues with proposed wording: <a href="#9">9</a> <a href="#10">10</a> <a href="#22">22</a> <a href="#23">23</a>
+    LWG issues with proposed wording: <a href="#9">9</a> <a href="#10">10</a> <a href="#15">15</a> <a href="#22">22</a> <a href="#23">23</a>
   </li>
   <li>
-    LWG issues with no wording: <a href="#11">11</a> <a href="#12">12</a> <a href="#14">14</a> <a href="#15">15</a> <a href="#16">16</a> <a href="#19">19</a> <a href="#20">20</a>
+    LWG issues with no wording: <a href="#11">11</a> <a href="#12">12</a> <a href="#14">14</a> <a href="#16">16</a> <a href="#19">19</a> <a href="#20">20</a>
   </li>
   <li>
      Evolution issues with no wording: <a href="#1">1</a> <a href="#13">13</a>
@@ -342,15 +346,10 @@ simpler to specify for the initial TS.
 <p><b>Proposed resolution:</b></p>
 <ol>
 <li>
-Remove paragraph 2 of 18.11.1 [coroutine.traits]
+Modify paragraph 2 of 18.11.1 [coroutine.traits] as follows
 <blockquote>
-<del>2. Users may specialize <code>coroutine_traits</code> to customize the semantics of coroutines.</del>
-</blockquote>
-</li>
-<li>
-In 18.11.1.1 [coroutine.traits.primary] add paragraph:
-<blockquote>
-  <ins>2. A program may specialize this template. Such specialization shall define publicly accessible nested type named promise_type.</ins>
+<del>2. Users may specialize <code>coroutine_traits</code> to customize the semantics of coroutines.</del><br>
+  <ins>2. A program may specialize this template. Such specialization shall define a publicly accessible nested type named promise_type.</ins>
 </blockquote>
 </li>
 <li>
@@ -360,6 +359,35 @@ In 18.11.2 [coroutine.handle] add paragraph:
 </blockquote>
 </li>
 </ol>
+
+<!-- --------------------------------------------------------------------------------------- -->
+<h3><a name="15" href="#15">15.</a> Make coroutine_handle comparison constexpr </h3>
+<p><b>Section:</b> 18.11.2.7 <b>Status:</b> Comment
+ <b>Submitter:</b> US015 <b>Opened:</b> 2017-06-05 <b>Last modified:</b> 2017-06-05</p>
+
+<p><b>Comment:</b></p>
+As coroutine_handle&lt;void&gt; is a literal type, should
+the comparison operators be constexpr?<p>
+Add constexpr to the declaration/definition of
+operator==, operator !=, operator&lt;, operator&lt;=,
+operator&gt;=, and operator&gt; for arguments of type
+coroutine_handle&lt;&gt;.
+</p>
+
+<p><b>Discussion:</b></p>
+The only literal coroutine_handle is the default constructed one. Not sure if we need constexpr on comparisons. (LEWG voted 3 5 11 3 0 to add constexpr)
+<p><b>Proposed wording:</b></p>
+Modify function declarations in clause 18.11.2.7 [coroutine.handle.compare] as follows:
+
+<blockquote>
+  <code><ins>constexpr</ins> bool operator==(coroutine_handle&lt;&gt; x, coroutine_handle&lt;&gt; y) noexcept;</code><br>
+  <code><ins>constexpr</ins> bool operator&lt;(coroutine_handle&lt;&gt; x, coroutine_handle&lt;&gt; y) noexcept;</code><br>
+  <code><ins>constexpr</ins> bool operator!=(coroutine_handle&lt;&gt; x, coroutine_handle&lt;&gt; y) noexcept;</code><br>
+  <code><ins>constexpr</ins> bool operator&gt;(coroutine_handle&lt;&gt; x, coroutine_handle&lt;&gt; y) noexcept;</code><br>
+  <code><ins>constexpr</ins> bool operator&lt;=(coroutine_handle&lt;&gt; x, coroutine_handle&lt;&gt; y) noexcept;</code><br>
+  <code><ins>constexpr</ins> bool operator&gt;=(coroutine_handle&lt;&gt; x, coroutine_handle&lt;&gt; y) noexcept;</code><br>
+</blockquote>
+
 
 <!-- --------------------------------------------------------------------------------------- -->
 <h3><a name="22" href="#22">22.</a> Rename [coroutine.handle.import.export] to [coroutine.handle.export.import] for consistency </h3>
@@ -490,24 +518,6 @@ Yes. Any combination of resumptions may result in a data race: resume/resume, re
 <p><b>Proposed resolution:</b></p>
 No action
 
-<!-- --------------------------------------------------------------------------------------- -->
-<h3><a name="15" href="#15">15.</a> Make coroutine_handle comparison constexpr </h3>
-<p><b>Section:</b> 18.11.2.7 <b>Status:</b> Comment
- <b>Submitter:</b> US015 <b>Opened:</b> 2017-06-05 <b>Last modified:</b> 2017-06-05</p>
-
-<p><b>Comment:</b></p>
-As coroutine_handle&lt;void&gt; is a literal type, should
-the comparison operators be constexpr?<p>
-Add constexpr to the declaration/definition of
-operator==, operator !=, operator&lt;, operator&lt;=,
-operator&gt;=, and operator&gt; for arguments of type
-coroutine_handle&lt;&gt;.
-</p>
-
-<p><b>Discussion:</b></p>
-The only literal coroutine_handle is the default constructed one. Not sure if we need constexpr on comparisons.
-<p><b>Proposed resolution:</b></p>
-No action
 <!-- --------------------------------------------------------------------------------------- -->
 <h3><a name="16" href="#16">16.</a> Rename suspend_always to suspend_always_t and suspend_never to suspend_never_t </h3>
 <p><b>Section:</b> 18.11.3 <b>Status:</b> Comment
