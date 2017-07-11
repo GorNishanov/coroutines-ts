@@ -1,0 +1,634 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta charset="utf-8">
+<title>C++ Coroutine TS Issues</title>
+<style type="text/css">
+  p {text-align:justify}
+  li {text-align:justify}
+  blockquote.note
+  {
+    background-color:#E0E0E0;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+  }
+  ins {background-color:#A0FFA0}
+  del {background-color:#FFA0A0}
+  table {border-collapse: collapse;}
+</style>
+</head>
+<body>
+<h1>C++ Coroutine TS Issues</h1>
+<table>
+<tr>
+<td align="left">Doc. no.</td>
+<td align="left">P0664R0</td>
+</tr>
+<tr>
+<td align="left">Date:</td>
+<td align="left">Revised 2017-06-18 at 14:25:00 UTC
+</td>
+</tr>
+<tr>
+<td align="left">Project:</td>
+<td align="left">Programming Language C++</td>
+</tr>
+<tr>
+<td align="left">Reference:</td>
+<td align="left">ISO/IEC PDTS 22277, C++ Extensions for Coroutines</td>
+</tr>
+<tr>
+<td align="left">Audience:</td>
+<td align="left">EWG, CWG, LWG</td>
+</tr>
+<tr>
+<td align="left">Reply to:</td>
+<td align="left">Gor Nishanov &lt;<a href="mailto:gorn@microsoft.com">gorn@microsoft.com</a>&gt;</td>
+</tr>
+</table>
+<h2> Introduction </h2>
+<p>All proposed resolutions wording is relative to <a href="https://isocpp.org/files/papers/N4663.pdf">N4663</a> (ISO/IEC PDTS 22277).</p>
+
+<h2> Table of content </h2>
+
+<ul>
+  <li>
+    Core issues with proposed wording: <a href="#2">2</a> <a href="#6">6</a> <a href="#7">7</a> <a href="#8">8</a> <a href="#18">18</a> <a href="#21">21</a>
+  </li>
+  <li>
+    Core comments requesting rebase of a TS to C++17: <a href="#3">3</a> <a href="#5">5</a> <a href="#17">17</a>
+  </li>
+  <li>
+    Core comments (no action): <a href="#4">4</a>
+  </li>
+  <li>
+    LWG issues with proposed wording: <a href="#9">9</a> <a href="#10">10</a> <a href="#22">22</a> <a href="#23">23</a>
+  </li>
+  <li>
+    LWG issues with no wording: <a href="#11">11</a> <a href="#12">12</a> <a href="#14">14</a> <a href="#15">15</a> <a href="#16">16</a> <a href="#19">19</a> <a href="#20">20</a>
+  </li>
+  <li>
+     Evolution issues with no wording: <a href="#1">1</a> <a href="#13">13</a>
+</ul>
+
+
+<!-- ================================================================================ -->
+<h2>Core Issues (with proposed wording) </h2>
+<hr>
+
+<h3><a name="2" href="#2">2.</a> Change to italics <code>await-resume</code> in 5.3.8/4</h3>
+<p><b>Section:</b> 5.3.8 [expr.await] <b>Status:</b> Has wording
+ <b>Submitter:</b> US002 <b>Opened:</b> 2017-06-05 <b>Last modified:</b> 2017-06-05</p>
+<p><b>Proposed resolution:</b></p>
+
+<p>Modify 5.3.8/4<p>
+<blockquote>
+<p>The <i>await-expression</i> has the same type and value category as the <del><code>await-resume</code></del><ins><i>await-resume</i></ins> expression.<p>
+</blockquote>
+
+<!-- --------------------------------------------------------------------------------------- -->
+<h3><a name="6" href="#6">6.</a> Remove or update stateful allocator example in 8.4.4/12</h3>
+<p><b>Section:</b> 8.4.4 [dcl.fct.def.coroutine] <b>Status:</b> Has wording
+ <b>Submitter:</b> US006 <b>Opened:</b> 2017-06-05 <b>Last modified:</b> 2017-06-05</p>
+<p><b>Issue:</b></p>
+<p>
+    Stateful allocators (pmr) do not work this way, there's
+    no mechanism for allocator propagation to the
+    captured state.
+</p>
+<p>
+    Strike section 12, or provide mechanism for holding allocator.
+</p>
+<p><b>Proposed resolution:</b></p>
+
+<p>Remove example 8.4.4/12<p>
+
+<!-- --------------------------------------------------------------------------------------- -->
+<h3><a name="7" href="#7">7.</a> Fix generator example in 8.4.4/11</h3>
+<p><b>Section:</b> 8.4.4/11 [dcl.fct.def.coroutine] <b>Status:</b> Has wording
+ <b>Submitter:</b> US007 <b>Opened:</b> 2017-06-05 <b>Last modified:</b> 2017-06-05</p>
+<p><b>Issue:</b></p>
+<p>
+Is unhandled_exception() a requirement for a promise_type?
+</p>
+<p>
+a) Call std::terminate if not present <br>
+or <br>
+b) Add unhandled_exception() to the complete example
+of promise_type in 8.4.4 paragraph 11, the generator
+example.
+</p>
+<p><b>Discussion:</b></p>
+<p><code>unhandled_exception()</code> is required to be present in a promise_type.
+There are more mistakes in the example that are fixed in the proposed resolution. Also,
+required includes are added to make the example self contained and runnable in 
+<a href="https://wandbox.org/permlink/i4el7TKB4F0VFJPj"> online compilers</a>. </p>
+<p><b>Proposed resolution:</b></p>
+Modify the example in 8.4.4/11 as follows:
+<blockquote>
+<pre>
+<ins>#include &lt;iostream&gt;</ins>
+<ins>#include &lt;experimental/coroutine&gt;</ins>
+
+// ::operator new(size_t, nothrow_t) will be used if allocation is needed
+struct generator {
+  struct promise_type;
+  using handle = std::experimental::coroutine_handle&lt;promise_type&gt;;
+  struct promise_type {
+    int current_value;
+    static auto get_return_object_on_allocation_failure() { return generator{nullptr}; }
+    auto get_return_object() { return generator{handle::from_promise(*this)}; }
+    auto initial_suspend() { return std::experimental::suspend_always{}; }
+    auto final_suspend() { return std::experimental::suspend_always{}; }
+    <ins>void unhandled_exception() { std::terminate(); }</ins>
+    <ins>void return_void() {}</ins>
+    auto yield_value(int value) {
+      current_value = value;
+      return std::experimental::suspend_always{};
+    }
+  };
+  bool move_next() { return coro ? (coro.resume(), !coro.done()) : false; }
+  int current_value() { return coro.promise().current_value; }
+  <ins>generator(generator const&) = delete;</ins>
+  <ins>generator(generator && rhs) : coro(rhs.coro) { rhs.coro = nullptr; }</ins>
+  ~generator() { if (coro) coro.destroy(); }
+private:
+  generator(handle h) : coro(h) {}
+  handle coro;
+};
+generator f() { co_yield 1; co_yield 2; }
+int main() {
+  auto g = f();
+  while (g.move_next()) std::cout << g.current_value() << std::endl;
+}
+</pre> 
+</blockquote>
+
+<!-- --------------------------------------------------------------------------------------- -->
+<h3><a name="8" href="#8">8.</a> Note about possibly undefined behaviour</h3>
+<p><b>Section:</b> 8.4.4/11 [dcl.fct.def.coroutine] <b>Status:</b> Has wording
+ <b>Submitter:</b> US008 <b>Opened:</b> 2017-06-05 <b>Last modified:</b> 2017-06-05</p>
+<p><b>Proposed change:</b></p>
+<p>
+Modify note in 8.4.4/11:
+<blockquote>
+If a coroutine has a parameter passed by reference,
+resuming the coroutine
+after the lifetime of the entity referred to by that
+parameter has ended is <del>likely to result in</del>
+undefined behavior.
+</blockquote>
+</p>
+<p><b>Proposed resolution:</b></p>
+
+No change. If after resumption a coroutine does not touch that parameter, there is no
+undefined behavior.
+
+<!-- --------------------------------------------------------------------------------------- -->
+<h3><a name="18" href="#18">18.</a> In intro.refs use required text from ISO directive part2 </h3>
+<p><b>Section:</b> 2 [intro.refs] <b>Status:</b> Has wording
+ <b>Submitter:</b> CA018 <b>Opened:</b> 2017-06-05 <b>Last modified:</b> 2017-06-05</p>
+<p><b>Issue:</b></p>
+<p>
+The form required by ISO/IEC Directives, Part 2, 2016 subclause 15.5.1 is not followed.
+</p>
+<p>
+    Use the text provided by the Directives.
+</p>
+<p><b>Proposed resolution:</b></p>
+
+<p>Modify [intro.refs] paragraph 1 as follows: <p>
+<blockquote>
+  <del>The following referenced document is indispensable for the
+application of this document. For dated references, only the
+edition cited applies.</del><br>
+  <ins>The following documents are referred to in the text in such a way that some or all of their 
+      content constitutes requirements of this document. For dated references, only the edition cited applies. 
+      For undated references, the latest edition of the referenced document (including any amendments) applies.</ins>
+</blockquote>
+
+<!-- --------------------------------------------------------------------------------------- -->
+<h3><a name="21" href="#21">21.</a> Wording of 'co_return &lt;expr&gt;;' statement for expressions of type void implies that &lt;expr&gt; is not evaluated </h3>
+<p><b>Section:</b> 6.6.3.1 [stmt.return.coroutine] <b>Status:</b> Has wording
+ <b>Submitter:</b> Lewis Baker <b>Opened:</b> 2017-03-11 <b>Last modified:</b> 2017-06-19</p>
+<p><b>Issue:</b></p>
+<p>
+This wording seems to indicate that <i>expr</i> is not evaluated in co_return <i>expr</i> if the expression has type <code>void</code>, 
+since <i>expr</i> does not occur in the translation. I assume this was not the intention here.</p>
+<p>
+Perhaps there needs to be an extra case here to explicitly state what co_return <i>expr</i>; translates to if the type of <i>expr</i>
+is <code>void</code>?
+
+<p><b>Proposed resolution:</b></p>
+
+<p>Insert new bullet in [stmt.return.coroutine] after 2.2 as follows: <p>
+<blockquote>
+(2.1) — <i>S</i> is <i>p</i>.<code>return_value(</code><i>braced-init-list</i><code>)</code>, if the operand is a <i>braced-init-list</i>; <br>
+(2.2) — <i>S</i> is <i>p</i>.<code>return_value(</code><i>expression</i><code>)</code>, if the operand is an expression of non-<code>void</code> type; <br>
+<ins>(2.3) — <i>S</i> is <i>expression</i>,<code>return_void()</code>, if the operand is an expression of <code>void</code> type;</ins> <br>
+(2.<del>3</del><ins>4</ins>) — <i>S</i> is <i>p</i>.<code>return_void()</code>, otherwise; <br>
+</pre>
+</blockquote>
+
+<hr>
+<!-- ================================================================================ -->
+<h2>Core comments requesting rebase to C++17 </h2>
+<hr>
+<!-- --------------------------------------------------------------------------------------- -->
+<h3><a name="3" href="#3">3.</a> Update range based for statement after C++17 </h3>
+<p><b>Section:</b> 6.5.4/1 [stmt.ranged]<b>Status:</b> Comment
+ <b>Submitter:</b> US003 <b>Opened:</b> 2017-06-05 <b>Last modified:</b> 2017-06-05</p>
+<p><b>Comment:</b></p>
+<p> Update range based for statement after C++17</p>
+<!-- --------------------------------------------------------------------------------------- -->
+<h3><a name="5" href="#5">5.</a> Modify co_return grammar to match C++17 </h3>
+<p><b>Section:</b> 6.6.3.1 [stmt.return.coroutine]<b>Status:</b> Comment
+ <b>Submitter:</b> US005 <b>Opened:</b> 2017-06-05 <b>Last modified:</b> 2017-06-05</p>
+<p><b>Comment:</b></p>
+<p> Simplify the grammar for
+    <pre>
+coroutine-return-statement:
+   co_return expression_opt_;
+   co_return braced-init-list;
+    </pre>
+to 
+    <pre>coroutine-return-statement:
+   co_return co_return expr-or-braced-init-list opt;
+    </pre>
+</p>
+<!-- --------------------------------------------------------------------------------------- -->
+<h3><a name="17" href="#17">17.</a> Rebase entire TS on C++17 </h3>
+<p><b>Section:</b> <b>Status:</b> Comment
+ <b>Submitter:</b> US017 <b>Opened:</b> 2017-06-05 <b>Last modified:</b> 2017-06-05</p>
+<p><b>Comment:</b></p>
+<p> We are in the process of balloting the final text of the
+next C++ standard, provisionally ISO/IEC 14882:2017.
+We should hold back publishing this TS long enough to
+rebase on the text of the new standard.
+</p>
+<p>
+Other than updating this reference, the change is
+almost entirely updating section numbers and crossreferences.
+The normative changes would be</p>
+<ul>
+<li>updating the range based 'for' loop syntax;</li>
+<li>the text for a 'return' statement would need adjusting;</li>
+<li>the wording on restrictions with respect to longjmp
+should be reviewed;</li>
+<li>hash support for coroutine_handle should be updated
+with the “enabled” terminology.</li>
+</ul>
+
+<hr>
+<!-- ================================================================================ -->
+<h2>Core comments (no action) </h2>
+<hr>
+<!-- --------------------------------------------------------------------------------------- -->
+<h3><a name="4" href="#4">4.</a> It would be good to minimize undefined
+behaviour </h3>
+<p><b>Section:</b> 6.6.3 6.6.3.1 8.4.4 8.11.2.5 18.10 18.11.2.5 <b>Status:</b> Comment
+ <b>Submitter:</b> US004 <b>Opened:</b> 2017-06-05 <b>Last modified:</b> 2017-06-05</p>
+<p><b>Comment:</b></p>
+<p>
+There are many new cases of undefined behaviour
+introduced by the TS which are somewhat easily triggered by independent parts of the mechanisms,
+e.g., the result type of the coroutine interacting
+through the promise_type to allow flow of control to
+run off the end of a coroutine.
+In general it would be good to minimize undefined
+behaviour.</p>
+<p>
+No action for now. However, experience with TS
+implementation may allow reducing UB. This should form part of any review for integrating coroutines as
+part of a future standard.
+</p>
+
+<!-- ================================================================================ -->
+<hr>
+<h2>LWG Issues (with proposed wording) </h2>
+<hr>
+
+<!-- --------------------------------------------------------------------------------------- -->
+<h3><a name="9" href="#9">9.</a> Move row in the language support table</h3>
+<p><b>Section:</b> 18.1 [support.general] Table 30 <b>Status:</b> Has wording
+ <b>Submitter:</b> CA009 <b>Opened:</b> 2017-06-05 <b>Last modified:</b> 2017-06-05</p>
+
+<p><b>Issue:</b></p>
+The entry for subclause 18.11 appears before the entry for subclause 18.10.
+
+<p><b>Proposed resolution:</b></p>
+Move the insertion of the entry for subclause 18.11
+to appear after the entry for subclause 18.10.
+
+<!-- --------------------------------------------------------------------------------------- -->
+<h3><a name="10" href="#10">10.</a> Specify the exact behaviour of user-customization of
+coroutine_traits. </h3>
+<p><b>Section:</b> 18.11.1 [coroutine.traits] <b>Status:</b> Has wording
+ <b>Submitter:</b> US010 <b>Opened:</b> 2017-06-05 <b>Last modified:</b> 2017-06-05</p>
+
+<p><b>Issue:</b></p>
+Is the template coroutines_traits intended to be a
+user-extension point? If so, spell out the contract
+for users to customize this trait. Otherwise, restrict
+user specialization with the wording for all type
+traits in the <type_traits> header. 18.11.1p2
+suggests the former, while the latter is much
+simpler to specify for the initial TS.
+
+<p><b>Proposed resolution:</b></p>
+<ol>
+<li>
+Remove paragraph 2 of 18.11.1 [coroutine.traits]
+<blockquote>
+<del>2. Users may specialize <code>coroutine_traits</code> to customize the semantics of coroutines.</del>
+</blockquote>
+</li>
+<li>
+In 18.11.1.1 [coroutine.traits.primary] add paragraph:
+<blockquote>
+  <ins>2. A program may specialize this template. Such specialization shall define publicly accessible nested type named promise_type.</ins>
+</blockquote>
+</li>
+<li>
+In 18.11.2 [coroutine.handle] add paragraph:
+<blockquote>
+  <ins>2. The behavior of a program that adds specializations for <code>coroutine_handle</code> is undefined.</ins>
+</blockquote>
+</li>
+</ol>
+
+<!-- --------------------------------------------------------------------------------------- -->
+<h3><a name="22" href="#22">22.</a> Rename [coroutine.handle.import.export] to [coroutine.handle.export.import] for consistency </h3>
+<p><b>Section:</b> 18.11 [support.coroutine] <b>Status:</b> Has wording
+ <b>Submitter:</b> Bryce Lelbach <b>Opened:</b> 2017-03-10 <b>Last modified:</b> 2017-06-19</p>
+
+<p><b>Issue:</b></p>
+In the class synopsis for coroutine_handle<> in [coroutine.handle], this section is referred to as "export/import", and the export function (address) is listed before the import function (from_address). Likewise, in the definitions for these two methods in [coroutine.handle.import.export], the section is titled "Export/import" and address appears first. Since from_address mentions address, this seems like the correct order to list things in as it avoids adding forward references to the spec.
+
+I'd like to rename this stable tag from [coroutine.handle.import.export] to [coroutine.handle.export.import] as an editorial change before PTDS.
+
+<p><a href="https://github.com/GorNishanov/CoroutineWording/pull/5">Pull request.</a></p>
+
+<p><b>Proposed resolution:</b></p>
+<blockquote>
+<pre>s/coroutine.handle.import.export/coroutine.handle.export.import/g</pre>
+</blockquote>
+
+<!-- --------------------------------------------------------------------------------------- -->
+<h3><a name="23" href="#23">23.</a> coroutine_handle::from_address - consolidate duplicate definitions, add missing constexpr and replace address() with address in precondition wording </h3>
+<p><b>Section:</b> 18.11.2 [coroutine.handle] <b>Status:</b> Has wording
+ <b>Submitter:</b> Bryce Lelbach <b>Opened:</b> 2017-03-10 <b>Last modified:</b> 2017-06-19</p>
+
+<p><b>Issue:</b></p>
+<p>
+There are currently two definitions of the from_address: one in [coroutine.handle.import.export] and one in [coroutine.handle.import]. 
+In the class synopses in [coroutine.handle], the coroutine_handle&lt;&gt; specialization references [coroutine.handle.import.export] 
+while primary definition for coroutine_handle references [corouinte.handle.import].
+They are nearly identical in wording. although the definition in [coroutine.handle.import.export] is written as if it was out of line 
+(e.g. coroutine_handle&lt;&gt;::from_address).
+Even though the primary template of coroutine_handle inherits from coroutine_handle&lt;&gt; it is necessary to define from_address 
+in the primary template, since, from_address returns coroutine_handle, which is a different type in the primary template than it is 
+in coroutine_handle. 
+</p>
+<p>
+<code>from_address</code>'s <i>Requires</i>: paragraph in [coroutine.handle.import.export] states the pre-condition that 
+"addr was obtained via a prior call to <code>address()</code>". It should be <code>address</code>, not <code>address()</code>, 
+since <code>address()</code> is an expression not a method
+</p>
+<p>
+<code>from_address</code> is declared constexpr in the class synopsis ([coroutine.handle], 
+in both the primary template and the specialization for coroutine_handle<>) but is not <code>constexpr</code> in the definition. 
+The design intent, I believe, is for from_address to be constexpr.</p>
+<p><a href="https://github.com/GorNishanov/CoroutineWording/pull/4">Pull request.</a></p>
+<p><b>Proposed resolution:</b></p>
+<ol>
+<li>
+Modify 18.11.2 [coroutine.handle] primary template synopsis:
+<blockquote>
+<pre>
+    <del>// 18.11.2.3 import</del>
+    <ins>// 18.11.2.2 import</ins>
+    constexpr static coroutine_handle from_address(void* addr);
+</pre>
+</blockquote>
+</li>
+<li>
+Modify 18.11.2.2 [coroutine.handle.import.export] as follows:
+<blockquote>
+  <pre>
+    <ins>constexpr</ins> static coroutine_handle<ins>&lt;&gt;</ins> coroutine_handle&lt;&gt;::from_address(void* addr);
+    <ins>constexpr static coroutine_handle&lt;Promise&gt; coroutine_handle&lt;Promise&lt;::from_address(void* addr);</ins>
+    <i>Requires</i>: addr was obtained via a prior call to address<del>()</del>.
+  </pre>
+</blockquote>
+</li>
+</ol>
+
+<!-- ================================================================================ -->
+<hr>
+<h2>LWG Issues (no wording) </h2>
+<hr>
+
+<!-- --------------------------------------------------------------------------------------- -->
+<h3><a name="11" href="#11">11.</a> coroutine_handle: Unclear where specification refer to specialization or primary template </h3>
+<p><b>Section:</b> 18.1.2 [coroutine.handle] <b>Status:</b> Comment
+ <b>Submitter:</b> US011 <b>Opened:</b> 2017-06-05 <b>Last modified:</b> 2017-06-05</p>
+
+<p><b>Issue:</b></p>
+The specification of each operation is not explicitly
+clear whether it applied to the specialization of
+coroutine_handle&lt;void&gt;, or the primary
+coroutine_handle template.
+<p>
+    Break this section into two, to clearly provide definitions
+for both versions of the template.
+</p>
+
+<p><b>Proposed resolution:</b></p>
+Use resolution for <a href="#23">23</a>
+
+
+<!-- --------------------------------------------------------------------------------------- -->
+<h3><a name="12" href="#12">12.</a> Should there be a coroutine_handle type with ownership semantic? </h3>
+<p><b>Section:</b> 18.1.2 [coroutine.handle] <b>Status:</b> Comment
+ <b>Submitter:</b> US012 <b>Opened:</b> 2017-06-05 <b>Last modified:</b> 2017-06-05</p>
+
+<p><b>Comment:</b></p>
+Coroutine handles have essentially raw pointer
+semantics. Should there be a library type as part of
+the TS that does destroy / set to nullptr?
+<p>
+If a library type is needed, please add it.
+</p>
+
+<p><b>Discussion:</b></p>
+coroutine handle is a low level type. Ownership semantic is introduced by higher level types such as a generator or task.
+Note that not every use of coroutine_handle requires ownership semantic. An iterator does not own the coroutine nor a coroutine_handle
+captured by a lambda passed as a callback parameter to an asynchronous API owns the coroutine it refers to. 
+<p><b>Proposed resolution:</b></p>
+No action
+
+<!-- --------------------------------------------------------------------------------------- -->
+<h3><a name="14" href="#14">14.</a> Comment about: a concurrent resumption of a coroutine by multiple
+threads may result in a data race </h3>
+<p><b>Section:</b> 18.11.2.5 <b>Status:</b> Comment
+ <b>Submitter:</b> US014 <b>Opened:</b> 2017-06-05 <b>Last modified:</b> 2017-06-05</p>
+
+<p><b>Comment:</b></p>
+a concurrent resumption of a coroutine by multiple
+threads may result in a data race<p>
+Possibly means concurrent destruction here, in the
+destroy method.
+</p>
+
+<p><b>Discussion:</b></p>
+Yes. Any combination of resumptions may result in a data race: resume/resume, resume/destroy or destroy/destroy. 
+<p><b>Proposed resolution:</b></p>
+No action
+
+<!-- --------------------------------------------------------------------------------------- -->
+<h3><a name="15" href="#15">15.</a> Make coroutine_handle comparison constexpr </h3>
+<p><b>Section:</b> 18.11.2.7 <b>Status:</b> Comment
+ <b>Submitter:</b> US015 <b>Opened:</b> 2017-06-05 <b>Last modified:</b> 2017-06-05</p>
+
+<p><b>Comment:</b></p>
+As coroutine_handle&lt;void&gt; is a literal type, should
+the comparison operators be constexpr?<p>
+Add constexpr to the declaration/definition of
+operator==, operator !=, operator&lt;, operator&lt;=,
+operator&gt;=, and operator&gt; for arguments of type
+coroutine_handle&lt;&gt;.
+</p>
+
+<p><b>Discussion:</b></p>
+The only literal coroutine_handle is the default constructed one. Not sure if we need constexpr on comparisons.
+<p><b>Proposed resolution:</b></p>
+No action
+<!-- --------------------------------------------------------------------------------------- -->
+<h3><a name="16" href="#16">16.</a> Rename suspend_always to suspend_always_t and suspend_never to suspend_never_t </h3>
+<p><b>Section:</b> 18.11.3 <b>Status:</b> Comment
+ <b>Submitter:</b> US016 <b>Opened:</b> 2017-06-05 <b>Last modified:</b> 2017-06-05</p>
+
+<p><b>Comment:</b></p>
+The names suspend_never and suspend_always
+should be (inline) constexpr variables of type
+suspend_never_t and suspend_always_t
+respectively.
+<p>
+Change suspend_never and suspend_always as
+appropriate.
+</p>
+
+<p><b>Discussion:</b></p>
+Most common pattern observed in the wild for these types are:
+<pre>
+  struct promise_type {
+    suspend_never initial_suspend() { return {}; }
+    suspend_always yield_value(int value) { ...; return {}; }
+    ...
+  };
+</pre>
+Suggested change makes the common case more verbose.
+<p><b>Proposed resolution:</b></p>
+No action
+<!-- --------------------------------------------------------------------------------------- -->
+<h3><a name="19" href="#19">19.</a> Add higher-level coroutine types </h3>
+<p><b>Section:</b> <b>Status:</b> Comment
+ <b>Submitter:</b> US019 <b>Opened:</b> 2017-06-05 <b>Last modified:</b> 2017-06-05</p>
+
+<p><b>Comment:</b></p>
+The TS presents only low level mechanisms to
+implement coroutines. For final release in a C++
+standard, standard library implementations of
+generators, futures from coroutines, guard types for
+handles, etc. should also ship.
+<p>
+Please consider adding standard library
+implementations of generators, futures from
+Coroutines, guard types for handles and any others that
+may be needed when Coroutines are incorporated into
+the C++ Standard.
+</p>
+
+<p><b>Discussion:</b></p>
+Yes. We plan to add generator and adapters for network TS and concurrency TS.
+<p><b>Proposed resolution:</b></p>
+No immediate action for PDTS
+
+<!-- --------------------------------------------------------------------------------------- -->
+<h3><a name="20" href="#20">20.</a> Disallow storing coroutines in std::function objects that discard their result. </h3>
+<p><b>Section:</b> <b>Status:</b> Comment
+ <b>Submitter:</b> US020 <b>Opened:</b> 2017-06-05 <b>Last modified:</b> 2017-06-05</p>
+
+<p><b>Comment:</b></p>
+Coroutines are invokable types, can they be stored
+by a std::function? What about a
+std::function&lt;void()&gt; that discards the result on
+invocation?
+<p>
+Disallow storing coroutines in std::function objects
+that discard their result.
+</p>
+
+<p><b>Discussion:</b></p>
+Yes, coroutines are functions and they can be stored in a std::function. 
+Storing a coroutine in a std::function objects that discard their result is no different than
+storing a function with the same signature as coroutine in std::function.
+<p><b>Proposed resolution:</b></p>
+No action
+
+<hr>
+<!-- ================================================================================ -->
+<h2>Evolution Issues (no wording) </h2>
+<hr>
+<!-- --------------------------------------------------------------------------------------- -->
+<h3><a name="1" href="#1">1.</a> Support stackful coroutines</h3>
+<p><b>Section:</b> <b>Status:</b> Comment
+ <b>Submitter:</b> CH001 <b>Opened:</b> 2017-06-05 <b>Last modified:</b> 2017-06-05</p>
+<p><b>Issue:</b></p>
+<p>
+This TS disallows stackful coroutines. This is too
+restrictive and stackful coroutines should be allowed as
+well.
+</p>
+<p>
+  Allow as suspension context functions that were called from a top-level coroutine.
+</p>
+
+<!-- --------------------------------------------------------------------------------------- -->
+<h3><a name="13" href="#13">13.</a> Allow both return_void and return_value</h3>
+<p><b>Section:</b> <b>Status:</b> Comment
+ <b>Submitter:</b> US013 <b>Opened:</b> 2017-06-05 <b>Last modified:</b> 2017-06-05</p>
+<p><b>Comment:</b></p>
+<p>
+Promise types are required to implement either
+return_value() or return_void(), but not both, and it is
+undefined behaviour for a coroutine to run off the end,
+where return_void would be called.</p>
+<p>
+  Consider implementing both either_return() and
+return_value() for promise types, and eliminate the
+undefined behaviour.
+</p>
+<p><b>Discussion:</b></p>
+The design intent of having one or the other to make sure that <code>co_return</code>
+behavior in a coroutine is similar to that of <code>return</code> in a regular function.
+Allowing both would allow this code to compile:
+<pre>
+  coro f(bool cond) {
+    if (cond)
+      co_return 42;
+    else
+      co_return;
+  }
+</pre>
+which we would like to avoid.
+<p><b>Proposed Resolution:</b></p>
+No change
+
+</body>
+</html>
