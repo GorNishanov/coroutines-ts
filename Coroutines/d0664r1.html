@@ -61,7 +61,10 @@
 
 <ul>
   <li>
-    Core issues with proposed wording: <a href="#2">2</a> <a href="#6">6</a> <a href="#7">7</a> <a href="#8">8</a> <a href="#18">18</a> <a href="#21">21</a>
+    <b>[CWG Approved Toronto-7/12/2017]</b> Core issues with proposed wording: <a href="#2">2</a> <a href="#6">6</a> <a href="#7">7</a> <a href="#18">18</a> <a href="#21">21</a>
+  </li>
+  <li>
+    <b>[LWG Approved Toronto-7/11/2017]</b> LWG issues with proposed wording: <a href="#9">9</a> <a href="#10">10</a> <a href="#11">11</a> <a href="#14">14</a> <a href="#15">15</a> <a href="#22">22</a> <a href="#23">23</a>
   </li>
   <li>
     Core comments requesting rebase of a TS to C++17: <a href="#3">3</a> <a href="#5">5</a> <a href="#17">17</a>
@@ -70,10 +73,10 @@
     Core comments (no action): <a href="#4">4</a>
   </li>
   <li>
-    LWG issues with proposed wording: <a href="#9">9</a> <a href="#10">10</a> <a href="#15">15</a> <a href="#22">22</a> <a href="#23">23</a>
+    Core comments (rejected, no consensus for change): <a href="#8">8</a>
   </li>
   <li>
-    LWG issues with no wording: <a href="#11">11</a> <a href="#12">12</a> <a href="#14">14</a> <a href="#16">16</a> <a href="#19">19</a> <a href="#20">20</a>
+    LWG issues with no wording: <a href="#12">12</a> <a href="#16">16</a> <a href="#19">19</a> <a href="#20">20</a>
   </li>
   <li>
      Evolution issues with no wording: <a href="#1">1</a> <a href="#13">13</a>
@@ -173,26 +176,6 @@ int main() {
 </blockquote>
 
 <!-- --------------------------------------------------------------------------------------- -->
-<h3><a name="8" href="#8">8.</a> Note about possibly undefined behaviour</h3>
-<p><b>Section:</b> 8.4.4/11 [dcl.fct.def.coroutine] <b>Status:</b> Has wording
- <b>Submitter:</b> US008 <b>Opened:</b> 2017-06-05 <b>Last modified:</b> 2017-06-05</p>
-<p><b>Proposed change:</b></p>
-<p>
-Modify note in 8.4.4/11:
-<blockquote>
-If a coroutine has a parameter passed by reference,
-resuming the coroutine
-after the lifetime of the entity referred to by that
-parameter has ended is <del>likely to result in</del>
-undefined behavior.
-</blockquote>
-</p>
-<p><b>Proposed resolution:</b></p>
-
-No change. If after resumption a coroutine does not touch that parameter, there is no
-undefined behavior.
-
-<!-- --------------------------------------------------------------------------------------- -->
 <h3><a name="18" href="#18">18.</a> In intro.refs use required text from ISO directive part2 </h3>
 <p><b>Section:</b> 2 [intro.refs] <b>Status:</b> Has wording
  <b>Submitter:</b> CA018 <b>Opened:</b> 2017-06-05 <b>Last modified:</b> 2017-06-05</p>
@@ -229,12 +212,13 @@ is <code>void</code>?
 
 <p><b>Proposed resolution:</b></p>
 
-<p>Insert new bullet in [stmt.return.coroutine] after 2.2 as follows: <p>
+<p>Modify paragraph 2 in [stmt.return.coroutine] follows: <p>
 <blockquote>
+2. ... where <i>final_suspend</i> is as defined in 8.4.4 and <i>S</i> is <del>an expression</del> defined as follows: <br>
 (2.1) — <i>S</i> is <i>p</i>.<code>return_value(</code><i>braced-init-list</i><code>)</code>, if the operand is a <i>braced-init-list</i>; <br>
 (2.2) — <i>S</i> is <i>p</i>.<code>return_value(</code><i>expression</i><code>)</code>, if the operand is an expression of non-<code>void</code> type; <br>
-<ins>(2.3) — <i>S</i> is <i>expression</i>,<code>return_void()</code>, if the operand is an expression of <code>void</code> type;</ins> <br>
-(2.<del>3</del><ins>4</ins>) — <i>S</i> is <i>p</i>.<code>return_void()</code>, otherwise; <br>
+<!-- <ins>(2.3) — <i>S</i> is <i>expression</i>,<code>return_void()</code>, if the operand is an expression of <code>void</code> type;</ins> <br> -->
+(2.3) — <i>S</i> is <ins><code>{ </code><i>expression<sub>opt</sub></i><code> ; </code></ins><i>p</i>.<code>return_void()<ins>; }</ins></code>, otherwise; <br>
 </pre>
 </blockquote>
 
@@ -311,6 +295,32 @@ implementation may allow reducing UB. This should form part of any review for in
 part of a future standard.
 </p>
 
+<hr>
+<!-- ================================================================================ -->
+<h2>Core comments (rejected, no consensus for change) </h2>
+<hr>
+<!-- --------------------------------------------------------------------------------------- -->
+
+<!-- --------------------------------------------------------------------------------------- -->
+<h3><a name="8" href="#8">8.</a> Note about possibly undefined behaviour</h3>
+<p><b>Section:</b> 8.4.4/11 [dcl.fct.def.coroutine] <b>Status:</b> Has wording
+ <b>Submitter:</b> US008 <b>Opened:</b> 2017-06-05 <b>Last modified:</b> 2017-06-05</p>
+<p><b>Proposed change:</b></p>
+<p>
+Modify note in 8.4.4/11:
+<blockquote>
+If a coroutine has a parameter passed by reference,
+resuming the coroutine
+after the lifetime of the entity referred to by that
+parameter has ended <del>is likely to</del> result<ins>s</ins> in
+undefined behavior.
+</blockquote>
+</p>
+<p><b>Proposed resolution:</b></p>
+
+No change. If after resumption a coroutine does not touch that parameter, there is no
+undefined behavior.
+
 <!-- ================================================================================ -->
 <hr>
 <h2>LWG Issues (with proposed wording) </h2>
@@ -356,6 +366,58 @@ Modify paragraph 2 of 18.11.1 [coroutine.traits] as follows
 In 18.11.2 [coroutine.handle] add paragraph:
 <blockquote>
   <ins>2. The behavior of a program that adds specializations for <code>coroutine_handle</code> is undefined.</ins>
+</blockquote>
+</li>
+</ol>
+
+<!-- --------------------------------------------------------------------------------------- -->
+<h3><a name="11" href="#11">11.</a> coroutine_handle: Unclear where specification refer to specialization or primary template </h3>
+<p><b>Section:</b> 18.1.2 [coroutine.handle] <b>Status:</b> Comment
+ <b>Submitter:</b> US011 <b>Opened:</b> 2017-06-05 <b>Last modified:</b> 2017-06-05</p>
+
+<p><b>Issue:</b></p>
+The specification of each operation is not explicitly
+clear whether it applied to the specialization of
+coroutine_handle&lt;void&gt;, or the primary
+coroutine_handle template.
+<p>
+    Break this section into two, to clearly provide definitions
+for both versions of the template.
+</p>
+
+<p><b>Proposed resolution:</b></p>
+Use resolution for <a href="#23">23</a>
+
+<!-- --------------------------------------------------------------------------------------- -->
+<h3><a name="14" href="#14">14.</a> Comment about: a concurrent resumption of a coroutine by multiple
+threads may result in a data race </h3>
+<p><b>Section:</b> 18.11.2.5 <b>Status:</b> Comment
+ <b>Submitter:</b> US014 <b>Opened:</b> 2017-06-05 <b>Last modified:</b> 2017-06-05</p>
+
+<p><b>Comment:</b></p>
+a concurrent resumption of a coroutine by multiple
+threads may result in a data race<p>
+Possibly means concurrent destruction here, in the
+destroy method.
+</p>
+
+<p><b>Discussion:</b></p>
+Yes. Any combination of resumptions may result in a data race: resume/resume, resume/destroy or destroy/destroy. 
+<p><b>Proposed wording:</b></p>
+
+<ol>
+<li>
+Modify paragraph 3 of 18.11.2.5 [coroutine.handle.resumption] as follows:
+<blockquote>
+3. <i>Synchronization: </i><del>a concurrent resumption of a coroutine by multiple threads may result in a data race.</del><br>
+  <ins>a concurrent resumption of the coroutine via <code>resume</code>, <code>operator()</code>, or <code>destroy</code> may result in a data race.</ins>
+</blockquote>
+</li>
+<li>
+Modify paragraph 6 of 18.11.2.5 [coroutine.handle.resumption] as follows:
+<blockquote>
+3. <i>Synchronization: </i><del>a concurrent resumption of a coroutine by multiple threads may result in a data race.</del><br>
+  <ins>a concurrent resumption of the coroutine via <code>resume</code>, <code>operator()</code>, or <code>destroy</code> may result in a data race.</ins>
 </blockquote>
 </li>
 </ol>
@@ -439,7 +501,7 @@ Modify 18.11.2 [coroutine.handle] primary template synopsis:
 <blockquote>
 <pre>
     <del>// 18.11.2.3 import</del>
-    <ins>// 18.11.2.2 import</ins>
+    <ins>// 18.11.2.2 export/import</ins>
     constexpr static coroutine_handle from_address(void* addr);
 </pre>
 </blockquote>
@@ -454,30 +516,15 @@ Modify 18.11.2.2 [coroutine.handle.import.export] as follows:
   </pre>
 </blockquote>
 </li>
+<li>
+Remove section 18.11.2.3 [coroutine.handle.import].
+</li>
 </ol>
 
 <!-- ================================================================================ -->
 <hr>
 <h2>LWG Issues (no wording) </h2>
 <hr>
-
-<!-- --------------------------------------------------------------------------------------- -->
-<h3><a name="11" href="#11">11.</a> coroutine_handle: Unclear where specification refer to specialization or primary template </h3>
-<p><b>Section:</b> 18.1.2 [coroutine.handle] <b>Status:</b> Comment
- <b>Submitter:</b> US011 <b>Opened:</b> 2017-06-05 <b>Last modified:</b> 2017-06-05</p>
-
-<p><b>Issue:</b></p>
-The specification of each operation is not explicitly
-clear whether it applied to the specialization of
-coroutine_handle&lt;void&gt;, or the primary
-coroutine_handle template.
-<p>
-    Break this section into two, to clearly provide definitions
-for both versions of the template.
-</p>
-
-<p><b>Proposed resolution:</b></p>
-Use resolution for <a href="#23">23</a>
 
 
 <!-- --------------------------------------------------------------------------------------- -->
@@ -500,23 +547,6 @@ captured by a lambda passed as a callback parameter to an asynchronous API owns 
 <p><b>Proposed resolution:</b></p>
 No action
 
-<!-- --------------------------------------------------------------------------------------- -->
-<h3><a name="14" href="#14">14.</a> Comment about: a concurrent resumption of a coroutine by multiple
-threads may result in a data race </h3>
-<p><b>Section:</b> 18.11.2.5 <b>Status:</b> Comment
- <b>Submitter:</b> US014 <b>Opened:</b> 2017-06-05 <b>Last modified:</b> 2017-06-05</p>
-
-<p><b>Comment:</b></p>
-a concurrent resumption of a coroutine by multiple
-threads may result in a data race<p>
-Possibly means concurrent destruction here, in the
-destroy method.
-</p>
-
-<p><b>Discussion:</b></p>
-Yes. Any combination of resumptions may result in a data race: resume/resume, resume/destroy or destroy/destroy. 
-<p><b>Proposed resolution:</b></p>
-No action
 
 <!-- --------------------------------------------------------------------------------------- -->
 <h3><a name="16" href="#16">16.</a> Rename suspend_always to suspend_always_t and suspend_never to suspend_never_t </h3>
