@@ -100,6 +100,8 @@
 <p>The <i>await-expression</i> has the same type and value category as the <del><code>await-resume</code></del><ins><i>await-resume</i></ins> expression.<p>
 </blockquote>
 
+<i>[Accepted: Toronto-7/10/2017]</i>
+
 <!-- --------------------------------------------------------------------------------------- -->
 <h3><a name="6" href="#6">6.</a> Remove or update stateful allocator example in 8.4.4/12</h3>
 <p><b>Section:</b> 8.4.4 [dcl.fct.def.coroutine] <b>Status:</b> Has wording
@@ -116,6 +118,8 @@
 <p><b>Proposed resolution:</b></p>
 
 <p>Remove example 8.4.4/12<p>
+
+<i>[Accepted: Toronto-7/10/2017]</i>
 
 <!-- --------------------------------------------------------------------------------------- -->
 <h3><a name="7" href="#7">7.</a> Fix generator example in 8.4.4/11</h3>
@@ -178,6 +182,8 @@ int main() {
 </pre> 
 </blockquote>
 
+<i>[Accepted: Toronto-7/10/2017]</i>
+
 <!-- --------------------------------------------------------------------------------------- -->
 <h3><a name="18" href="#18">18.</a> In intro.refs use required text from ISO directive part2 </h3>
 <p><b>Section:</b> 2 [intro.refs] <b>Status:</b> Has wording
@@ -200,6 +206,8 @@ edition cited applies.</del><br>
       content constitutes requirements of this document. For dated references, only the edition cited applies. 
       For undated references, the latest edition of the referenced document (including any amendments) applies.</ins>
 </blockquote>
+
+<i>[Accepted: Toronto-7/10/2017]</i>
 
 <!-- --------------------------------------------------------------------------------------- -->
 <h3><a name="21" href="#21">21.</a> Wording of 'co_return &lt;expr&gt;;' statement for expressions of type void implies that &lt;expr&gt; is not evaluated </h3>
@@ -225,6 +233,8 @@ is <code>void</code>?
 </pre>
 </blockquote>
 
+<i>[Accepted: Toronto-7/12/2017]</i>
+
 <hr>
 <!-- ================================================================================ -->
 <h2>Core comments requesting rebase to C++17 </h2>
@@ -235,6 +245,8 @@ is <code>void</code>?
  <b>Submitter:</b> US003 <b>Opened:</b> 2017-06-05 <b>Last modified:</b> 2017-06-05</p>
 <p><b>Comment:</b></p>
 <p> Update range based for statement after C++17</p>
+
+<i>[Rejected. Will rebase prior to merge to working paper. Toronto-7/10/2017]</i>
 <!-- --------------------------------------------------------------------------------------- -->
 <h3><a name="5" href="#5">5.</a> Modify co_return grammar to match C++17 </h3>
 <p><b>Section:</b> 6.6.3.1 [stmt.return.coroutine]<b>Status:</b> Comment
@@ -251,6 +263,7 @@ to
    co_return co_return expr-or-braced-init-list opt;
     </pre>
 </p>
+<i>[Rejected. Will rebase prior to merge to working paper. Toronto-7/10/2017]</i>
 <!-- --------------------------------------------------------------------------------------- -->
 <h3><a name="17" href="#17">17.</a> Rebase entire TS on C++17 </h3>
 <p><b>Section:</b> <b>Status:</b> Comment
@@ -274,6 +287,7 @@ should be reviewed;</li>
 with the “enabled” terminology.</li>
 </ul>
 
+<i>[Rejected. Will rebase prior to merge to working paper. Toronto-7/10/2017]</i>
 <hr>
 <!-- ================================================================================ -->
 <h2>Core comments (no action) </h2>
@@ -298,6 +312,7 @@ implementation may allow reducing UB. This should form part of any review for in
 part of a future standard.
 </p>
 
+<i>[No Action. Toronto-7/10/2017]</i>
 <hr>
 <!-- ================================================================================ -->
 <h2>Core comments (rejected, no consensus for change) </h2>
@@ -323,7 +338,8 @@ undefined behavior.
 
 No change. If after resumption a coroutine does not touch that parameter, there is no
 undefined behavior.
-
+<br><br>
+<i>[Reject. No consensus for change. Toronto-7/10/2017]</i>
 <!-- ================================================================================ -->
 <hr>
 <h2>LWG Issues (with proposed wording) </h2>
@@ -340,6 +356,8 @@ The entry for subclause 18.11 appears before the entry for subclause 18.10.
 <p><b>Proposed resolution:</b></p>
 Move the insertion of the entry for subclause 18.11
 to appear after the entry for subclause 18.10.
+<br><br>
+<i>[Accepted. Toronto-7/11/2017]</i>
 
 <!-- --------------------------------------------------------------------------------------- -->
 <h3><a name="10" href="#10">10.</a> Specify the exact behaviour of user-customization of
@@ -373,6 +391,9 @@ In 18.11.2 [coroutine.handle] add paragraph:
 </li>
 </ol>
 
+<br>
+<i>[Accepted. Toronto-7/11/2017]</i>
+
 <!-- --------------------------------------------------------------------------------------- -->
 <h3><a name="11" href="#11">11.</a> coroutine_handle: Unclear where specification refer to specialization or primary template </h3>
 <p><b>Section:</b> 18.1.2 [coroutine.handle] <b>Status:</b> Comment
@@ -390,6 +411,9 @@ for both versions of the template.
 
 <p><b>Proposed resolution:</b></p>
 Use resolution for <a href="#23">23</a>
+
+<br><br>
+<i>[Accepted. Toronto-7/11/2017]</i>
 
 <!-- --------------------------------------------------------------------------------------- -->
 <h3><a name="14" href="#14">14.</a> Comment about: a concurrent resumption of a coroutine by multiple
@@ -425,6 +449,9 @@ Modify paragraph 6 of 18.11.2.5 [coroutine.handle.resumption] as follows:
 </li>
 </ol>
 
+<br>
+<i>[Accepted. Toronto-7/11/2017]</i>
+
 <!-- --------------------------------------------------------------------------------------- -->
 <h3><a name="15" href="#15">15.</a> Make coroutine_handle comparison constexpr </h3>
 <p><b>Section:</b> 18.11.2.7 <b>Status:</b> Comment
@@ -453,6 +480,8 @@ Modify function declarations in clause 18.11.2.7 [coroutine.handle.compare] as f
   <code><ins>constexpr</ins> bool operator&gt;=(coroutine_handle&lt;&gt; x, coroutine_handle&lt;&gt; y) noexcept;</code><br>
 </blockquote>
 
+<br>
+<i>[Accepted. Toronto-7/11/2017]</i>
 
 <!-- --------------------------------------------------------------------------------------- -->
 <h3><a name="22" href="#22">22.</a> Rename [coroutine.handle.import.export] to [coroutine.handle.export.import] for consistency </h3>
@@ -470,6 +499,8 @@ I'd like to rename this stable tag from [coroutine.handle.import.export] to [cor
 <blockquote>
 <pre>s/coroutine.handle.import.export/coroutine.handle.export.import/g</pre>
 </blockquote>
+
+<i>[Accepted. Toronto-7/11/2017]</i>
 
 <!-- --------------------------------------------------------------------------------------- -->
 <h3><a name="23" href="#23">23.</a> coroutine_handle::from_address - consolidate duplicate definitions, add missing constexpr and replace address() with address in precondition wording </h3>
@@ -524,6 +555,8 @@ Remove section 18.11.2.3 [coroutine.handle.import].
 </li>
 </ol>
 
+<i>[Accepted. Toronto-7/11/2017]</i>
+
 <!-- ================================================================================ -->
 <hr>
 <h2>LWG Issues (no wording) </h2>
@@ -550,6 +583,8 @@ captured by a lambda passed as a callback parameter to an asynchronous API owns 
 <p><b>Proposed resolution:</b></p>
 No action
 
+<br><br>
+<i>[Reject. No consensus for change. Toronto-7/11/2017]</i>
 
 <!-- --------------------------------------------------------------------------------------- -->
 <h3><a name="16" href="#16">16.</a> Rename suspend_always to suspend_always_t and suspend_never to suspend_never_t </h3>
@@ -578,6 +613,10 @@ Most common pattern observed in the wild for these types are:
 Suggested change makes the common case more verbose.
 <p><b>Proposed resolution:</b></p>
 No action
+
+<br><br>
+<i>[Reject. No consensus for change. Toronto-7/11/2017]</i>
+
 <!-- --------------------------------------------------------------------------------------- -->
 <h3><a name="19" href="#19">19.</a> Add higher-level coroutine types </h3>
 <p><b>Section:</b> <b>Status:</b> Comment
@@ -602,6 +641,9 @@ Yes. We plan to add generator and adapters for network TS and concurrency TS.
 <p><b>Proposed resolution:</b></p>
 No immediate action for PDTS
 
+<br><br>
+<i>[Accept. No action for now. Toronto-7/11/2017]</i>
+
 <!-- --------------------------------------------------------------------------------------- -->
 <h3><a name="20" href="#20">20.</a> Disallow storing coroutines in std::function objects that discard their result. </h3>
 <p><b>Section:</b> <b>Status:</b> Comment
@@ -624,6 +666,9 @@ storing a function with the same signature as coroutine in std::function.
 <p><b>Proposed resolution:</b></p>
 No action
 
+<br><br>
+<i>[Reject. No consensus for change. Toronto-7/11/2017]</i>
+
 <hr>
 <!-- ================================================================================ -->
 <h2>Evolution Issues (no wording) </h2>
@@ -641,6 +686,9 @@ well.
 <p>
   Allow as suspension context functions that were called from a top-level coroutine.
 </p>
+
+<br>
+<i>[Reject. No consensus for change. Toronto-7/10/2017]</i>
 
 <!-- --------------------------------------------------------------------------------------- -->
 <h3><a name="13" href="#13">13.</a> Allow both return_void and return_value</h3>
@@ -672,6 +720,9 @@ Allowing both would allow this code to compile:
 which we would like to avoid.
 <p><b>Proposed Resolution:</b></p>
 No change
+
+<br><br>
+<i>[Reject. No consensus for change. Toronto-7/11/2017]</i>
 
 </body>
 </html>
