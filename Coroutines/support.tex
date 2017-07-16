@@ -175,7 +175,7 @@ inline namespace coroutines_v1 {
     constexpr coroutine_handle(nullptr_t) noexcept;
     coroutine_handle& operator=(nullptr_t) noexcept;
     
-    // \ref{coroutine.handle.import.export} export/import
+    // \ref{coroutine.handle.export.import} export/import
     constexpr void* address() const noexcept;
     constexpr static coroutine_handle from_address(void* addr);
     
@@ -254,7 +254,7 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
   \pnum\returns \tcode{*this}.
 \end{itemdescr}
 
-\rSec3[coroutine.handle.import.export]{\tcode{coroutine_handle} export/import}
+\rSec3[coroutine.handle.export.import]{\tcode{coroutine_handle} export/import}
 
 \begin{itemdecl}
   constexpr void* address() const noexcept;
