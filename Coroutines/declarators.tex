@@ -270,37 +270,37 @@ int main() {
 \end{codeblock}
 \exitexample
 
-\pnum
-\enterexample
-\begin{codeblock}
-  // using a stateful allocator
-  class Arena;
-  struct my_coroutine {
-    struct promise_type {
-      ...
-      template <typename... TheRest>
-      void* operator new(std::size_t size, Arena& pool, TheRest const&...) {
-        return pool.allocate(size);
-      }
-      void operator delete(void* p, std::size_t size) {
-      	// reference to a pool is not available
-      	// to the delete operator and should be stored
-      	// by the allocator as a part of the allocation
-        Arena::deallocate(p, size);
-      }
-    };
-  };
-  
-  my_coroutine f(Arena& a) {
-    // will call my_coroutine::promise_type::operator new(<required-size>, a)
-    // to obtain storage for the coroutine state
-    co_yield 1;
-  }
-  
-  int main() {
-    Arena memPool;
-    for (int i = 0; i < 1'000'000; ++i) f(memPool);
-  };
-\end{codeblock}
-\exitexample
+%\pnum
+%\enterexample
+%\begin{codeblock}
+%  // using a stateful allocator
+%  class Arena;
+%  struct my_coroutine {
+%    struct promise_type {
+%      ...
+%      template <typename... TheRest>
+%      void* operator new(std::size_t size, Arena& pool, TheRest const&...) {
+%        return pool.allocate(size);
+%      }
+%      void operator delete(void* p, std::size_t size) {
+%      	// reference to a pool is not available
+%      	// to the delete operator and should be stored
+%      	// by the allocator as a part of the allocation
+%        Arena::deallocate(p, size);
+%      }
+%    };
+%  };
+%  
+%  my_coroutine f(Arena& a) {
+%    // will call my_coroutine::promise_type::operator new(<required-size>, a)
+%    // to obtain storage for the coroutine state
+%    co_yield 1;
+%  }
+%  
+%  int main() {
+%    Arena memPool;
+%    for (int i = 0; i < 1'000'000; ++i) f(memPool);
+%  };
+%\end{codeblock}
+%\exitexample
 \end{quote}
