@@ -362,7 +362,7 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
 \rSec3[coroutine.handle.compare]{Comparison operators}
 
 \begin{itemdecl}
-  bool operator==(coroutine_handle<> x, coroutine_handle<> y) noexcept;
+  constexpr bool operator==(coroutine_handle<> x, coroutine_handle<> y) noexcept;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -371,7 +371,7 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
 \end{itemdescr}
 
 \begin{itemdecl}
-  bool operator<(coroutine_handle<> x, coroutine_handle<> y) noexcept;
+  constexpr bool operator<(coroutine_handle<> x, coroutine_handle<> y) noexcept;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -380,7 +380,7 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
 \end{itemdescr}
 
 \begin{itemdecl}
-  bool operator!=(coroutine_handle<> x, coroutine_handle<> y) noexcept;
+  constexpr bool operator!=(coroutine_handle<> x, coroutine_handle<> y) noexcept;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -389,7 +389,7 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
 \end{itemdescr}
 
 \begin{itemdecl}
-  bool operator>(coroutine_handle<> x, coroutine_handle<> y) noexcept;
+  constexpr bool operator>(coroutine_handle<> x, coroutine_handle<> y) noexcept;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -398,7 +398,7 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
 \end{itemdescr}
 
 \begin{itemdecl}
-  bool operator<=(coroutine_handle<> x, coroutine_handle<> y) noexcept;
+  constexpr bool operator<=(coroutine_handle<> x, coroutine_handle<> y) noexcept;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -407,7 +407,7 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
 \end{itemdescr}
 
 \begin{itemdecl}
-  bool operator>=(coroutine_handle<> x, coroutine_handle<> y) noexcept;
+  constexpr bool operator>=(coroutine_handle<> x, coroutine_handle<> y) noexcept;
 \end{itemdecl}
 
 \begin{itemdescr}
