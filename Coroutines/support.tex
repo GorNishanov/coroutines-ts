@@ -85,12 +85,12 @@ inline namespace coroutines_v1 {
     struct coroutine_handle;		
   
   // \ref{coroutine.handle.compare} comparison operators:	
-  bool operator==(coroutine_handle<> x, coroutine_handle<> y) noexcept;
-  bool operator!=(coroutine_handle<> x, coroutine_handle<> y) noexcept;
-  bool operator<(coroutine_handle<> x, coroutine_handle<> y) noexcept;			
-  bool operator<=(coroutine_handle<> x, coroutine_handle<> y) noexcept;			
-  bool operator>=(coroutine_handle<> x, coroutine_handle<> y) noexcept;
-  bool operator>(coroutine_handle<> x, coroutine_handle<> y) noexcept;
+  constexpr bool operator==(coroutine_handle<> x, coroutine_handle<> y) noexcept;
+  constexpr bool operator!=(coroutine_handle<> x, coroutine_handle<> y) noexcept;
+  constexpr bool operator<(coroutine_handle<> x, coroutine_handle<> y) noexcept;			
+  constexpr bool operator<=(coroutine_handle<> x, coroutine_handle<> y) noexcept;			
+  constexpr bool operator>=(coroutine_handle<> x, coroutine_handle<> y) noexcept;
+  constexpr bool operator>(coroutine_handle<> x, coroutine_handle<> y) noexcept;
     
   // \ref{coroutine.trivial.awaitables} trivial awaitables
   struct suspend_never;
