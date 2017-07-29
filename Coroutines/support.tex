@@ -217,7 +217,7 @@ Let \textit{P} be the promise type of a coroutine (\ref{dcl.fct.def.coroutine}).
 and can be used to refer to a suspended or executing coroutine.
 A default constructed \tcode{coroutine_handle} object does not refer to any coroutine.
 
-\pnum The behavior of a program that adds specializations for \tcode{coroutine_handle} is undefined.
+\pnum If a program declares an explicit or partial specialization of \tcode{coroutine_handle}, the behavior is undefined.
 
 %Such a function is called a \textit{target} of a coroutine handle.
 %A default constructed \tcode{coroutine_handle} object has no target.
