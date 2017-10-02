@@ -16,7 +16,11 @@ Modifications made directly to existing text from the International
 Standard use \added{underlining} to represent added text and
 \removed{strikethrough} to represent deleted text. 
 
+\begingroup
+\renewcommand{\cleardoublepage}{}
+\renewcommand{\clearpage}{}
 \rSec0[intro.refs]{Normative references}
+\endgroup
 
 \pnum
 The following documents are referred to in the text in such a way that some or all of their content constitutes requirements of this document. For dated references, only the edition cited applies. For undated references, the latest edition of the referenced document (including any amendments) applies.
@@ -34,7 +38,11 @@ are unrelated to the similarly-numbered clauses and subclauses of the \Cpp Stand
 
 % NOTES: N4302 use transaction memory edits to fix this. 
 
+\begingroup
+\renewcommand{\cleardoublepage}{}
+\renewcommand{\clearpage}{}
 \rSec0[intro.defs]{Terms and definitions}
+\endgroup
 
 No terms and definitions are listed in this document.
 ISO and IEC maintain terminological databases for use in standardization at the following addresses:

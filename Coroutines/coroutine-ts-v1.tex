@@ -85,33 +85,63 @@
 \mainmatter
 \setglobalstyles
 
-\include{foreword}
-\include{intro}
+\input{foreword}
+\input{intro}
 %\include{lex}
 %\include{basic}
-\include{expressions}
-\include{statements}
-\include{declarations}
-\include{declarators}
+\input{expressions}
+\input{statements}
+\input{declarations}
+\input{declarators}
 %% \include{derived}
+
+\begingroup
+\renewcommand{\cleardoublepage}{}
+\renewcommand{\clearpage}{}
 \rSec0[class]{Classes}
+\endgroup
 No changes are made to Clause \ref{class} of the \Cpp Standard.
+
+\begingroup
+\renewcommand{\cleardoublepage}{}
+\renewcommand{\clearpage}{}
 \rSec0[class.derived]{Derived classes}
+\endgroup
 No changes are made to Clause \ref{class.derived} of the \Cpp Standard.
+
+\begingroup
+\renewcommand{\cleardoublepage}{}
+\renewcommand{\clearpage}{}
 \rSec0[class.access]{Member Access Control}
+\endgroup
+
 No changes are made to Clause \ref{class.access} of the \Cpp Standard.
-\include{special}
-\include{overloading}
+\input{special}
+\input{overloading}
 %%\include{templates}
+\begingroup
+\renewcommand{\cleardoublepage}{}
+\renewcommand{\clearpage}{}
 \rSec0[temp]{Templates}
+\endgroup
 No changes are made to Clause \ref{temp} of the \Cpp Standard.
+
+\begingroup
+\renewcommand{\cleardoublepage}{}
+\renewcommand{\clearpage}{}
 \rSec0[except]{Exception handling}
+\endgroup
 No changes are made to Clause \ref{except} of the \Cpp Standard.
+
+\begingroup
+\renewcommand{\cleardoublepage}{}
+\renewcommand{\clearpage}{}
 \rSec0[cpp]{Preprocessing directives}
+\endgroup
 No changes are made to Clause \ref{cpp} of the \Cpp Standard.
-\include{lib-intro}
-\include{support}
-\include{threads}
+\input{lib-intro}
+\input{support}
+\input{threads}
 
 %%--------------------------------------------------
 %% appendices
