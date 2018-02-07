@@ -165,8 +165,7 @@ Add \grammarterm{coroutine-return-statement} to the grammar production \grammart
     \nontermdef{jump-statement}\br
     \terminal{break ;}\br
     \terminal{continue ;}\br
-    \terminal{return} expression\opt \terminal{;}\br
-    \terminal{return} braced-init-list \terminal{;}\br
+    \terminal{return} expr-braced-init-list\opt \terminal{;}\br
     \added{coroutine-return-statement} \br
     \terminal{goto} identifier \terminal{;}
   \end{bnf}
@@ -297,7 +296,7 @@ Add the underlined text to paragraph 2:
 
 \rSec3[stmt.return.coroutine]{The \tcode{co_return} statement}%
 
-Add this subclause to \ref{stmt.jump}.
+Add this subclause to \ref{stmt.return}.
 
 \begin{quote}
 %\enternote
@@ -307,8 +306,7 @@ Add this subclause to \ref{stmt.jump}.
 
 \begin{bnf}
 	\nontermdef{coroutine-return-statement}\br
-	\terminal{co_return} expression\opt \terminal{;}\br
-	\terminal{co_return} braced-init-list\terminal{;}
+	\terminal{co_return} expr-or-braced-init-list\opt \terminal{;}\br
 \end{bnf}
 
 \pnum
@@ -316,7 +314,7 @@ A coroutine returns to its caller or resumer (\ref{dcl.fct.def.coroutine}) by th
 or when suspended (\ref{expr.await}). A coroutine shall not return to its caller or resumer by a \tcode{return} statement (\ref{stmt.return}).
 
 \pnum
-The \grammarterm{expression} or \grammarterm{braced-init-list} of a \tcode{co_return} statement is called its operand.
+The \grammarterm{expr-braced-init-list} of a \tcode{co_return} statement is called its operand.
 Let $p$ be an lvalue naming the coroutine promise object (\ref{dcl.fct.def.coroutine}) and $P$ be the type of that object, 
 then a \tcode{co_return} statement is equivalent to:
 
