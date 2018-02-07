@@ -1,6 +1,5 @@
 
 
-\setcounter{chapter}{4}
 \rSec0[expr]{Expressions}
 
 \setcounter{section}{2}
@@ -75,7 +74,7 @@ Evaluation of an \grammarterm{await-expression} involves the following auxiliary
   
   \item $a$ is the \grammarterm{cast-expression} if 
   the \grammarterm{await-expression} was implicitly produced by a \grammarterm{yield-expression} (\ref{expr.yield}), an initial suspend point, or a final suspend point (\ref{dcl.fct.def.coroutine}). 
-  Otherwise, the \grammarterm{unqualified-id} \tcode{await_transform} is looked up within the scope of \tcode{$P$} by class member access lookup (3.4.5), and if this lookup finds at least one declaration, then $a$ is \linebreak\mbox{\tcode{$p$.await_transform(\grammarterm{cast-expression});}} otherwise, $a$ is the  \grammarterm{cast-expression}.
+  Otherwise, the \grammarterm{unqualified-id} \tcode{await_transform} is looked up within the scope of \tcode{$P$} by class member access lookup (\cxxref{basic.lookup.classref}), and if this lookup finds at least one declaration, then $a$ is \linebreak\mbox{\tcode{$p$.await_transform(\grammarterm{cast-expression});}} otherwise, $a$ is the  \grammarterm{cast-expression}.
   
 %  \item The \grammarterm{unqualified-id} \tcode{await_transform} is looked up within the scope of \tcode{$P$} by class member access lookup (3.4.5), and if this lookup finds at least one declaration, then $a$ is \tcode{$p$.await_transform(\grammarterm{cast-expression});} otherwise, $a$ is \grammarterm{cast-expression}. $a$ is always \grammarterm{cast-expression} for implicit \grammarterm{await-expression}s produced by \grammarterm{yield-expression} (\ref{expr.yield}), or initial and final suspend points (\ref{dcl.fct.def.coroutine}).
 %  Let $A$ be the type of $a$. 
@@ -105,7 +104,7 @@ $o$ is determined by enumerating the applicable \tcode{operator co_await} functi
 \begin{itemize}
   \item If the result is \tcode{false}, the coroutine is considered suspended. Then, the \textit{await-suspend} expression is evaluated. If that expression has
   type \tcode{bool} and evaluates to \tcode{false}, the coroutine is resumed.
-  If that expression exits via an exception, the exception is caught, the coroutine is resumed, and the exception is immediately re-thrown (15.1). Otherwise, control flow returns to the current caller or resumer (\ref{dcl.fct.def.coroutine}) without exiting any scopes (\ref{stmt.jump}).
+  If that expression exits via an exception, the exception is caught, the coroutine is resumed, and the exception is immediately re-thrown (\cxxref{except.throw}). Otherwise, control flow returns to the current caller or resumer (\ref{dcl.fct.def.coroutine}) without exiting any scopes (\ref{stmt.jump}).
   \item If the result is \tcode{true}, or when the coroutine is resumed, the \textit{await-resume} expression is evaluated, and its result is the result of the \grammarterm{await-expression}.
   
 \end{itemize}
