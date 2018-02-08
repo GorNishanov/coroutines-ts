@@ -1,12 +1,12 @@
 
-\setcounter{chapter}{17}
+%\setcounter{chapter}{17}
 \rSec0[language.support]{Language support library}
 
 \rSec1[support.general]{General}
 
 Add a row to Table~\ref{tab:lang.sup.lib.summary} for coroutine support header \tcode{<experimental/coroutine>}.
 
-\setcounter{table}{29}
+\setcounter{table}{31}
 \begin{libsumtab}{Language support library summary}{tab:lang.sup.lib.summary}
 	\cxxref{support.types}       & Types                     &   \tcode{<cstddef>}   \\ \rowsep
 	&                           &   \tcode{<limits>}    \\
@@ -410,7 +410,8 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
 
 \begin{itemdescr}
   \pnum
-The template specialization shall meet the requirements of class template hash (\cxxref{unord.hash}).
+%The template specialization shall meet the requirements of class template hash (\cxxref{unord.hash}).
+The specialization is enabled\iref{unord.hash}.
 \end{itemdescr}
 
 \rSec2[coroutine.trivial.awaitables]{Trivial awaitables}
