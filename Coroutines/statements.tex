@@ -334,8 +334,8 @@ then a \tcode{co_return} statement is equivalent to:
 where $final$\tcode{\_}$suspend$ is as defined in \ref{dcl.fct.def.coroutine} and $S$ is defined as follows:
 
 \begin{itemize}
-  \item $S$ is  $p$\tcode{.return_value(}\grammarterm{braced-init-list}{}\tcode{)}, if the operand is a \grammarterm{braced-init-list};
-  \item $S$ is  $p$\tcode{.return_value(}\grammarterm{expression}{}\tcode{)}, if the operand is an expression of non-\tcode{void} type;
+  \item $S$ is  $p$\tcode{.return_value(}\grammarterm{expr-or-braced-init-list}{}\tcode{)}, if the operand is a \grammarterm{braced-init-list} or an expression of non-\tcode{void} type;
+%  \item $S$ is  $p$\tcode{.return_value(}\grammarterm{expression}{}\tcode{)}, if the operand is an expression of non-\tcode{void} type;
   \item $S$ is \tcode{\{}{ }\grammarterm{expression}\opt \tcode{;} $p$\tcode{.return_void()}\tcode{;{ }\}}, otherwise;
 \end{itemize}
 $S$ shall be a prvalue of type \tcode{void}.
