@@ -106,7 +106,7 @@ $o$ is determined by enumerating the applicable \tcode{operator co_await} functi
    If that expression has type \tcode{std::experimental::coroutine_handle<}$Z$\tcode{>} and evaluates to a value $s$, the coroutine referred to by $s$ is resumed as if by a call $s$\tcode{.resume()}. \enternote Any number of coroutines may be successively resumed in this fashion, eventually returning control flow to the current coroutine caller or resumer (\ref{dcl.fct.def.coroutine}). \exitnote 
   If that expression has
   type \tcode{bool} and evaluates to \tcode{false}, the coroutine is resumed.
-  If that expression exits via an exception, the exception is caught, the coroutine is resumed, and the exception is immediately re-thrown (\cxxref{except.throw}). Otherwise, control flow returns to the current caller or resumer (\ref{dcl.fct.def.coroutine}) without exiting any scopes (\ref{stmt.jump}).
+  If that expression exits via an exception, the exception is caught, the coroutine is resumed, and the exception is immediately re-thrown (\cxxref{except.throw}). Otherwise, control flow returns to the current coroutine caller or resumer (\ref{dcl.fct.def.coroutine}) without exiting any scopes (\ref{stmt.jump}).
   \item If the result is \tcode{true}, or when the coroutine is resumed, the \textit{await-resume} expression is evaluated, and its result is the result of the \grammarterm{await-expression}.
   
 \end{itemize}
