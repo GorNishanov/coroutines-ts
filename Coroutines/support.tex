@@ -216,6 +216,26 @@ inline namespace coroutines_v1 {
     Promise& promise() const;
   };
 
+  template <> struct coroutine_handle<noop_coroutine_promise> : coroutine_handle<>
+  {
+  // \ref{coroutine.handle.noop.observers} noop observers
+  constexpr explicit operator bool() const noexcept;
+  constexpr bool done() const noexcept;
+
+  // 18.11.2.8 noop resumption
+  constexpr void operator()() const noexcept;
+  constexpr void resume() const noexcept;
+  constexpr void destroy() const noexcept;
+
+  // 18.11.2.9 noop promise access
+  noop_coroutine_promise& promise() const noexcept;
+
+  // 18.11.2.10 noop address
+  constexpr void* address() const noexcept;
+private:
+  coroutine_handle(@\textit{unspecified}@);
+};
+
 } // namespace coroutines_v1
 } // namespace experimental
 } // namespace std
@@ -422,6 +442,26 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
 %The template specialization shall meet the requirements of class template hash (\cxxref{unord.hash}).
 The specialization is enabled\iref{unord.hash}.
 \end{itemdescr}
+
+\rSec3[coroutine.handle.noop.observers]{\tcode{noop_coroutine_handle} observers:}
+\begin{itemdecl}
+  constexpr explicit operator bool() const noexcept; 
+\end{itemdecl}
+
+\begin{itemdescr}
+  \pnum
+  \returns \tcode{true}.
+\end{itemdescr}
+
+\begin{itemdecl}
+  constexpr bool done() const noexcept; 
+\end{itemdecl}
+
+\begin{itemdescr}
+  \pnum
+  \returns \tcode{false}.
+\end{itemdescr}
+
 
 \rSec2[coroutine.promise.noop]{Class \tcode{noop_coroutine_promise}}
 \rSec2[coroutine.noop]{Function \tcode{noop_coroutine}}
