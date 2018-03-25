@@ -501,8 +501,25 @@ The specialization is enabled\iref{unord.hash}.
 \end{itemdescr}
 
 \rSec2[coroutine.promise.noop]{Class \tcode{noop_coroutine_promise}}
+\begin{itemdecl}
+  struct noop_coroutine_promise{};
+\end{itemdecl}
+
+\begin{itemdescr}
+  \pnum The class \tcode{noop_coroutine_promise} defines the promise type for the coroutine referred to by \tcode{noop_coroutine_handle} (\ref{support.coroutine}).
+\end{itemdescr}
+
 \rSec2[coroutine.noop]{Function \tcode{noop_coroutine}}
 
+\begin{itemdecl}
+  noop_coroutine_handle noop_coroutine() noexcept;
+\end{itemdecl}
+
+\begin{itemdescr}
+  \pnum\returns A handle to a coroutine that has no observable effects when resumed or destroyed.
+  
+  \pnum\remarks A handle returned from \tcode{noop_coroutine} may or may not compare equal to a handle returned from another invocation of \tcode{noop_coroutine}.
+\end{itemdescr}
 
 \rSec2[coroutine.trivial.awaitables]{Trivial awaitables}
 The header \tcode{<experimental/coroutine>} defines \tcode{suspend_never} and \tcode{suspend_always} as follows.
