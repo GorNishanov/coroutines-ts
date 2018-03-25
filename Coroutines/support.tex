@@ -230,7 +230,7 @@ inline namespace coroutines_v1 {
   // \ref{coroutine.handle.noop.promise} noop promise access
   noop_coroutine_promise& promise() const noexcept;
 
-  // 18.11.2.10 noop address
+  // \ref{coroutine.handle.noop.address} noop address
   constexpr void* address() const noexcept;
 private:
   coroutine_handle(@\textit{unspecified}@);
@@ -485,6 +485,19 @@ The specialization is enabled\iref{unord.hash}.
 \begin{itemdescr}
   \pnum
   \returns a reference to the promise object associated with this coroutine handle.
+\end{itemdescr}
+
+\rSec3[coroutine.handle.noop.address]{\tcode{noop_coroutine_handle} address}
+\begin{itemdecl}
+  constexpr void* address() const noexcept;
+\end{itemdecl}
+
+\begin{itemdescr}
+  \pnum
+  \returns \tcode{ptr}.
+
+  \pnum
+  \remarks A \tcode{noop_coroutine_handle}'s \tcode{ptr} always contains a non-\tcode{null} pointer value.
 \end{itemdescr}
 
 \rSec2[coroutine.promise.noop]{Class \tcode{noop_coroutine_promise}}
