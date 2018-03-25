@@ -93,7 +93,7 @@ $o$ is determined by enumerating the applicable \tcode{operator co_await} functi
 %  \item If the \grammarterm{await-expression} is potentially-evaluated and lookup for the unqualified-id \tcode{await_transform} within the scope of \tcode{decltype($p$)} as if by class member access lookup (3.4.5) finds at least one declaration, then $e$ is \tcode{$p$.await_transform(a);} otherwise, $e$ is $a$.
   \item $h$ is an object of type \tcode{std::experimental::coroutine_handle<$P$>} referring to the enclosing coroutine.
   \item \textit{await-ready} is the expression \tcode{$e$.await_ready()}, contextually converted to \tcode{bool}.
-  \item \textit{await-suspend} is the expression \tcode{$e$.await_suspend($h$)}, which shall be a prvalue of type \tcode{void} or \tcode{bool}.
+  \item \textit{await-suspend} is the expression \tcode{$e$.await_suspend($h$)}, which shall be a prvalue of type \tcode{void}, \tcode{bool}, or \tcode{std::experimental::coroutine_handle<}$Z$\tcode{>} for some type $Z$.
   \item \textit{await-resume} is the expression \tcode{$e$.await_resume()}.
 \end{itemize}
 %In an unevaluated operand, only the expressions $a$, $e$, and \textit{await-resume} are required to be valid, and the \grammarterm{await-expression} is equivalent to the \textit{await-resume} expression.
@@ -102,7 +102,9 @@ $o$ is determined by enumerating the applicable \tcode{operator co_await} functi
 
 \pnum The \grammarterm{await-expression} evaluates the \textit{await-ready} expression, then:
 \begin{itemize}
-  \item If the result is \tcode{false}, the coroutine is considered suspended. Then, the \textit{await-suspend} expression is evaluated. If that expression has
+  \item If the result is \tcode{false}, the coroutine is considered suspended. Then, the \textit{await-suspend} expression is evaluated.
+   If that expression has type \tcode{std::experimental::coroutine_handle<}$Z$\tcode{>} and evaluates to a value $s$, the coroutine referred to by $s$ is resumed as if by a call $s$\tcode{.resume()}. \enternote Any number of coroutines may be successively resumed in this fashion, eventually returning control flow to the current coroutine caller or resumer (\ref{dcl.fct.def.coroutine}). \exitnote 
+  If that expression has
   type \tcode{bool} and evaluates to \tcode{false}, the coroutine is resumed.
   If that expression exits via an exception, the exception is caught, the coroutine is resumed, and the exception is immediately re-thrown (\cxxref{except.throw}). Otherwise, control flow returns to the current caller or resumer (\ref{dcl.fct.def.coroutine}) without exiting any scopes (\ref{stmt.jump}).
   \item If the result is \tcode{true}, or when the coroutine is resumed, the \textit{await-resume} expression is evaluated, and its result is the result of the \grammarterm{await-expression}.
