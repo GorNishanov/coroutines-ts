@@ -225,3 +225,5 @@ pip-log.txt
 .mr.developer.cfg
 *.cb2
 *.cb
+*.bbl
+Coroutines/coroutine-ts-v1.blg

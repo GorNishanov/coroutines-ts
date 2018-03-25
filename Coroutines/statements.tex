@@ -42,51 +42,76 @@ Add the underlined text to paragraph 1.
 For a range-based \tcode{for} statement of the form
 
 \begin{ncbnf}
-  \terminal{for} \terminal{\added{co_await\opt{}}} \terminal{(} for-range-declaration : expression \terminal{)} statement
+  \terminal{for} \terminal{\added{co_await\opt{}}} \terminal{(} for-range-declaration : for-range-initializer \terminal{)} statement
 \end{ncbnf}
 
-let \textit{range-init} be equivalent to the \grammarterm{expression} surrounded
-by parentheses\footnote{this ensures that a top-level comma operator cannot be
-  reinterpreted as a delimiter between \grammarterm{init-declarator}{s} in the
-  declaration of \tcode{__range}.}
-
-\begin{ncbnf}
-  \terminal{(} expression \terminal{)}
-\end{ncbnf}
-
-and for a range-based \tcode{for} statement of the form
-
-\begin{ncbnf}
-  \terminal{for} \terminal{\added{co_await\opt{}}} \terminal{(} for-range-declaration \terminal{:} braced-init-list \terminal{)} statement
-\end{ncbnf}
-
-let \textit{range-init} be equivalent to the \grammarterm{braced-init-list}. In each case, a
-range-based \tcode{for} statement
+%let \textit{range-init} be equivalent to the \grammarterm{expression} surrounded
+%by parentheses\footnote{this ensures that a top-level comma operator cannot be
+%  reinterpreted as a delimiter between \grammarterm{init-declarator}{s} in the
+%  declaration of \tcode{__range}.}
+%
+%\begin{ncbnf}
+%  \terminal{(} expression \terminal{)}
+%\end{ncbnf}
+%
+%and for a range-based \tcode{for} statement of the form
+%
+%\begin{ncbnf}
+%  \terminal{for} \terminal{\added{co_await\opt{}}} \terminal{(} for-range-declaration \terminal{:} braced-init-list \terminal{)} statement
+%\end{ncbnf}
+%
+%let \textit{range-init} be equivalent to the \grammarterm{braced-init-list}. In each case, a
+%range-based \tcode{for} statement
 is equivalent to
 
-\begin{codeblock}
-  {
-    auto && __range = range-init;
-    for ( auto __begin =  @\added{\tcode{co_await}\opt{}}@ begin-expr,
-    __end = end-expr;
-    __begin != __end;
-     @\added{\tcode{co_await}\opt{}}@ ++__begin ) {
-      @\textit{for-range-declaration}@ = *__begin;
-      @\textit{statement}@
-    }
-  }
-\end{codeblock}
+%\begin{codeblock}
+%  {
+%    auto && __range = @\textit{for-range-initializer}@;
+%    for ( auto __begin =  @\added{\tcode{co_await}\opt{}}@ begin-expr,
+%    __end = end-expr;
+%    __begin != __end;
+%     @\added{\tcode{co_await}\opt{}}@ ++__begin ) {
+%      @\textit{for-range-declaration}@ = *__begin;
+%      @\textit{statement}@
+%    }
+%  }
+%\end{codeblock}
 
-where 
-\tcode{\added{co_await}}\added{ is present if and only if it appears immediately after the \tcode{for} keyword, and}\linebreak
-\tcode{__range}, \tcode{__begin}, and \tcode{__end} are variables defined for
-exposition only, and \tcode{_RangeT} is the type of the
-\grammarterm{}{expression}, and \textit{begin-expr} and \textit{end-expr} are
-determined as follows: ...
+\begin{ncbnftab}
+\terminal{\{}\br
+\>\terminal{auto \&\&__range =} for-range-initializer \terminal{;}\br
+\>\terminal{auto __begin =} \terminal{\added{co_await\opt{}}} begin-expr \terminal{;}\br
+\>\terminal{auto __end =} end-expr \terminal{;}\br
+\>\terminal{for ( ; __begin != __end; \terminal{\added{co_await\opt{}}} ++__begin ) \{}\br
+\>\>for-range-declaration \terminal{= *__begin;}\br
+\>\>statement\br
+\>\terminal{\}}\br
+\terminal{\}}
+\end{ncbnftab}
+\end{quote}
+
+Insert a new bullet after paragraph 1 bullet 1.
+
+\begin{quote}
+\begin{itemize}
+\item
+if the \grammarterm{for-range-initializer} is an \grammarterm{expression},
+it is regarded as if it were surrounded by parentheses (so that a comma operator
+cannot be reinterpreted as delimiting two \grammarterm{init-declarator}{s});
+\item \added{\tcode{co_await} is present if and only if it appears immediately after the \tcode{for} keyword;}
+\item \tcode{__range}, \tcode{__begin}, and \tcode{__end} are variables defined for
+exposition only; and ...
+\end{itemize}
+\end{quote}
+
+%\tcode{\added{co_await}}\added{ is present if and only if it appears immediately after the \tcode{for} keyword, and}\linebreak
+%\tcode{__range}, \tcode{__begin}, and \tcode{__end} are variables defined for
+%exposition only, and \tcode{_RangeT} is the type of the
+%\grammarterm{}{expression}, and \textit{begin-expr} and \textit{end-expr} are
+%determined as follows: ...
 
 %\ednote{The remainder of paragraph 1 remains unchanged and is not included here.}
 
-\end{quote}
 
 
 Add the following paragraph after paragraph 2.
@@ -128,7 +153,7 @@ Add the following paragraph after paragraph 2.
 %\textit{range-init}, \textit{begin-expr}, and \textit{end-expr} are defined as in the range-based \tcode{for} statement (\cxxref{stmt.ranged}).
 %
 %\end{quote}
-
+\pagebreak
 \setcounter{section}{5}
 \rSec1[stmt.jump]{Jump statements}%
 
@@ -140,8 +165,7 @@ Add \grammarterm{coroutine-return-statement} to the grammar production \grammart
     \nontermdef{jump-statement}\br
     \terminal{break ;}\br
     \terminal{continue ;}\br
-    \terminal{return} expression\opt \terminal{;}\br
-    \terminal{return} braced-init-list \terminal{;}\br
+    \terminal{return} expr-braced-init-list\opt \terminal{;}\br
     \added{coroutine-return-statement} \br
     \terminal{goto} identifier \terminal{;}
   \end{bnf}
@@ -179,12 +203,16 @@ A suspension of a coroutine (\ref{expr.await}) is not considered to be an exit f
 %\added{Using a \tcode{return} statement in a coroutine makes the program ill-formed.}
 %\end{quote}
 
-Add the underlined text to the last sentence of paragraph 2:
+Add the underlined text to paragraph 2:
 
 \begin{quote}
 \setcounter{Paras}{1}
-  \pnum ... Flowing off the end of a function \added{that is not a coroutine} is equivalent to a \tcode{return} with no value; this results in
-  undefined behavior in a value-returning function.
+  \pnum ... Flowing off the end of
+  a constructor,
+  a destructor, or
+  a function \added{that is not a coroutine} with a \cv{}~\tcode{void} return type is
+  equivalent to a \tcode{return} with no operand. Otherwise, flowing off the end of a function other than main (6.6.1) \added{or a coroutine (\ref{dcl.fct.def.coroutine})}
+  results in undefined behavior.
 \end{quote}
 
 %NOTE
@@ -268,7 +296,7 @@ Add the underlined text to the last sentence of paragraph 2:
 
 \rSec3[stmt.return.coroutine]{The \tcode{co_return} statement}%
 
-Add this subclause to \ref{stmt.jump}.
+Add this subclause to \ref{stmt.return}.
 
 \begin{quote}
 %\enternote
@@ -278,8 +306,7 @@ Add this subclause to \ref{stmt.jump}.
 
 \begin{bnf}
 	\nontermdef{coroutine-return-statement}\br
-	\terminal{co_return} expression\opt \terminal{;}\br
-	\terminal{co_return} braced-init-list\terminal{;}
+	\terminal{co_return} expr-or-braced-init-list\opt \terminal{;}\br
 \end{bnf}
 
 \pnum
@@ -287,7 +314,7 @@ A coroutine returns to its caller or resumer (\ref{dcl.fct.def.coroutine}) by th
 or when suspended (\ref{expr.await}). A coroutine shall not return to its caller or resumer by a \tcode{return} statement (\ref{stmt.return}).
 
 \pnum
-The \grammarterm{expression} or \grammarterm{braced-init-list} of a \tcode{co_return} statement is called its operand.
+The \grammarterm{expr-braced-init-list} of a \tcode{co_return} statement is called its operand.
 Let $p$ be an lvalue naming the coroutine promise object (\ref{dcl.fct.def.coroutine}) and $P$ be the type of that object, 
 then a \tcode{co_return} statement is equivalent to:
 
@@ -307,8 +334,8 @@ then a \tcode{co_return} statement is equivalent to:
 where $final$\tcode{\_}$suspend$ is as defined in \ref{dcl.fct.def.coroutine} and $S$ is defined as follows:
 
 \begin{itemize}
-  \item $S$ is  $p$\tcode{.return_value(}\grammarterm{braced-init-list}{}\tcode{)}, if the operand is a \grammarterm{braced-init-list};
-  \item $S$ is  $p$\tcode{.return_value(}\grammarterm{expression}{}\tcode{)}, if the operand is an expression of non-\tcode{void} type;
+  \item $S$ is  $p$\tcode{.return_value(}\grammarterm{expr-or-braced-init-list}{}\tcode{)}, if the operand is a \grammarterm{braced-init-list} or an expression of non-\tcode{void} type;
+%  \item $S$ is  $p$\tcode{.return_value(}\grammarterm{expression}{}\tcode{)}, if the operand is an expression of non-\tcode{void} type;
   \item $S$ is \tcode{\{}{ }\grammarterm{expression}\opt \tcode{;} $p$\tcode{.return_void()}\tcode{;{ }\}}, otherwise;
 \end{itemize}
 $S$ shall be a prvalue of type \tcode{void}.
