@@ -84,6 +84,15 @@ inline namespace coroutines_v1 {
   template <typename Promise = void>
     struct coroutine_handle;		
   
+  // \ref{coroutine.promise.noop} noop coroutine promise
+  struct noop_coroutine_promise;
+  template <> struct coroutine_handle<noop_coroutine_promise>;
+  // noop coroutine handle
+  using noop_coroutine_handle = coroutine_handle<noop_coroutine_promise>;
+  
+  // \ref{coroutine.noop} noop coroutine
+  noop_coroutine_handle noop_coroutine() noexcept;
+
   // \ref{coroutine.handle.compare} comparison operators:	
   constexpr bool operator==(coroutine_handle<> x, coroutine_handle<> y) noexcept;
   constexpr bool operator!=(coroutine_handle<> x, coroutine_handle<> y) noexcept;
@@ -413,6 +422,10 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
 %The template specialization shall meet the requirements of class template hash (\cxxref{unord.hash}).
 The specialization is enabled\iref{unord.hash}.
 \end{itemdescr}
+
+\rSec2[coroutine.promise.noop]{Class \tcode{noop_coroutine_promise}}
+\rSec2[coroutine.noop]{Function \tcode{noop_coroutine}}
+
 
 \rSec2[coroutine.trivial.awaitables]{Trivial awaitables}
 The header \tcode{<experimental/coroutine>} defines \tcode{suspend_never} and \tcode{suspend_always} as follows.
