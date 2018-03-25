@@ -227,7 +227,7 @@ inline namespace coroutines_v1 {
   constexpr void resume() const noexcept;
   constexpr void destroy() const noexcept;
 
-  // 18.11.2.9 noop promise access
+  // \ref{coroutine.handle.noop.promise} noop promise access
   noop_coroutine_promise& promise() const noexcept;
 
   // 18.11.2.10 noop address
@@ -443,7 +443,7 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
 The specialization is enabled\iref{unord.hash}.
 \end{itemdescr}
 
-\rSec3[coroutine.handle.noop.observers]{\tcode{noop_coroutine_handle} observers:}
+\rSec3[coroutine.handle.noop.observers]{\tcode{noop_coroutine_handle} observers}
 \begin{itemdecl}
   constexpr explicit operator bool() const noexcept; 
 \end{itemdecl}
@@ -462,11 +462,11 @@ The specialization is enabled\iref{unord.hash}.
   \returns \tcode{false}.
 \end{itemdescr}
 
-\rSec3[coroutine.handle.noop.resumption]{\tcode{noop_coroutine_handle} resumption:}
+\rSec3[coroutine.handle.noop.resumption]{\tcode{noop_coroutine_handle} resumption}
 \begin{itemdecl}
-constexpr void operator()() const noexcept;
-constexpr void resume() const noexcept;
-constexpr void destroy() const noexcept;
+  constexpr void operator()() const noexcept;
+  constexpr void resume() const noexcept;
+  constexpr void destroy() const noexcept;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -475,6 +475,16 @@ constexpr void destroy() const noexcept;
   
   \pnum
   \remarks If \tcode{noop_coroutine_handle} is converted to \tcode{coroutine_handle<>}, calls to \tcode{operator()}, \tcode{resume} and \tcode{destroy} on that handle will also have no observable effects.
+\end{itemdescr}
+
+\rSec3[coroutine.handle.noop.promise]{\tcode{noop_coroutine_handle} promise access}
+\begin{itemdecl}
+  noop_coroutine_promise& promise() const noexcept;
+\end{itemdecl}
+
+\begin{itemdescr}
+  \pnum
+  \returns a reference to the promise object associated with this coroutine handle.
 \end{itemdescr}
 
 \rSec2[coroutine.promise.noop]{Class \tcode{noop_coroutine_promise}}
