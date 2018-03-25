@@ -108,7 +108,7 @@ of \textit{f}, \textit{T} be the type \tcode{std::experimental::coroutine_traits
 Then, the coroutine behaves as if its body were:
 \begin{codeblock}
   {
-     @\textit{P }$p$@;
+     @\textit{P }$p$ \textit{promise-constructor-arguments}@;
      co_await @$p$@.initial_suspend(); // initial suspend point
      try { @\textit{F}@ } catch(...) { @\textit{p}@.unhandled_exception(); }
   @\textit{final_suspend}@:
@@ -117,7 +117,14 @@ Then, the coroutine behaves as if its body were:
 \end{codeblock}
 where an object denoted as \textit{p} is the \defn{promise object} of
 the coroutine and its type $P$ is the \defn{promise type}
-of the coroutine.
+of the coroutine,
+and \textit{promise-constructor-arguments} is determined as follows:
+overload resolution is performed on a promise constructor call created by
+assembling an argument list with lvalues $p_1$ ... $p_n$. If a viable
+constructor is found (\cxxref{over.match.viable}), then
+\textit{promise-constructor-arguments} is
+\tcode{(}$p_1$,...,$p_n$\tcode{)}, otherwise
+\textit{promise-constructor-arguments} is empty. 
 %,except that any exception thrown after the initial suspend point and
 %before the flow of execution reaches \textit{F} also results in entering
 %the \grammarterm{handler} of the \grammarterm{try-block}.
@@ -161,7 +168,7 @@ An implementation may need to allocate additional storage for a coroutine.
 This storage is known as the \defn{coroutine state} and is obtained by calling a non-array allocation function~(\cxxref{basic.stc.dynamic.allocation}).
 The allocation function's name is looked up in the scope of $P$. If this lookup fails, the allocation function's name is looked up in the global scope. If the lookup finds an allocation function in the scope of $P$, 
 %\removed{and that function takes exactly one parameter, it will be used; otherwise, all parameters of the coroutine are passed to the allocation function after the size parameter in order.}
-overload resolution is performed on a function call created by assembling an argument list. The first argument is the amount of space requested, and has type \tcode{std::size_t}. The lvalues $p_1$ ... $p_n$ are the succeeding arguments. If no matching function is found, overload resolution is performed again on a function call created by passing just the amount of space required as an argument of type \tcode{std::size_t}.
+overload resolution is performed on a function call created by assembling an argument list. The first argument is the amount of space requested, and has type \tcode{std::size_t}. The lvalues $p_1$ ... $p_n$ are the succeeding arguments. If no viable function is found  (\cxxref{over.match.viable}), overload resolution is performed again on a function call created by passing just the amount of space required as an argument of type \tcode{std::size_t}.
 %\enternote 
 %An allocation function template shall have two or more function parameters. 
 %A template instance is never considered to be an allocation function with exactly one parameter, regardless of its signature. 
@@ -230,7 +237,7 @@ The selected deallocation function shall be called with the address of the block
 %coroutine_handle<>
 
 \pnum
-When a coroutine is invoked, a copy is created for each coroutine parameter. Each such copy is an object with automatic storage duration that is direct-initialized from an lvalue referring to the corresponding parameter if the parameter is an lvalue reference, and from an xvalue referring to it otherwise. A reference to a parameter in the function-body of the coroutine is replaced by a reference to its copy.
+When a coroutine is invoked, a copy is created for each coroutine parameter. Each such copy is an object with automatic storage duration that is direct-initialized from an lvalue referring to the corresponding parameter if the parameter is an lvalue reference, and from an xvalue referring to it otherwise. A reference to a parameter in the function-body of the coroutine and in the call to the coroutine promise constructor is replaced by a reference to its copy.
 The initialization and destruction of each parameter copy occurs in the context of the called coroutine.
 Initializations of parameter copies are sequenced before the call to the coroutine promise constructor and indeterminately sequenced with respect to each other.
 The lifetime of parameter copies ends immediately after the lifetime of the coroutine promise object ends.
