@@ -179,7 +179,7 @@ overload resolution is performed on a function call created by assembling an arg
 The \grammarterm{unqualified-id} \tcode{get_return_object_on_allocation_failure} is looked up in the scope of class \textit{P}
 by class member access lookup (\cxxref{basic.lookup.classref}). If a declaration is found, then the result of a call to an allocation function used to obtain storage for the coroutine state is assumed to return
 \tcode{nullptr} if it fails to obtain storage, and if a global allocation function is selected, the \tcode{::operator new(size_t, nothrow_t)} form shall be used.
-%is passed to an allocaiton. 
+%is passed to an allocator. 
 If an allocation function returns \tcode{nullptr}, the coroutine returns control to the caller of the coroutine and the return value is obtained by a call to $P$\tcode{::get_return_object_on_allocation_failure()}. 
 The allocation function used in this case must have a non-throwing \grammarterm{noexcept-specification}.
 

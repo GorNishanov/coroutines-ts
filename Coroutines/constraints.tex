@@ -56,7 +56,7 @@ and variable templates is required when referring a template specialization
 function templates is required during overload resolution (\ref{over.match.viable}).
 \exitnote
 % 
-Determining if a constraint is satisfied entails the the substitution 
+Determining if a constraint is satisfied entails the substitution 
 of template arguments into that constraint.
 % 
 The rules for determining the satisfaction of different kinds of 
@@ -262,7 +262,7 @@ template<typename T> concept bool C = requires (T t) { ++t; };
 The concept \tcode{C} introduces an expression constraint for 
 the expression \tcode{++t}.
 % 
-The type argument \tcode{int} satisfies this constraint because the
+The type argument \tcode{int} satisfies this constraint because 
 the expression \tcode{++t} is valid after substituting \tcode{int}
 for \tcode{T}.
 \exitexample
@@ -355,7 +355,7 @@ convertible to \tcode{bool}.
 An implicit conversion constraint \tcode{P} is equivalent to another implicit 
 conversion constraint \tcode{Q} if and only if the \grammarterm{expression}{}s 
 of \tcode{P} and \tcode{Q} are equivalent using the rules in
-\ref{temp.over.link} to compare expressions, and the the types
+\ref{temp.over.link} to compare expressions, and the types
 of \tcode{P} and \tcode{Q} are equivalent according to the rules in
 \cxxref{temp.type}.
 
@@ -799,7 +799,7 @@ Then, \tcode{P} subsumes \tcode{Q} if and only if
 \begin{itemize}
 \item for every disjunctive clause \tcode{P$i$} in the disjunctive normal 
 form of \tcode{P}, \tcode{P$i$} subsumes every conjunctive clause \tcode{Q$j$} 
-in the conjuctive normal form of \tcode{Q}, where
+in the conjunctive normal form of \tcode{Q}, where
 
 \item a disjunctive clause \tcode{P$i$} subsumes a conjunctive clause
 \tcode{Q$j$} if and only if each atomic constraint in \tcode{P$i$} subsumes 
