@@ -347,8 +347,8 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
   at its final suspend point, behavior is undefined.
   
   \pnum
-  \sync A concurrent resumption of the coroutine via \tcode{resume}, \tcode{operator()}, or \tcode{destroy} may result in a data race.
-  
+  \enternote A concurrent resumption of the coroutine via \tcode{resume}, \tcode{operator()}, or \tcode{destroy} may result in a data race.
+  \exitnote
 \end{itemdescr}
 
 \begin{itemdecl}
@@ -362,7 +362,7 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
   \effects Destroys the coroutine (\ref{dcl.fct.def.coroutine}).
   
 \pnum
-  \sync A concurrent resumption of the coroutine via \tcode{resume}, \tcode{operator()}, or \tcode{destroy} may result in a data race.
+  \enternote A concurrent resumption of the coroutine via \tcode{resume}, \tcode{operator()}, or \tcode{destroy} may result in a data race.
 \end{itemdescr}
 
 \rSec3[coroutine.handle.promise]{\tcode{coroutine_handle} promise access}
