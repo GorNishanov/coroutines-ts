@@ -77,11 +77,11 @@ namespace experimental {
 inline namespace coroutines_v1 {
 
   // \ref{coroutine.traits} coroutine traits
-  template <typename R, typename... ArgTypes>
+  template <class R, class... ArgTypes>
     struct coroutine_traits;
   	
   // \ref{coroutine.handle} coroutine handle
-  template <typename Promise = void>
+  template <class Promise = void>
     struct coroutine_handle;		
   
   // \ref{coroutine.promise.noop} noop coroutine promise
@@ -204,7 +204,7 @@ inline namespace coroutines_v1 {
     void* ptr; // exposition only
   };
 
-  template <typename Promise>
+  template <class Promise>
   struct coroutine_handle : coroutine_handle<>
   {
     // \ref{coroutine.handle.con} construct/reset
