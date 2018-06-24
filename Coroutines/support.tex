@@ -272,7 +272,7 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
   \precondition \tcode{p} is a reference to a promise object of a coroutine.
   
 	\pnum
-  \returns a coroutine handle $h$ referring to the coroutine.
+  \returns A coroutine handle $h$ referring to the coroutine.
   
   \pnum\postconditions \tcode{addressof(}$h$\tcode{.promise()) == addressof(p)}.
 \end{itemdescr}
@@ -343,11 +343,11 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
   \precondition \tcode{*this} refers to a suspended coroutine.
   
   \pnum
-  \effects resumes the execution of the coroutine. If the coroutine was suspended
+  \effects Resumes the execution of the coroutine. If the coroutine was suspended
   at its final suspend point, behavior is undefined.
   
   \pnum
-  \sync a concurrent resumption of the coroutine via \tcode{resume}, \tcode{operator()}, or \tcode{destroy} may result in a data race.
+  \sync A concurrent resumption of the coroutine via \tcode{resume}, \tcode{operator()}, or \tcode{destroy} may result in a data race.
   
 \end{itemdescr}
 
@@ -359,10 +359,10 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
   \precondition \tcode{*this} refers to a suspended coroutine.
   
   \pnum
-  \effects destroys the coroutine (\ref{dcl.fct.def.coroutine}).
+  \effects Destroys the coroutine (\ref{dcl.fct.def.coroutine}).
   
 \pnum
-  \sync a concurrent resumption of the coroutine via \tcode{resume}, \tcode{operator()}, or \tcode{destroy} may result in a data race.
+  \sync A concurrent resumption of the coroutine via \tcode{resume}, \tcode{operator()}, or \tcode{destroy} may result in a data race.
 \end{itemdescr}
 
 \rSec3[coroutine.handle.promise]{\tcode{coroutine_handle} promise access}
@@ -375,7 +375,7 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
   \precondition \tcode{*this} refers to a coroutine.
   
   \pnum
-  \returns a reference to the promise of the coroutine.
+  \returns A reference to the promise of the coroutine.
 \end{itemdescr}
 
 \rSec3[coroutine.handle.compare]{Comparison operators}
@@ -487,7 +487,7 @@ The specialization is enabled\iref{unord.hash}.
 
 \begin{itemdescr}
   \pnum
-  \returns a reference to the promise object associated with this coroutine handle.
+  \returns A reference to the promise object associated with this coroutine handle.
 \end{itemdescr}
 
 \rSec3[coroutine.handle.noop.address]{\tcode{noop_coroutine_handle} address}
