@@ -155,7 +155,9 @@ that satisfies those requirements.
 \rSec3[coroutine.traits.primary]{Struct template \tcode{coroutine_traits}}
 \pnum The header \tcode{<experimental/coroutine>} defines
 the primary template \tcode{coroutine_traits} such that 
-if \tcode{ArgTypes} is a parameter pack of types and if \tcode{R} is a type that has a valid (\cxxref{temp.deduct}) member type \tcode{promise_type}, then
+if \tcode{ArgTypes} is a parameter pack of types and 
+if \tcode{R} is a type that has a valid (\cxxref{temp.deduct}) member type \tcode{promise_type},
+then
 \tcode{coroutine_traits<R,ArgTypes...>} has the following publicly accessible member:
 
 \begin{codeblock}
