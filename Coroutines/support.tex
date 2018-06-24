@@ -193,9 +193,9 @@ inline namespace coroutines_v1 {
     bool done() const; 
     
     // \ref{coroutine.handle.resumption} resumption
-    void operator()();
-    void resume();	
-    void destroy();
+    void operator()() const;
+    void resume() const;
+    void destroy() const;
     
   private:
     void* ptr; // exposition only
@@ -332,8 +332,8 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
 
 \rSec3[coroutine.handle.resumption]{\tcode{coroutine_handle} resumption}
 \begin{itemdecl}
-  void operator()();
-  void resume();	
+  void operator()() const;
+  void resume() const;	
 \end{itemdecl}
 \begin{itemdescr}
   \pnum
@@ -349,7 +349,7 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
 \end{itemdescr}
 
 \begin{itemdecl}
-  void destroy();
+  void destroy() const;
 \end{itemdecl}
 \begin{itemdescr}
   \pnum
