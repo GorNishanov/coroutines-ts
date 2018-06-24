@@ -152,7 +152,7 @@ that satisfies those requirements.
 %\\ 
 %\end{concepttable}
 
-\rSec3[coroutine.traits.primary]{Struct template \tcode{coroutine_traits}}
+\rSec3[coroutine.traits.primary]{Class template \tcode{coroutine_traits}}
 \pnum The header \tcode{<experimental/coroutine>} defines
 the primary template \tcode{coroutine_traits} such that 
 if \tcode{ArgTypes} is a parameter pack of types and 
@@ -171,7 +171,7 @@ Otherwise, \tcode{coroutine_traits<R,ArgTypes...>} has no members.
 	
 %\pnum A user specialization of \tcode{coroutine_traits} shall have a valid member type \tcode{promise_type}.
 
-\rSec2[coroutine.handle]{Struct template \tcode{coroutine_handle}}
+\rSec2[coroutine.handle]{Class template \tcode{coroutine_handle}}
 
 \indexlibrary{\idxcode{coroutine_handle}}%
 \begin{codeblock}
