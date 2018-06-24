@@ -156,7 +156,8 @@ that satisfies those requirements.
 \pnum The header \tcode{<experimental/coroutine>} defines
 the primary template \tcode{coroutine_traits} such that 
 if \tcode{ArgTypes} is a parameter pack of types and 
-if \tcode{R} is a type that has a valid (\cxxref{temp.deduct}) member type \tcode{promise_type},
+if the \grammarterm{qualified-id} \tcode{R::promise_type} is valid and
+denotes a type (\cxxref{temp.deduct}),
 then
 \tcode{coroutine_traits<R,ArgTypes...>} has the following publicly accessible member:
 
