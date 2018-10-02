@@ -70,13 +70,13 @@ Evaluation of an \grammarterm{await-expression} involves the following auxiliary
 	
 %  \item If the \grammarterm{cast-expression} is a prvalue, $a$ is a temporary object copy-initialized from the \grammarterm{cast-expression}, otherwise $a$ is an lvalue referring to the result of evaluating the \grammarterm{cast-expression}.
   
-  \item $p$ is an lvalue naming the promise object (8.4.4) of the enclosing coroutine and $P$ is the type of that object.
+  \item $p$ is an lvalue naming the promise object (\ref{def.fct.def.coroutine}) of the enclosing coroutine and $P$ is the type of that object.
   
   \item $a$ is the \grammarterm{cast-expression} if 
   the \grammarterm{await-expression} was implicitly produced by a \grammarterm{yield-expression} (\ref{expr.yield}), an initial suspend point, or a final suspend point (\ref{dcl.fct.def.coroutine}). 
   Otherwise, the \grammarterm{unqualified-id} \tcode{await_transform} is looked up within the scope of \tcode{$P$} by class member access lookup (\cxxref{basic.lookup.classref}), and if this lookup finds at least one declaration, then $a$ is \linebreak\mbox{\tcode{$p$.await_transform(\grammarterm{cast-expression});}} otherwise, $a$ is the  \grammarterm{cast-expression}.
   
-%  \item The \grammarterm{unqualified-id} \tcode{await_transform} is looked up within the scope of \tcode{$P$} by class member access lookup (3.4.5), and if this lookup finds at least one declaration, then $a$ is \tcode{$p$.await_transform(\grammarterm{cast-expression});} otherwise, $a$ is \grammarterm{cast-expression}. $a$ is always \grammarterm{cast-expression} for implicit \grammarterm{await-expression}s produced by \grammarterm{yield-expression} (\ref{expr.yield}), or initial and final suspend points (\ref{dcl.fct.def.coroutine}).
+%  \item The \grammarterm{unqualified-id} \tcode{await_transform} is looked up within the scope of \tcode{$P$} by class member access lookup (\cxxref{basic.lookup.classref}), and if this lookup finds at least one declaration, then $a$ is \tcode{$p$.await_transform(\grammarterm{cast-expression});} otherwise, $a$ is \grammarterm{cast-expression}. $a$ is always \grammarterm{cast-expression} for implicit \grammarterm{await-expression}s produced by \grammarterm{yield-expression} (\ref{expr.yield}), or initial and final suspend points (\ref{dcl.fct.def.coroutine}).
 %  Let $A$ be the type of $a$. 
 
 \item  
@@ -84,13 +84,13 @@ $o$ is determined by enumerating the applicable \tcode{operator co_await} functi
 
 %
 %  \item If $A$ is a class type, the \grammarterm{unqualified-id}{s}
-%  \tcode{await_ready}, \tcode{await_suspend} and \tcode{await_resume} are looked up in the scope of class $A$ by class member access lookup (3.4.5) and if this lookup finds at least one declaration, then $o$ is $a$; otherwise, $o$ is
+%  \tcode{await_ready}, \tcode{await_suspend} and \tcode{await_resume} are looked up in the scope of class $A$ by class member access lookup (\cxxref{basic.lookup.classref}) and if this lookup finds at least one declaration, then $o$ is $a$; otherwise, $o$ is
 %  the result of the invocation of the unary \tcode{co_await} operator function applied to expression $a$ (\cxxref{over.match.oper}).
 %  \item If the qualified lookup of \tcode{$A$::operator co_await} finds at least one declaration, $o$ is \break \tcode{$a$.operator co_await()}; otherwise, if the \grammarterm{unqualified-id}{s}
-%  \tcode{await_ready}, \tcode{await_suspend} and \tcode{await_resume} are looked up in the scope of class $A$ as if by class member access lookup (3.4.5) and if this lookup finds at least one declaration, then, $o$ is $a$; otherwise, $o$ is \tcode{operator co_await($a$)}.
+%  \tcode{await_ready}, \tcode{await_suspend} and \tcode{await_resume} are looked up in the scope of class $A$ as if by class member access lookup (\cxxref{basic.lookup.classref}) and if this lookup finds at least one declaration, then, $o$ is $a$; otherwise, $o$ is \tcode{operator co_await($a$)}.
   \item $e$ is a temporary object copy-initialized from $o$ if $o$ is a prvalue; otherwise $e$ is an lvalue referring to the result of evaluating $o$.
   
-%  \item If the \grammarterm{await-expression} is potentially-evaluated and lookup for the unqualified-id \tcode{await_transform} within the scope of \tcode{decltype($p$)} as if by class member access lookup (3.4.5) finds at least one declaration, then $e$ is \tcode{$p$.await_transform(a);} otherwise, $e$ is $a$.
+%  \item If the \grammarterm{await-expression} is potentially-evaluated and lookup for the unqualified-id \tcode{await_transform} within the scope of \tcode{decltype($p$)} as if by class member access lookup (\cxxref{basic.lookup.classref}) finds at least one declaration, then $e$ is \tcode{$p$.await_transform(a);} otherwise, $e$ is $a$.
   \item $h$ is an object of type \tcode{std::experimental::coroutine_handle<$P$>} referring to the enclosing coroutine.
   \item \textit{await-ready} is the expression \tcode{$e$.await_ready()}, contextually converted to \tcode{bool}.
   \item \textit{await-suspend} is the expression \tcode{$e$.await_suspend($h$)}, which shall be a prvalue of type \tcode{void}, \tcode{bool}, or \tcode{std::experimental::coroutine_handle<}$Z$\tcode{>} for some type $Z$.
