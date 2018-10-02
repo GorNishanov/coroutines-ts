@@ -24,6 +24,8 @@ local.properties
 *.lot
 *.gz
 *.pdf
+*.fls
+*.fdb_latexmk
 
 # External tool builders
 .externalToolBuilders/
