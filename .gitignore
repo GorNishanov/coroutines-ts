@@ -26,6 +26,7 @@ local.properties
 *.pdf
 *.fls
 *.fdb_latexmk
+*.synctex*
 
 # External tool builders
 .externalToolBuilders/
