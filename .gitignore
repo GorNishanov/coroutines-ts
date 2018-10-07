@@ -230,3 +230,4 @@ pip-log.txt
 *.cb
 *.bbl
 Coroutines/coroutine-ts-v1.blg
+EditorReport.html
