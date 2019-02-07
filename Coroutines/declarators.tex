@@ -154,6 +154,7 @@ When the coroutine reaches \textit{final suspend point} the coroutine is suspend
 \tcode{$p$.final_suspend(std::experimental::coroutine_handle<$P$>::from_promise($p$))} is evaluated.
 The result of this expression must have type \tcode{std::experimental::coroutine_handle<}$Z$\tcode{>} for some type $Z$.
 The coroutine identified by the returned handle is resumed as if by calling the \tcode{resume()} method. 
+\enternote Any number of coroutines may be successively resumed in this fashion, eventually returning control flow to the current coroutine caller or resumer (\ref{dcl.fct.def.coroutine}). \exitnote
 
 %\enternote
 %For subsequent suspends, if any, the coroutine
