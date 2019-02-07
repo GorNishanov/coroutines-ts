@@ -112,7 +112,7 @@ Then, the coroutine behaves as if its body were:
      co_await @$p$@.initial_suspend(); // initial suspend point
      try { @\textit{F}@ } catch(...) { @\textit{p}@.unhandled_exception(); }
   @\textit{final_suspend}@:
-     co_await @$p$@.final_suspend(); // final suspend point
+     // final suspend point
   }
 \end{codeblock}
 where an object denoted as \textit{p} is the \defn{promise object} of
@@ -149,6 +149,13 @@ When a coroutine returns to its caller, the return value is produced by a call t
  \mbox{\tcode{$p$.get_return_object()}}. A call to a \tcode{get_return_object} is sequenced before the call to \linebreak
 \mbox{\tcode{initial_suspend}} and is invoked at most once.
 
+\pnum
+When the coroutine reaches \textit{final suspend point} the coroutine is suspended and the expression \linebreak
+\tcode{$p$.final_suspend(std::experimental::coroutine_handle<$P$>::from_promise($p$))} is evaluated.
+The result of this expression must have type \tcode{std::experimental::coroutine_handle<}$Z$\tcode{>} for some type $Z$.
+The coroutine identified by the returned handle is resumed as if by calling the \tcode{resume()} method. 
+A subsequent call to \tcode{$h$.resume()} on the coroutine handle passed to \tcode{final_suspend()}
+results in undefined behaviour.
 
 %\enternote
 %For subsequent suspends, if any, the coroutine
@@ -197,7 +204,7 @@ struct generator {
     static auto get_return_object_on_allocation_failure() { return generator{nullptr}; }
     auto get_return_object() { return generator{handle::from_promise(*this)}; }
     auto initial_suspend() { return std::experimental::suspend_always{}; }
-    auto final_suspend() { return std::experimental::suspend_always{}; }
+    auto final_suspend(handle h) { return std::experimental::noop_coroutine(); }
     void unhandled_exception() { std::terminate(); }
     void return_void() {}
     auto yield_value(int value) {
@@ -223,11 +230,11 @@ int main() {
 \exitexample
 
 \pnum
-The coroutine state is destroyed when
-control flows off the end of the coroutine or
-the \tcode{destroy} member function (\ref{coroutine.handle.resumption}) of an object of type \tcode{std::experimental::coroutine_handle<\textit{P}}> associated with this coroutine is invoked. In the latter case objects with automatic storage duration that are in scope
-at the suspend point are destroyed in the reverse order of the construction. The storage for the coroutine state is released by calling a non-array deallocation
-function~(\cxxref{basic.stc.dynamic.deallocation}). If \tcode{destroy} is called for a coroutine that is not suspended, the program has undefined behavior.
+The coroutine state is destroyed when the \tcode{destroy} member function (\ref{coroutine.handle.resumption})
+of an object of type \tcode{std::experimental::coroutine_handle<\textit{P}}> associated with this coroutine is invoked.
+Objects with automatic storage duration that are in scope at the suspend point are destroyed in the reverse order of the construction.
+The storage for the coroutine state is released by calling a non-array deallocation function~(\cxxref{basic.stc.dynamic.deallocation}).
+If \tcode{destroy} is called for a coroutine that is not suspended, the program has undefined behavior.
 
 \pnum
 The deallocation function's name is looked up in the scope of $P$. If this lookup fails, the deallocation function's name is looked up in the global scope. If deallocation function lookup finds both a usual deallocation function with only a pointer parameter and a usual deallocation function with both a pointer parameter and a size parameter, then the selected deallocation function shall be the one with two parameters. Otherwise, the selected deallocation function shall be the function with one parameter. If no usual deallocation function is found, the program is ill-formed.
