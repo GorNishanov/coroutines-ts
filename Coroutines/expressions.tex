@@ -73,7 +73,7 @@ Evaluation of an \grammarterm{await-expression} involves the following auxiliary
   \item $p$ is an lvalue naming the promise object (\ref{def.fct.def.coroutine}) of the enclosing coroutine and $P$ is the type of that object.
   
   \item $a$ is the \grammarterm{cast-expression} if 
-  the \grammarterm{await-expression} was implicitly produced by a \grammarterm{yield-expression} (\ref{expr.yield}), an initial suspend point, or a final suspend point (\ref{dcl.fct.def.coroutine}). 
+  the \grammarterm{await-expression} was implicitly produced by a \grammarterm{yield-expression} (\ref{expr.yield}) or a final suspend point (\ref{dcl.fct.def.coroutine}). 
   Otherwise, the \grammarterm{unqualified-id} \tcode{await_transform} is looked up within the scope of \tcode{$P$} by class member access lookup (\cxxref{basic.lookup.classref}), and if this lookup finds at least one declaration, then $a$ is \linebreak\mbox{\tcode{$p$.await_transform(\grammarterm{cast-expression});}} otherwise, $a$ is the  \grammarterm{cast-expression}.
   
 %  \item The \grammarterm{unqualified-id} \tcode{await_transform} is looked up within the scope of \tcode{$P$} by class member access lookup (\cxxref{basic.lookup.classref}), and if this lookup finds at least one declaration, then $a$ is \tcode{$p$.await_transform(\grammarterm{cast-expression});} otherwise, $a$ is \grammarterm{cast-expression}. $a$ is always \grammarterm{cast-expression} for implicit \grammarterm{await-expression}s produced by \grammarterm{yield-expression} (\ref{expr.yield}), or initial and final suspend points (\ref{dcl.fct.def.coroutine}).

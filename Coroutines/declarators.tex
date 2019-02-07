@@ -106,10 +106,12 @@ Let \textit{R} be the return type and \textit{F} be the \grammarterm{function-bo
 of \textit{f}, \textit{T} be the type \tcode{std::experimental::coroutine_traits<$R$,$P_1$,...,$P_n$>}, and \textit{P} be the class type denoted by \textit{T}\tcode{::promise_type}. 
 %If \textit{T}\tcode{::promise_type} does not refer to a type the program is ill-formed. Type \textit{P} is the \term{promise type} of the coroutine.
 Then, the coroutine behaves as if its body were:
+
+
 \begin{codeblock}
   {
      @\textit{P }$p$ \textit{promise-constructor-arguments}@;
-     co_await @$p$@.initial_suspend(); // initial suspend point
+     // initial suspend point
      try { @\textit{F}@ } catch(...) { @\textit{p}@.unhandled_exception(); }
   @\textit{final_suspend}@:
      co_await @$p$@.final_suspend(); // final suspend point
@@ -125,9 +127,6 @@ constructor is found (\cxxref{over.match.viable}), then
 \textit{promise-constructor-arguments} is
 \tcode{(}$p_1$,...,$p_n$\tcode{)}, otherwise
 \textit{promise-constructor-arguments} is empty. 
-%,except that any exception thrown after the initial suspend point and
-%before the flow of execution reaches \textit{F} also results in entering
-%the \grammarterm{handler} of the \grammarterm{try-block}.
 
 \pnum
 The \grammarterm{unqualified-id}{s}
@@ -145,10 +144,9 @@ If the \grammarterm{unqualified-id} \tcode{return_void} is found, flowing off th
 %When a coroutine returns to its caller, the return value is produced as if by the statement \mbox{\tcode{return}{ }$gro$\tcode{;}}
 
 \pnum 
-When a coroutine returns to its caller, the return value is produced by a call to \linebreak
- \mbox{\tcode{$p$.get_return_object()}}. A call to a \tcode{get_return_object} is sequenced before the call to \linebreak
-\mbox{\tcode{initial_suspend}} and is invoked at most once.
-
+When a coroutine reaches \textit{initial suspend point}, the coroutine is suspended and execution returns
+to the caller a value produced by a call to \linebreak
+\mbox{\tcode{$p$.get_return_object(std::experimental::coroutine_handle<\textit{P}>::from_promise(p))}}. \linebreak
 
 %\enternote
 %For subsequent suspends, if any, the coroutine
@@ -195,8 +193,7 @@ struct generator {
   struct promise_type {
     int current_value;
     static auto get_return_object_on_allocation_failure() { return generator{nullptr}; }
-    auto get_return_object() { return generator{handle::from_promise(*this)}; }
-    auto initial_suspend() { return std::experimental::suspend_always{}; }
+    auto get_return_object(handle h) { return generator{h}; }
     auto final_suspend() { return std::experimental::suspend_always{}; }
     void unhandled_exception() { std::terminate(); }
     void return_void() {}
