@@ -4,7 +4,7 @@
 
 \rSec1[support.general]{General}
 
-Add a row to Table~\ref{tab:lang.sup.lib.summary} for coroutine support header \tcode{<experimental/coroutine>}.
+Add a row to Table~\ref{tab:lang.sup.lib.summary} for coroutine support header \tcode{<coroutine>}.
 
 \setcounter{table}{31}
 \begin{libsumtab}{Language support library summary}{tab:lang.sup.lib.summary}
@@ -27,7 +27,7 @@ Add a row to Table~\ref{tab:lang.sup.lib.summary} for coroutine support header \
 	&                           &   \tcode{<ctime>}     \\ \rowsep
 	\added{\ref{support.coroutine}} 
 	& \added{Coroutines support} 
-	& \added{\tcode{<experimental/coroutine>}}    \\
+	& \added{\tcode{<coroutine>}}    \\
 
 \end{libsumtab}
 
@@ -65,10 +65,10 @@ Add this subclause to Clause \ref{language.support}.
 
 \pnum
 The header
-\tcode{<experimental/coroutine>}
+\tcode{<coroutine>}
 defines several types providing compile and run-time support for coroutines in a \Cpp program.
 
-\synopsis{Header \tcode{<experimental/coroutine>} synopsis}
+\synopsis{Header \tcode{<coroutine>} synopsis}
 
 \indextext{\idxhdr{coroutine}}%
 \indexlibrary{\idxhdr{coroutine}}%
@@ -154,7 +154,7 @@ that satisfies those requirements.
 %\end{concepttable}
 
 \rSec3[coroutine.traits.primary]{Class template \tcode{coroutine_traits}}
-\pnum The header \tcode{<experimental/coroutine>} defines
+\pnum The header \tcode{<coroutine>} defines
 the primary template \tcode{coroutine_traits} such that 
 if \tcode{ArgTypes} is a parameter pack of types and 
 if the \grammarterm{qualified-id} \tcode{R::promise_type} is valid and
@@ -527,7 +527,7 @@ The specialization is enabled\iref{unord.hash}.
 \end{itemdescr}
 
 \rSec2[coroutine.trivial.awaitables]{Trivial awaitables}
-The header \tcode{<experimental/coroutine>} defines \tcode{suspend_never} and \tcode{suspend_always} as follows.
+The header \tcode{<coroutine>} defines \tcode{suspend_never} and \tcode{suspend_always} as follows.
 \begin{codeblock}
 namespace std {
 namespace experimental {
@@ -656,7 +656,7 @@ inline namespace coroutines_v1 {
 %of a promise type for a simple generator.
 %\begin{codeblock}
 %  #include <iostream>
-%  #include <experimental/coroutine>
+%  #include <coroutine>
 %  
 %  struct generator {
 %    struct promise_type {
