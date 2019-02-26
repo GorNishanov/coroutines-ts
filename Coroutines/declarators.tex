@@ -244,6 +244,14 @@ The lifetime of parameter copies ends immediately after the lifetime of the coro
 \enternote
 If a coroutine has a parameter passed by reference, resuming the coroutine after the lifetime of the entity referred to by that parameter has ended is likely to result in undefined behavior.
 \exitnote
+
+\pnum
+If the evaluation of the expression $p$\tcode{.unhandled_exception()} exits via an exception,
+the coroutine is considered suspended at the final suspend point.
+
+\pnum
+The expression \tcode{co_await} $p$\tcode{.final_suspend()} shall not be potentially-throwing (\cxxref{except.spec}).
+
 %\pnum
 %An invocation of a coroutine may incur an extra copy/move operation for the parameters.
 %%These copies are defined in the same scope as a \term{promise object}. 
