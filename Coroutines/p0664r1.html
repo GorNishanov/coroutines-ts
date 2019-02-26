@@ -151,18 +151,18 @@ Modify the example in 8.4.4/11 as follows:
 // ::operator new(size_t, nothrow_t) will be used if allocation is needed
 struct generator {
   struct promise_type;
-  using handle = std::experimental::coroutine_handle&lt;promise_type&gt;;
+  using handle = std::coroutine_handle&lt;promise_type&gt;;
   struct promise_type {
     int current_value;
     static auto get_return_object_on_allocation_failure() { return generator{nullptr}; }
     auto get_return_object() { return generator{handle::from_promise(*this)}; }
-    auto initial_suspend() { return std::experimental::suspend_always{}; }
-    auto final_suspend() { return std::experimental::suspend_always{}; }
+    auto initial_suspend() { return std::suspend_always{}; }
+    auto final_suspend() { return std::suspend_always{}; }
     <ins>void unhandled_exception() { std::terminate(); }</ins>
     <ins>void return_void() {}</ins>
     auto yield_value(int value) {
       current_value = value;
-      return std::experimental::suspend_always{};
+      return std::suspend_always{};
     }
   };
   bool move_next() { return coro ? (coro.resume(), !coro.done()) : false; }

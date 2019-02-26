@@ -111,7 +111,7 @@ inline namespace coroutines_v1 {
 
 // \ref{coroutine.handle.hash} hash support:
 template <class T> struct hash;
-template <class P> struct hash<experimental::coroutine_handle<P>>;
+template <class P> struct hash<coroutine_handle<P>>;
 
 } // namespace std
 \end{codeblock}
@@ -439,7 +439,7 @@ A default constructed \tcode{coroutine_handle} object does not refer to any coro
 \rSec3[coroutine.handle.hash]{Hash support}
 
 \begin{itemdecl}
-  template <class P> struct hash<experimental::coroutine_handle<P>>;
+  template <class P> struct hash<coroutine_handle<P>>;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -662,11 +662,11 @@ inline namespace coroutines_v1 {
 %    struct promise_type {
 %      int current_value;
 %      auto get_return_object() { return generator{*this}; }
-%      auto initial_suspend() { return std::experimental::suspend_always{}; }
-%      auto final_suspend() { return std::experimental::suspend_always{}; }
+%      auto initial_suspend() { return std::suspend_always{}; }
+%      auto final_suspend() { return std::suspend_always{}; }
 %      auto yield_value(int value) { 
 %        current_value = value; 
-%        return std::experimental::suspend_always{};
+%        return std::suspend_always{};
 %      }
 %    };
 %    
@@ -679,7 +679,7 @@ inline namespace coroutines_v1 {
 %    
 %    ~generator() { coro.destroy(); }
 %  private:
-%    using handle = std::experimental::coroutine_handle<promise_type>;
+%    using handle = std::coroutine_handle<promise_type>;
 %    explicit generator(promise_type& myPromise): coro(handle::from_promise(myPromise)) {}
 %    handle coro;
 %  };

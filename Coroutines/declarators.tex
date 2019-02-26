@@ -92,7 +92,7 @@ The \grammarterm{parameter-declaration-clause} of the coroutine shall not termin
 %to complete the definition of its semantics.
 %These types and functions are provided as a set of member types or typedefs
 %and member functions in the specializations of class template
-%\tcode{std::experimental::coroutine_traits} (\ref{coroutine.traits}). 
+%\tcode{std::coroutine_traits} (\ref{coroutine.traits}). 
 
 \pnum
 For a coroutine \textit{f} that is a non-static member function, let $P_1$ denote the type of the implicit object parameter (\cxxref{over.match.funcs}) and $P_2$ ... $P_n$ be the types of the function parameters; otherwise let $P_1$ ... $P_n$ be the types of the function parameters. Let $p_1$ ... $p_n$ be lvalues denoting those objects.
@@ -103,7 +103,7 @@ Let \textit{R} be the return type and \textit{F} be the \grammarterm{function-bo
 %\grammarterm{compound-statement} or 
 %\grammarterm{function-try-block}.
 %}
-of \textit{f}, \textit{T} be the type \tcode{std::experimental::coroutine_traits<$R$,$P_1$,...,$P_n$>}, and \textit{P} be the class type denoted by \textit{T}\tcode{::promise_type}. 
+of \textit{f}, \textit{T} be the type \tcode{std::coroutine_traits<$R$,$P_1$,...,$P_n$>}, and \textit{P} be the class type denoted by \textit{T}\tcode{::promise_type}. 
 %If \textit{T}\tcode{::promise_type} does not refer to a type the program is ill-formed. Type \textit{P} is the \term{promise type} of the coroutine.
 Then, the coroutine behaves as if its body were:
 \begin{codeblock}
@@ -154,7 +154,7 @@ When a coroutine returns to its caller, the return value is produced by a call t
 %For subsequent suspends, if any, the coroutine
 %is invoked via resumption member functions of 
 %%NOTE massage
-%\tcode{std::experimental::coroutine_handle} (\ref{coroutine.handle}) and no return value is expected.
+%\tcode{std::coroutine_handle} (\ref{coroutine.handle}) and no return value is expected.
 %\exitnote
 
 \pnum
@@ -191,18 +191,18 @@ The allocation function used in this case must have a non-throwing \grammarterm{
 // ::operator new(size_t, nothrow_t) will be used if allocation is needed
 struct generator {
   struct promise_type;
-  using handle = std::experimental::coroutine_handle<promise_type>;
+  using handle = std::coroutine_handle<promise_type>;
   struct promise_type {
     int current_value;
     static auto get_return_object_on_allocation_failure() { return generator{nullptr}; }
     auto get_return_object() { return generator{handle::from_promise(*this)}; }
-    auto initial_suspend() { return std::experimental::suspend_always{}; }
-    auto final_suspend() { return std::experimental::suspend_always{}; }
+    auto initial_suspend() { return std::suspend_always{}; }
+    auto final_suspend() { return std::suspend_always{}; }
     void unhandled_exception() { std::terminate(); }
     void return_void() {}
     auto yield_value(int value) {
       current_value = value;
-      return std::experimental::suspend_always{};
+      return std::suspend_always{};
     }
   };
   bool move_next() { return coro ? (coro.resume(), !coro.done()) : false; }
@@ -225,7 +225,7 @@ int main() {
 \pnum
 The coroutine state is destroyed when
 control flows off the end of the coroutine or
-the \tcode{destroy} member function (\ref{coroutine.handle.resumption}) of an object of type \tcode{std::experimental::coroutine_handle<\textit{P}}> associated with this coroutine is invoked. In the latter case objects with automatic storage duration that are in scope
+the \tcode{destroy} member function (\ref{coroutine.handle.resumption}) of an object of type \tcode{std::coroutine_handle<\textit{P}}> associated with this coroutine is invoked. In the latter case objects with automatic storage duration that are in scope
 at the suspend point are destroyed in the reverse order of the construction. The storage for the coroutine state is released by calling a non-array deallocation
 function~(\cxxref{basic.stc.dynamic.deallocation}). If \tcode{destroy} is called for a coroutine that is not suspended, the program has undefined behavior.
 
