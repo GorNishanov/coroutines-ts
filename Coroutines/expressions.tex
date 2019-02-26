@@ -67,6 +67,8 @@ of a \grammarterm{for-init-statement}, an \grammarterm{await-expression}
 shall appear only in an \grammarterm{initializer} of that \grammarterm{declaration-statement}
 or \grammarterm{simple-declaration}.
 An \grammarterm{await-expression} shall not appear in a default argument (\cxxref{dcl.fct.default}).
+An \grammarterm{await-expression} shall not appear in the initializer of a block-scope
+variable with static or thread storage duration.
 A context within a function where an \grammarterm{await-expression} can appear
 is called a \term{suspension context} of the function.
 
