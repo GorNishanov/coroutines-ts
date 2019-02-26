@@ -74,9 +74,6 @@ defines several types providing compile and run-time support for coroutines in a
 \indexlibrary{\idxhdr{coroutine}}%
 \begin{codeblock}
 namespace std {
-namespace experimental {
-inline namespace coroutines_v1 {
-
   // \ref{coroutine.traits} coroutine traits
   template <class R, class... ArgTypes>
     struct coroutine_traits;
@@ -105,15 +102,11 @@ inline namespace coroutines_v1 {
   // \ref{coroutine.trivial.awaitables} trivial awaitables
   struct suspend_never;
   struct suspend_always;
-    
-} // namespace coroutines_v1
-} // namespace experimental
 
-// \ref{coroutine.handle.hash} hash support:
-template <class T> struct hash;
-template <class P> struct hash<coroutine_handle<P>>;
-
-} // namespace std
+  // \ref{coroutine.handle.hash} hash support:
+  template <class T> struct hash;
+  template <class P> struct hash<coroutine_handle<P>>;
+}
 \end{codeblock}
 
 \rSec2[coroutine.traits]{Coroutine traits}
@@ -177,9 +170,6 @@ Otherwise, \tcode{coroutine_traits<R,ArgTypes...>} has no members.
 \indexlibrary{\idxcode{coroutine_handle}}%
 \begin{codeblock}
 namespace std {
-namespace experimental {
-inline namespace coroutines_v1 {
-
   template <>
   struct coroutine_handle<void>
   {
@@ -222,27 +212,24 @@ inline namespace coroutines_v1 {
 
   template <> struct coroutine_handle<noop_coroutine_promise> : coroutine_handle<>
   {
-  // \ref{coroutine.handle.noop.observers} noop observers
-  constexpr explicit operator bool() const noexcept;
-  constexpr bool done() const noexcept;
+    // \ref{coroutine.handle.noop.observers} noop observers
+    constexpr explicit operator bool() const noexcept;
+    constexpr bool done() const noexcept;
 
-  // \ref{coroutine.handle.noop.resumption} noop resumption
-  constexpr void operator()() const noexcept;
-  constexpr void resume() const noexcept;
-  constexpr void destroy() const noexcept;
+    // \ref{coroutine.handle.noop.resumption} noop resumption
+    constexpr void operator()() const noexcept;
+    constexpr void resume() const noexcept;
+    constexpr void destroy() const noexcept;
 
-  // \ref{coroutine.handle.noop.promise} noop promise access
-  noop_coroutine_promise& promise() const noexcept;
+    // \ref{coroutine.handle.noop.promise} noop promise access
+    noop_coroutine_promise& promise() const noexcept;
 
-  // \ref{coroutine.handle.noop.address} noop address
-  constexpr void* address() const noexcept;
-private:
-  coroutine_handle(@\textit{unspecified}@);
-};
-
-} // namespace coroutines_v1
-} // namespace experimental
-} // namespace std
+    // \ref{coroutine.handle.noop.address} noop address
+    constexpr void* address() const noexcept;
+  private:
+    coroutine_handle(@\textit{unspecified}@);
+  };
+}
 \end{codeblock}
 
 \pnum
@@ -530,9 +517,6 @@ The specialization is enabled\iref{unord.hash}.
 The header \tcode{<coroutine>} defines \tcode{suspend_never} and \tcode{suspend_always} as follows.
 \begin{codeblock}
 namespace std {
-namespace experimental {
-inline namespace coroutines_v1 {
-
   struct suspend_never {
     constexpr bool await_ready() const noexcept { return true; }
     constexpr void await_suspend(coroutine_handle<>) const noexcept {}
@@ -543,10 +527,7 @@ inline namespace coroutines_v1 {
     constexpr void await_suspend(coroutine_handle<>) const noexcept {}
     constexpr void await_resume() const noexcept {}
   };
-
-} // namespace coroutines_v1
-} // namespace experimental
-} // namespace std
+}
 \end{codeblock}
 \end{quote}
 
